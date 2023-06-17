@@ -1,0 +1,16 @@
+.draft {
+    max-width: calc(100vw - 256px - 2rem);
+}
+
+.form {
+    max-width: 550px;
+}
+
+.form-header {
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+
+    >input.form-title {
+        border-bottom: solid 2px var(--gray-3);
+    }
+}

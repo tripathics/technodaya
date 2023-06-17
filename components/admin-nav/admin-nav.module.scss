@@ -1,0 +1,75 @@
+.nav-wrapper {
+    grid-area: sidebar;
+    background-color: var(--gray-3);
+    z-index: 1000;
+    min-height: calc(100vh - 6px);
+    position: sticky;
+    left: 0;
+}
+
+.nav {
+    position: sticky;
+    top: 0;
+
+    .logo {
+        padding: 1.2rem 0.2rem 1.8rem;
+        margin: 0 0.6rem;
+    }
+
+    .nav-items {
+        width: 256px;
+        list-style-type: none;
+        padding: 0;
+        overflow-y: auto;
+
+        .nav-item {
+            a {
+                font-weight: 600;
+                font-size: 1.2rem;
+                position: relative;
+                text-transform: uppercase;
+                display: inline-block;
+                padding: 0.6rem 0.2rem;
+                margin: 0.6rem 1.2rem;
+                text-decoration: none;
+                color: var(--gray-6);
+                transition: all 0.3s ease;
+            }
+
+            a.active {
+                color: var(--gray-10);
+            }
+
+            a::after {
+                content: "";
+                height: 0.125rem;
+                width: 100%;
+                position: absolute;
+                top: calc(50% - 0.1rem);
+                left: 0;
+                transform: scaleX(0);
+                background-color: var(--gray-6);
+                transform-origin: left;
+                transition: 0.2s transform ease-out;
+            }
+
+            a:hover {
+                color: var(--gray-10);
+            }
+
+            a:hover::after {
+                transform: scaleX(1);
+            }
+
+            a:active::after {
+                transform-origin: right;
+                background-color: var(--gray-10);
+                transform: scaleX(0);
+            }
+
+            a.active::after {
+                transform: scaleX(1);
+            }
+        }
+    }
+}

@@ -1,0 +1,106 @@
+.footer {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(rgba(21, 21, 21, 0.8), rgba(5, 5, 5, 0.8)), url(/images/banner.jpg);
+    background-size: cover;
+    min-height: var(--footer-height);
+    color: #ddd;
+    font-size: 0.8rem;
+  
+    a {
+      color: #ddd;
+      text-decoration: none;
+      border-bottom: solid 1px transparent;
+    }
+  
+    a:hover {
+      color: #fafafa;
+      border-bottom: solid 1px #f6cd5d;
+    }
+  
+    #technodayaLogo {
+      width: 184px;
+      margin-bottom: 0.8rem;
+    }
+  
+    .tagline {
+      // font-family: "Cormorant", serif;
+      font-weight: 500;
+      font-style: italic;
+      font-size: 1.2rem;
+      margin-bottom: 0.4rem;
+    }
+  
+    section {
+      flex-grow: 1;
+      margin-right: 4rem;
+      margin-bottom: 2rem;
+  
+      h3 {
+        font-weight: 600;
+        padding: 0.5rem 0;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        line-height: 1;
+        border-top: solid 1px rgba($color: #fff, $alpha: 0.12);
+        border-bottom: solid 1px rgba($color: #fff, $alpha: 0.12);
+        font-size: 0.75rem;
+        margin-bottom: 0.8rem;
+      }
+  
+      ul {
+        list-style-type: none;
+  
+        li {
+          margin-bottom: 0.4rem;
+          font-size: 0.95rem;
+        }
+      }
+    }
+    section:last-child {
+      margin-right: 0;
+    }
+  
+    .info-Footer {
+      flex-grow: 1;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      font-family: inherit;
+      justify-content: space-between;
+      padding-top: 2rem;
+    }
+  
+    .copyright {
+      background-color: #0d0d13;
+      color: white;
+      line-height: 1.4;
+      text-align: center;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+  
+    @media screen and (max-width: 780px) {
+      section {
+        margin-right: 2rem;
+      }
+    }
+  
+    @media screen and (max-width: 548px) {
+      section {
+        margin-right: 1.2rem;
+      }
+    }
+  }
+  
+  @media screen and (max-width: 548px) {
+  .mobile-submit {
+      display: none;
+    } 
+  } 
+  
+  @media print {
+    .footer {
+      display: none;
+    }
+  }

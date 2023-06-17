@@ -1,0 +1,99 @@
+'use client'
+import { useEffect, useState } from 'react'
+import { auth, db } from '@/firebasse.config';
+import ErrorIcon from '@/components/icons/error-icon';
+import SpinnerIcon from '@/components/icons/spinner-icon';
+import EmailIcon from '@/components/icons/email-icon';
+import LockIcon from '@/components/icons/lock-icon';
+// import { useNavigate, useLocation } from 'react-router-dom'
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { getDoc, doc } from 'firebase/firestore'
+import cx from 'classnames';
+import styles from './styles/Login.module.scss';
+import { useUser } from '@/contexts/user';
+import { useRouter } from 'next/navigation';
+
+const Login = () => {
+  const { user } = useUser();
+
+  const router = useRouter();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMsg('');
+
+    signInWithEmailAndPassword(auth, email, password).then(async (res) => {
+      const docSnap = await getDoc(doc(db, 'users', res.user.uid));
+      if (docSnap.exists()) {
+        const authUser = {
+          user: res.user,
+          admin: docSnap.data().Role === 'admin'
+        }
+        router.push(authUser.admin ? '/admin' : '/submit');
+      }
+      else {
+        signOut(auth);
+        setErrorMsg('Invalid user!');
+        resetForm();
+        setLoading(false);
+      }
+    }).catch(err => {
+      setErrorMsg(err.message);
+      resetForm();
+      logoutUser();
+      setLoading(false);
+    })
+  }
+
+  const resetForm = () => {
+    setEmail('');
+    setPassword('');
+  }
+
+  useEffect(() => {
+    if (user && !loading) router.push('/');
+  })
+
+  return (
+    <div className={styles['login-page']}>
+      <div className='container'>
+        <header className='page-header'>
+          <h1 className='heading'>Login</h1>
+        </header>
+        <div className={styles['form-box']}>
+          <div className='messages'>
+            {errorMsg && <div className={cx(styles['login-msg'], styles.error)}>
+              <div className={styles.icon}><ErrorIcon /></div>
+              {errorMsg}
+            </div>}
+          </div>
+          <form className={styles['login-form']} onSubmit={handleLogin}>
+            <div className={cx(styles['login-field'], styles.email)}>
+              <EmailIcon />
+              <input type='email' required placeholder='Email' onChange={(e) => setEmail(e.target.value)} value={email} ></input>
+            </div>
+            <div className={cx(styles['login-field'], styles.password)}>
+              <LockIcon />
+              <input type='password' onChange={(e) => setPassword(e.target.value)} value={password} required placeholder='Password'></input>
+            </div>
+            {loading ? (
+              <button className={styles['login-btn']} disabled type="submit">
+                <SpinnerIcon style={{ height: '1.2rem' }} />
+              </button>
+            ) : (
+              <button className={styles['login-btn']} type="submit">Login</button>
+            )}
+          </form>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Login;

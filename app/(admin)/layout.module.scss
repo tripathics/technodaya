@@ -1,0 +1,10 @@
+.admin-layout {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    grid-template-areas: "sidebar main";
+    min-width: fit-content;
+}
+
+.main {
+    grid-area: main;
+}
