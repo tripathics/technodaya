@@ -6,7 +6,6 @@
     --nav-active-bg: rgb(39, 39, 39);
     --nav-sticky-top: 0;
     height: var(--nav-height);
-    font-family: 'Crimson Text', serif;
     position: sticky;
     top: var(--nav-sticky-top);
     z-index: 1000;
@@ -53,7 +52,6 @@
                 }
 
                 .nav-item {
-                    font-family: inherit;
                     background-color: transparent;
                     border: none;
                     text-decoration: none;
@@ -73,6 +71,10 @@
             }
 
             .logout {
+                .nav-item {
+                    font-family: inherit;
+                }
+
                 .nav-item-txt.btn-txt {
                     display: flex;
                     flex-direction: row;

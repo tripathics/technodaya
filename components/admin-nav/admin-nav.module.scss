@@ -5,6 +5,32 @@
     min-height: calc(100vh - 6px);
     position: sticky;
     left: 0;
+    transition: transform 0.3s ease 0s;
+
+    .nav-toggle-wrapper {
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translateX(100%);
+        padding: 1.14rem;
+        display: none;
+    }
+
+    .nav-toggle {
+        height: 1.8rem;
+        width: 1.8rem;
+        background-color: var(--gray-1);
+        border: solid 1px var(--gray-7);
+        border-radius: 4px;
+
+        svg {
+            fill: black;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
 }
 
 .nav {
@@ -71,5 +97,74 @@
                 transform: scaleX(1);
             }
         }
+
+        .nav-item {
+            .logout {
+                background-color: #fff;
+                border: 1px solid var(--gray-4);
+                border-radius: 2rem;
+                font-weight: 500;
+                font-size: 1.2rem;
+                position: relative;
+                display: inline-block;
+                padding: 0.6rem 0.2rem;
+                margin: 0.6rem 1.2rem;
+                text-decoration: none;
+                color: var(--gray-8);
+                transition: all 0.2s cubic-bezier(0.0, 0, 0.2, 1);
+
+                .btn-txt {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    padding-left: 0.5rem;
+                    padding-right: 2.2rem;
+                    position: relative;
+                    font-size: 0.85rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.15ch;
+
+                    svg {
+                        position: absolute;
+                        right: 0;
+                        display: inline-block;
+                        height: 1.2rem;
+                        width: auto;
+                        fill: var(--gray-8);
+                    }
+                }
+            }
+
+            .logout:hover {
+                border-color: var(--gray-6);
+                background-color: var(--gray-0);
+                transition: all 0.1s cubic-bezier(0.0, 0, 0.2, 1);
+            }
+
+            .logout:active {
+                color: var(--gray-10);
+                border-color: var(--gray-10);
+                background-color: var(--gray-2);
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .nav-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+
+        .nav-toggle-wrapper {
+            display: block;
+        }
+    }
+
+    .nav-wrapper.nav-open {
+        transform: translateX(0);
     }
 }

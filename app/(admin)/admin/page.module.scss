@@ -20,9 +20,14 @@
         font-weight: 600;
         text-align: center;
         font-size: 1.2rem;
-        letter-spacing: 0.4ch;
+        letter-spacing: 0.3ch;
         color: var(--gray-9);
         line-height: 1.8rem;
+        margin-right: 1.2rem;
+
+        @media screen and (max-width: 768px) {
+            margin-left: 2.2rem;
+        }
     }
 }
 
@@ -33,6 +38,7 @@
 
 .btns-group {
     display: flex;
+    height: 1.8rem;
     flex-direction: row;
     align-items: center;
 }
@@ -82,4 +88,30 @@
 .status {
     color: var(--gray-65);
     font-size: 0.8rem;
+    text-align: right;
+}
+
+.submissions {
+    max-width: calc(100vw - 256px - 6px);
+}
+
+@media screen and (max-width: 768px) {
+    .page-header {
+        left: 0;
+    }
+
+    .submissions {
+        max-width: calc(100vw - 6px);
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .page-header {
+        .heading {
+            width: 0;
+            opacity: 0;
+            user-select: none;
+            white-space: nowrap;
+        }
+    }
 }

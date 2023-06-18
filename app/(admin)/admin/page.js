@@ -141,7 +141,7 @@ export default function Submissions() {
   }, [fetchingApproved, fetchingPending])
 
   return (
-    <div className={cx("submissions", styles.page)}>
+    <div className={cx(styles.submissions, 'submissions', styles.page)}>
       <header className={cx(styles['page-header'], styles.container)}>
         <h1 className={styles.heading}>Submissions</h1>
         <div className={styles["btns-group"]}>

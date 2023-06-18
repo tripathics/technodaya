@@ -1,10 +1,8 @@
 'use client'
-import NavItem from "./NavItem"
+
 import { useUser } from "@/contexts/user";
-import Loading from "../icons/spinner-icon";
-import styles from "./Navigation.module.scss";
-import { Crimson_Text } from "next/font/google";
-const crimson_text = Crimson_Text({ display: 'swap', subsets: ['latin'], weight: ['400', '600', '700'], styles: ['normal', 'italic'] })
+import styles from './admin-nav.module.scss'
+import cx from "classnames";
 
 const LogoutIcon = () => (
   <svg width="40" height="29" viewBox="0 0 40 29" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -22,33 +20,14 @@ const LogoutIcon = () => (
   </svg>
 )
 
-const NavLinks = [
-  { link: '/submit', name: 'Submit', auth: true },
-  { link: '/activity', name: 'My activity', auth: true },
-  { link: '/admin', name: 'Admin', auth: true, admin: true },
-];
-
-const AuthNav = () => {
-  const { user, admin, loading, logout } = useUser();
+export default function NavBtn() {
+  const { user, logout } = useUser();
   return (
-    loading
-      ? <Loading />
-      : user
-        ? (<>
-          {NavLinks.filter(link => link.auth && (link.admin ? admin : true))
-            .map(link => <NavItem key={link.name} link={link.link} name={link.name} />
-            )}
-          <li className={[styles.logout, crimson_text.className].join(' ')}>
-            <button className={styles['nav-item']} title="logout" onClick={logout}>
-              <div className={[styles['btn-txt'], styles['nav-item-txt']].join(' ')}>
-                <span>{user?.displayName.slice(0, user.displayName.search(' ')) || 'Logout'}</span>
-                <LogoutIcon />
-              </div>
-            </button>
-          </li>
-        </>)
-        : <NavItem link="/login" name="Login" />
+    <button className={cx(styles.logout)} onClick={logout} title="Logout">
+      <div className={styles['btn-txt']}>
+        <span>{user?.displayName.slice(0, user.displayName.search(' ')) || 'Logout'}</span>
+        <LogoutIcon />
+      </div>
+    </button>
   )
 }
-
-export default AuthNav;

@@ -9,6 +9,7 @@ const Provider = ({ children }) => {
   const [user, setUser] = useState(auth.currentUser);
   const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [redirected, setRedirected] = useState(false);
 
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
@@ -40,7 +41,7 @@ const Provider = ({ children }) => {
     signOut(auth);
   }
 
-  const exposed = { user, admin, loading, logout }
+  const exposed = { user, admin, loading, logout, redirected, setRedirected }
 
   return <Context.Provider value={exposed}>{children}</Context.Provider>;
 }

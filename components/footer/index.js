@@ -6,9 +6,9 @@ const crimson_text = Crimson_Text({ display: 'swap', subsets: ['latin'], weight:
 const cormorant = Cormorant({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], styles: ['normal', 'italic'] })
 const zilla_slab = Zilla_Slab({ display: 'swap', subsets: ['latin'], weight: ['300', '400'] })
 
-const Footer = () => {
+const Footer = ({ className = '' }) => {
   return (
-    <footer className={[styles.footer, crimson_text.className].join(' ')}>
+    <footer className={[styles.footer, crimson_text.className, className].join(' ')}>
       <div className={['container', styles['info-Footer']].join(' ')}>
         <section>
           <Image id={styles.technodayaLogo} width={184} height={22.4} src='/images/logo/technodaya-logo-white.png' alt="Technodaya" />

@@ -11,14 +11,11 @@ const NavLinks = [
   { link: '/', name: 'Home' },
   { link: '/read', name: 'Read' },
   { link: '/about', name: 'About us' },
-  { link: '/submit', name: 'Submit', auth: true },
-  { link: '/activity', name: 'My Activity', auth: true },
-  { link: '/admin', name: 'Admin', auth: true, admin: true },
 ]
 
-const Navbar = () => {
+const Navbar = ({ className = '' }) => {
   return (
-    <nav className={styles['navbar-component']}>
+    <nav className={[styles['navbar-component'], className].join(' ')}>
       <div className={[styles['nav-content-wrapper'], 'container'].join(' ')} >
         <header className={styles.banner}>
           <Link exact="true" href='/'>

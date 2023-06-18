@@ -1,0 +1,17 @@
+.activity-component {
+    .last-updated {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 2rem;
+    }
+
+    .summary {
+        h2 {
+            font-weight: 400;
+        }
+
+        margin: 1rem 0 2rem;
+    }
+}

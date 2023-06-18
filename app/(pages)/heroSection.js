@@ -35,7 +35,7 @@ const HeroSection = () => {
             <p>Vol-{issues[latestIssueId].Vol} Issue-{issues[latestIssueId].Issue}</p>
             <p>{issues[latestIssueId].Month} {issues[latestIssueId].Year}</p>
           </div>
-          <Link href="/magazine" className={[styles.btn, open_sans.className].join(' ')}>
+          <Link href="/read" className={[styles.btn, open_sans.className].join(' ')}>
             Read more
           </Link>
         </>)}
@@ -46,7 +46,7 @@ const HeroSection = () => {
       <div className="container">
         <header>
           <h1>Recent releases</h1>
-          <Link href="/magazine" className={"btn"}>
+          <Link href="/read" className={"btn"}>
             View all
           </Link>
         </header>

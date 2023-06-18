@@ -5,8 +5,7 @@ import ErrorIcon from '@/components/icons/error-icon';
 import SpinnerIcon from '@/components/icons/spinner-icon';
 import EmailIcon from '@/components/icons/email-icon';
 import LockIcon from '@/components/icons/lock-icon';
-// import { useNavigate, useLocation } from 'react-router-dom'
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { signInWithEmailAndPassword } from 'firebase/auth'
 import { getDoc, doc } from 'firebase/firestore'
 import cx from 'classnames';
 import styles from './styles/Login.module.scss';
@@ -14,7 +13,7 @@ import { useUser } from '@/contexts/user';
 import { useRouter } from 'next/navigation';
 
 const Login = () => {
-  const { user } = useUser();
+  const { user, redirected, setRedirected, logout } = useUser();
 
   const router = useRouter();
 
@@ -35,10 +34,16 @@ const Login = () => {
           user: res.user,
           admin: docSnap.data().Role === 'admin'
         }
-        router.push(authUser.admin ? '/admin' : '/submit');
+
+        if (redirected === true) {
+          setRedirected(false);
+          router.back();
+        } else {
+          router.push(authUser.admin ? '/admin' : '/submit');
+        }
       }
       else {
-        signOut(auth);
+        logout();
         setErrorMsg('Invalid user!');
         resetForm();
         setLoading(false);
@@ -46,7 +51,7 @@ const Login = () => {
     }).catch(err => {
       setErrorMsg(err.message);
       resetForm();
-      logoutUser();
+      logout();
       setLoading(false);
     })
   }

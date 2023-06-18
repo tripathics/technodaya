@@ -1,5 +1,7 @@
 .draft {
-    max-width: calc(100vw - 256px - 2rem);
+    @media screen and (max-width: 548px) {
+        display: none;
+    }
 }
 
 .form {

@@ -1,4 +1,5 @@
-import { deleteObject } from "firebase/storage"
+import { storage } from "@/firebasse.config"
+import { deleteObject, ref } from "firebase/storage"
 
 const Categories = [
   '',
@@ -79,7 +80,7 @@ const toCapital = (s) => {
 }
 
 const deleteFileFromStorage = async (url) => {
-  const fileRef = fileRef(url);
+  const fileRef = ref(storage, url);
   try {
     await deleteObject(fileRef);
     console.log('Deleted file');

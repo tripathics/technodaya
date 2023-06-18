@@ -786,9 +786,8 @@ h3 {
       border-radius: 50%;
 
       svg {
-        fill: none;
         position: absolute;
-        height: 1.2rem;
+        height: 2.4rem;
         width: auto;
         top: 50%;
         left: 50%;
@@ -1478,7 +1477,7 @@ table {
   display: none;
   background-color: black;
   color: white;
-  height: calc(100vh - var(--nav-height) - 59px);
+  height: 100vh;
   position: relative;
 
   .error-gif,
@@ -1488,7 +1487,14 @@ table {
     transform: translateY(-50%);
   }
 
+  .error-gif-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
   .error-gif {
+    width: 100%;
     padding: 0 1rem;
     margin: auto;
 

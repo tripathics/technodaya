@@ -13,6 +13,7 @@ import cx from 'classnames'
 import NavigateNextIcon from '@/components/icons/navigate-next-icon'
 import NavigateBeforeIcon from '@/components/icons/navigate-before-icon'
 import PreviewIcon from '@/components/icons/preview-icon'
+import Image from 'next/image'
 
 const DraftForm = ({ title, vol, iss, month, handleChange }) => {
   const handleInput = (e) => {
@@ -21,13 +22,14 @@ const DraftForm = ({ title, vol, iss, month, handleChange }) => {
   }
 
   return (
-    <form id="draftForm" className={cx('draft-form', formStyles.form, styles.form)}>
+    <form id="draftForm" className={cx('draft-form', formStyles.form, styles.form)} onSubmit={e => { e.preventDefault(); }}>
       <div className={cx(formStyles['form-header'], styles['form-header'])}>
         <input
           type="text"
           name="title"
           className={cx(formStyles['form-title'], styles['form-title'], formStyles['form-control'])}
-          placeholder="Title of newsletter"
+          placeholder="Title of newsletter *"
+          required={true}
           onChange={handleInput}
           value={title}
         />
@@ -45,7 +47,7 @@ const SmallScreenError = () => (
   <div className='error-bw'>
     <div className="error-gif-wrapper">
       <div className="error-gif">
-        <Image src='/images/width.gif' alt="Take my money" />
+        <Image src='/images/width.gif' width={620} height={258} alt="Take my money" />
       </div>
       <div className="error-message">
         <h1>
@@ -146,6 +148,9 @@ export default function Draft() {
     console.log(publishObj);
 
     const previewLink = `previews/${year}/${biMonth}`
+    alert('Todo - Generate preview')
+    setState(prevData => ({ ...prevData, loading: false }));
+    return;
 
     // delete existing previews
     fs.collection(previewLink).get()
@@ -188,10 +193,11 @@ export default function Draft() {
     fetchData();
   }, [])
 
-  return (
-    <div className={cx("draft", pageStyles.page)}>
+  return (<>
+    <SmallScreenError />
+    <div className={cx("draft", styles.draft, pageStyles.page)}>
       <header className={cx(pageStyles['page-header'], pageStyles.container)}>
-        <h1 className={pageStyles.heading}>Draft an Issue</h1>
+        <h1 className={pageStyles.heading}>Draft Issue</h1>
         <div className={pageStyles["btns-group"]}>
           {!state.formView && !state.preview && (
             !state.loading ? <button
@@ -221,16 +227,20 @@ export default function Draft() {
               Publish
             </button>
           </>)}
-          {state.title && state.iss && state.month && state.vol && (
-            state.formView ? (
-              <button className={pageStyles.btn} title="Next" onClick={switchView} type="button">
-                <span className={pageStyles['btn-text']}>Next</span> <NavigateNextIcon />
-              </button>
-            ) : (
-              <button className={pageStyles.btn} title="Back" onClick={switchView} type="button">
-                <span className={pageStyles['btn-text']}>Back</span> <NavigateBeforeIcon />
-              </button>
-            ))}
+          {state.formView ? (
+            <button className={pageStyles.btn} title="Next" onClick={(e) => {
+              if (document.getElementById('draftForm').checkValidity()) {
+                e.preventDefault();
+                switchView();
+              };
+            }} type="submit" form='draftForm' >
+              <span className={pageStyles['btn-text']}>Next</span> <NavigateNextIcon />
+            </button>
+          ) : (
+            <button className={pageStyles.btn} title="Back" onClick={switchView} type="button">
+              <span className={pageStyles['btn-text']}>Back</span> <NavigateBeforeIcon />
+            </button>
+          )}
         </div>
       </header >
 
@@ -259,5 +269,5 @@ export default function Draft() {
         }
       </main >
     </div >
-  )
+  </>)
 }
