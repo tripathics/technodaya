@@ -48,7 +48,7 @@ const Home = () => (
       </div>
     </section>
 
-    <Script src="/js/parallax.js" strategy="beforeInteractive" />
+    <Script src="/js/parallax.js" strategy="afterInteractive" />
   </div>
 );
 

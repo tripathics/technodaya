@@ -159,9 +159,9 @@ export const Activity = ({ activity, index, isDragDisabled }) => {
             <Content>
               {title && <ActivityTitle>{title}</ActivityTitle>}
               <Desc>
-                <ReactMarkdown children={content} rehypePlugins={[rehypeRaw]}
+                <ReactMarkdown rehypePlugins={[rehypeRaw]}
                   remarkPlugins={[remarkGfm]}
-                />
+                >{content}</ReactMarkdown>
               </Desc>
               <Flex>
                 <Author>
@@ -261,9 +261,9 @@ export class Task extends Component {
             >
               <Content>
                 <Desc>
-                  <ReactMarkdown children={content} rehypePlugins={[rehypeRaw]}
+                  <ReactMarkdown rehypePlugins={[rehypeRaw]}
                     remarkPlugins={[remarkGfm]}
-                  />
+                  >{content}</ReactMarkdown>
                 </Desc>
                 <Flex>
                   <Author>

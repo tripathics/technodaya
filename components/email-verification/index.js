@@ -37,7 +37,7 @@ const EmailVerification = ({ user }) => {
       }
       <h4>Instructions</h4>
       <ul>
-        <li>An email containing a verification link will be sent to {user ? <strong>{user.email}</strong> : 'your email'} once you click "Verify now".</li>
+        <li>An email containing a verification link will be sent to {user ? <strong>{user.email}</strong> : 'your email'} once you click &quot;Verify now&quot;.</li>
         <li>Visit the verification link and your email will be verified. Login again to see the changes.</li>
       </ul>
 

@@ -9,6 +9,7 @@ import useFetchCollection from "@/hooks/fetchCollection";
 import styles from './Activity.module.scss';
 import EmailVerification from "@/components/email-verification";
 import { useUser } from "@/contexts/user";
+import Image from "next/image";
 
 const Activity = () => {
   const [lastUpdated, setLastUpdated] = useState(null);
@@ -95,20 +96,23 @@ const Submission = ({ type, created, title, desc, imgUrl }) => (
     <td>{type}</td>
     <td>{created}</td>
     <td>
-      <ReactMarkdown children={title} rehypePlugins={[rehypeRaw]}
+      <ReactMarkdown rehypePlugins={[rehypeRaw]}
         remarkPlugins={[remarkGfm]}
-      />
+      >{title}</ReactMarkdown>
     </td>
     <td>
       <div>
-        <ReactMarkdown children={desc} rehypePlugins={[rehypeRaw]}
+        <ReactMarkdown rehypePlugins={[rehypeRaw]}
           remarkPlugins={[remarkGfm]}
-        />
+        >{desc}</ReactMarkdown>
       </div>
       <div style={{
-        maxWidth: '400px', margin: '1rem 0'
+        width: '400px', height: '300px', position: 'relative',
+        maxWidth: '100%', margin: '1rem 0'
       }}>
-        {imgUrl.map(url => <img style={{ width: '100%', height: 'auto' }} key={url} src={url} alt="" />)}
+        {imgUrl.map(url => (
+          <Image key={url} alt='' src={url} fill={true} style={{ objectFit: "contain" }} />
+        ))}
       </div>
     </td>
   </tr>
