@@ -4,7 +4,7 @@ import { DndMain } from '@/components/admin/dnd/dndMain'
 import { fs, db } from '@/firebasse.config'
 import { getBiMonth, BiMonthlyNames, CategoryTitles } from '@/helpers/helpers'
 import SpinnerIcon from '@/components/icons/spinner-icon'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
 import { DateInput, TextInput } from '@/components/form/InputComponents'
 import formStyles from '@/components/form/Form.module.scss'
 import pageStyles from '../page.module.scss';
@@ -14,6 +14,7 @@ import NavigateNextIcon from '@/components/icons/navigate-next-icon'
 import NavigateBeforeIcon from '@/components/icons/navigate-before-icon'
 import PreviewIcon from '@/components/icons/preview-icon'
 import Image from 'next/image'
+import SendIcon from '@/components/icons/send-icon'
 
 const DraftForm = ({ title, vol, iss, month, handleChange }) => {
   const handleInput = (e) => {
@@ -123,7 +124,7 @@ export default function Draft() {
     setState(prevData => ({ ...prevData, orders: fetchedOrders }))
   }
 
-  const handlePreviewIssue = (e) => {
+  const handlePreviewIssue = async (e) => {
     e.preventDefault();
     const { orders, title, vol, iss, month } = state;
     setState(prevData => ({ ...prevData, loading: true }));
@@ -147,34 +148,17 @@ export default function Draft() {
 
     console.log(publishObj);
 
-    const previewLink = `previews/${year}/${biMonth}`
-    alert('Todo - Generate preview')
-    setState(prevData => ({ ...prevData, loading: false }));
-    return;
+    const previewLink = `previews/${year}${biMonth}`
 
-    // delete existing previews
-    fs.collection(previewLink).get()
-      .then(previews => {
-        console.log(previews.docs);
-        console.log('Deleting old previews');
-        let left = previews.docs.length;
-        console.log(`${left} to delete`);
-        for (let snap of previews.docs) {
-          fs.collection(previewLink).doc(`${snap.id}`).delete().then(() => {
-            console.log(`Deleted ${snap.id}`);
-            if (left === 0) return;
-          })
-            .catch(err => { throw err; })
-        }
-      })
-      .then(() => {
-        console.log(`Generating preview`)
-        fs.collection(previewLink).doc().set(publishObj)
-          .then(async () => {
-            console.log('Preview generated!');
-            setState(prevData => ({ ...prevData, preview: previewLink, loading: false }));
-          })
-      })
+    // add or update(if exists) preview link in db
+    const docRef = doc(db, 'previews', `${year}${biMonth}`);
+    try {
+      await setDoc(docRef, publishObj);
+    } catch (err) {
+      throw err;
+    } finally {
+      setState(prevData => ({ ...prevData, loading: false, preview: previewLink }));
+    }
   }
 
   const handleForm = (name, value) => {
@@ -213,10 +197,9 @@ export default function Draft() {
           )}
 
           {state.preview && (<>
-            <a target="_blank" rel="noreferrer" href={`/${preview}`}>
+            <p className={pageStyles.status}><a target="_blank" rel="noreferrer" href={`/${state.preview}`}>
               Show preview
-            </a>
-
+            </a></p>
             <button
               form="draftForm"
               className={pageStyles.btn}
@@ -224,7 +207,8 @@ export default function Draft() {
               onClick={() => { }}
               type="submit"
             >
-              Publish
+              <span className={pageStyles['btn-text']}>Publish</span>
+              <SendIcon />
             </button>
           </>)}
           {state.formView ? (

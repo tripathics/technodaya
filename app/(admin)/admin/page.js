@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from "react"
 import Submission from "@/components/admin/submissions"
-import { db, storage } from "@/firebasse.config"
+import { db } from "@/firebasse.config"
 import { arrayRemove } from "firebase/firestore"
 import SpinnerIcon from "@/components/icons/spinner-icon"
 import { where, orderBy, setDoc, doc, deleteDoc } from 'firebase/firestore'

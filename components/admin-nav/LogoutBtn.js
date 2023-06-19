@@ -25,7 +25,7 @@ export default function NavBtn() {
   return (
     <button className={cx(styles.logout)} onClick={logout} title="Logout">
       <div className={styles['btn-txt']}>
-        <span>{user?.displayName.slice(0, user.displayName.search(' ')) || 'Logout'}</span>
+        <span>{user?.displayName?.slice(0, user.displayName.search(' ')) || 'Logout'}</span>
         <LogoutIcon />
       </div>
     </button>

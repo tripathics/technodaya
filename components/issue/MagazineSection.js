@@ -9,10 +9,10 @@ import Image from "next/image"
 const open_sans = Open_Sans({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], styles: ['normal', 'italic'] })
 const crimson_text = Crimson_Text({ display: 'swap', subsets: ['latin'], weight: ['400', '600', '700'], styles: ['normal', 'italic'] })
 
-const MagazineActivity = ({ id, title, content, brochureUrl, imgUrl, imgCaption }) => {
-  const images = imgUrl.map((url, i) => (
+const MagazineActivity = ({ title, content, brochureUrl, imgUrl, imgCaption }) => {
+  const images = imgUrl.map((url) => (
     <a key={url} href={url} target='_blank' rel='noreferrer'>
-      <div key={`img${id}${i}`} className={styles['img-wrapper']}>
+      <div className={styles['img-wrapper']}>
         <Image className={styles.bg} src={url} alt="" fill={true} />
         <Image className={styles.img} src={url} alt={imgCaption} fill={true} />
       </div>
