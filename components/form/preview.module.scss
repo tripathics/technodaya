@@ -91,6 +91,7 @@
         display: flex;
         justify-content: center;
         padding: 0 1.125rem;
+        margin-top: 1.6rem;
         --color: var(--gray-7);
         --bg: transparent;
 
@@ -183,11 +184,27 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        gap: 2rem;
-        margin: 2rem 0 3rem;
+        margin-top: 1.6rem;
         justify-content: center;
         width: 100%;
         align-items: center;
+
+        .image-container {
+            width: 100%;
+            max-width: 350px;
+            margin: 0.8rem 0.8rem 0 0;
+
+            >div {
+                position: unset !important;
+            }
+
+            .image {
+                object-fit: contain;
+                width: 100% !important;
+                position: relative !important;
+                height: unset !important;
+            }
+        }
 
         .img-container {
             position: relative;

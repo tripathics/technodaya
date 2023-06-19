@@ -31,6 +31,7 @@
 
             #technodayaLogo {
                 height: 1.6rem;
+                width: auto;
             }
         }
 
@@ -89,6 +90,12 @@
                         fill: black;
                     }
                 }
+            }
+
+            .mobile .logout .nav-item-txt.btn-txt svg {
+                fill: white;
+                height: 2rem;
+                margin-left: 0.5rem;
             }
 
             .nav-items.desktop {
@@ -218,18 +225,6 @@
                 z-index: 1;
                 font-size: 2rem;
 
-                .nav-item.logout {
-                    .nav-item-txt.btn-txt {
-                        gap: 1rem;
-
-                        svg {
-                            height: 3rem;
-                            width: 3rem;
-                            fill: white;
-                        }
-                    }
-                }
-
                 .nav-item {
                     position: relative;
                     padding: 0 var(--left-offset);
@@ -353,9 +348,6 @@
             fill: white;
         }
 
-        // .hamburgur .line {
-        //     background-color: white;
-        // }
         .mobile-menu {
             color: white;
         }

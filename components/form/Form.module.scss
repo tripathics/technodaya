@@ -185,7 +185,7 @@ $form-muted: #ced4da;
     label.filled::before,
     label:focus-within::before {
         color: var(--primary);
-        transform: translate3d(0.5rem, -40%, 0);
+        transform: translate3d(0.56rem, -40%, 0);
         font-size: 11px;
         background-color: transparent;
         padding: 0 0.3rem 0.1rem;

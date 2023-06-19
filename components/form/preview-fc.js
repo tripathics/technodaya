@@ -118,8 +118,8 @@ const PreviewFC = ({ display, category, fields, images = [], imgCaption, submit,
 
         <div className={styles['image-preview']}>
           {images.map((img, i) => (
-            <div key={i} className={styles['img-container']}>
-              <Image fill={true} alt="" src={URL.createObjectURL(img)} />
+            <div key={i} className={styles['image-container']} >
+              <Image className={styles['image']} fill={true} alt="" src={URL.createObjectURL(img)} />
             </div>
           ))}
         </div>

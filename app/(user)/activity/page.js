@@ -59,7 +59,7 @@ const Activity = () => {
               </button>
             </div>
           )}
-          {fetchingApproved && fetchingPending ? <SpinnerIcon />
+          {(fetchingApproved && fetchingPending) || !user ? <SpinnerIcon />
             : Object.keys(pending).length || Object.keys(approved).length ? (<>
               <div className={styles.summary}>
                 <h2>
@@ -106,12 +106,9 @@ const Submission = ({ type, created, title, desc, imgUrl }) => (
           remarkPlugins={[remarkGfm]}
         >{desc}</ReactMarkdown>
       </div>
-      <div style={{
-        width: '400px', height: '300px', position: 'relative',
-        maxWidth: '100%', margin: '1rem 0'
-      }}>
+      <div className={styles['image-container']}>
         {imgUrl.map(url => (
-          <Image key={url} alt='' src={url} fill={true} style={{ objectFit: "contain" }} />
+          <Image key={url} alt='' src={url} fill={true} className={styles['image']} />
         ))}
       </div>
     </td>

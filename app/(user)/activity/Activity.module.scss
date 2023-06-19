@@ -15,3 +15,20 @@
         margin: 1rem 0 2rem;
     }
 }
+
+.image-container {
+    width: 100%;
+    max-width: 350px;
+    margin: 0.8rem 0.8rem 0 0;
+
+    >div {
+        position: unset !important;
+    }
+
+    .image {
+        object-fit: contain;
+        width: 100% !important;
+        position: relative !important;
+        height: unset !important;
+    }
+}

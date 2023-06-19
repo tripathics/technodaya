@@ -1,5 +1,5 @@
 'use client'
-import NavItem from "./NavItem"
+import { NavItem } from "./NavItem"
 import { useUser } from "@/contexts/user";
 import Loading from "../icons/spinner-icon";
 import styles from "./Navigation.module.scss";

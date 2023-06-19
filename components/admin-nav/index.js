@@ -12,15 +12,16 @@ const links = [
 export default function AdminNav() {
   return (
     <NavProvider>
+      <div className={styles['nav-overlay']}></div>
       <aside className={styles['nav-wrapper']}>
         <div className={styles['nav-toggle-wrapper']}>
           <NavToggle />
         </div>
         <nav className={styles.nav}>
           <div className={styles.logo}>
-            <Link href={'/'}>
-              <Image width={200} height={25.6} src={'/images/logo/technodaya-logo1.png'} alt="Technodaya" id={styles.technodayaLogo} />
-            </Link>
+            <NavLink href={'/'}>
+              <Image width={821} height={100} src={'/images/logo/technodaya-logo1.png'} alt="Technodaya" id={styles.technodayaLogo} />
+            </NavLink>
           </div>
           <ul className={styles['nav-items']}>
             {links.map(link => (<li className={styles['nav-item']} key={link.href}>

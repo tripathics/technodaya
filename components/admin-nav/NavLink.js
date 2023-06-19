@@ -16,8 +16,12 @@ export default function NavProvider({ children }) {
   useEffect(() => {
     if (open) {
       document.querySelector(`aside.${styles['nav-wrapper']}`).classList.add(styles['nav-open']);
+      document.querySelector(`div.${styles['nav-overlay']}`).classList.add(styles['nav-open']);
+      document.body.style.overflow = 'hidden';
     } else {
       document.querySelector(`aside.${styles['nav-wrapper']}`).classList.remove(styles['nav-open']);
+      document.querySelector(`div.${styles['nav-overlay']}`).classList.remove(styles['nav-open']);
+      document.body.style.overflow = 'auto';
     }
   }, [open])
 
@@ -26,7 +30,7 @@ export default function NavProvider({ children }) {
   )
 }
 
-export function NavLink({ href, label }) {
+export function NavLink({ href, label = '', children = <></> }) {
   const pathname = usePathname();
   const { setOpen } = useContext(Context);
 
@@ -34,7 +38,7 @@ export function NavLink({ href, label }) {
     setOpen(false);
   }
 
-  return <Link onClick={closeSideNav} className={cx(crimson_text.className, { [styles.active]: pathname === href })} href={href}>{label}</Link>
+  return <Link onClick={closeSideNav} className={cx(crimson_text.className, { [styles.active]: pathname === href })} href={href}>{label}<>{children}</></Link>
 }
 
 export function NavToggle() {
