@@ -1,10 +1,10 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { DndMain } from '@/components/admin/dnd/dndMain'
 import { fs, db } from '@/firebasse.config'
 import { getBiMonth, BiMonthlyNames, CategoryTitles } from '@/helpers/helpers'
 import SpinnerIcon from '@/components/icons/spinner-icon'
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
 import { DateInput, TextInput } from '@/components/form/InputComponents'
 import formStyles from '@/components/form/Form.module.scss'
 import pageStyles from '../page.module.scss';
@@ -16,14 +16,14 @@ import PreviewIcon from '@/components/icons/preview-icon'
 import Image from 'next/image'
 import SendIcon from '@/components/icons/send-icon'
 
-const DraftForm = ({ title, vol, iss, month, handleChange }) => {
-  const handleInput = (e) => {
-    const { name, value } = e.target;
-    handleChange(name, value);
+const DraftForm = ({ formData, handleChange, submitForm }) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    submitForm();
   }
 
   return (
-    <form id="draftForm" className={cx('draft-form', formStyles.form, styles.form)} onSubmit={e => { e.preventDefault(); }}>
+    <form id="draftForm" className={cx('draft-form', formStyles.form, styles.form)} onSubmit={handleSubmit}>
       <div className={cx(formStyles['form-header'], styles['form-header'])}>
         <input
           type="text"
@@ -31,15 +31,15 @@ const DraftForm = ({ title, vol, iss, month, handleChange }) => {
           className={cx(formStyles['form-title'], styles['form-title'], formStyles['form-control'])}
           placeholder="Title of newsletter *"
           required={true}
-          onChange={handleInput}
-          value={title}
+          onChange={handleChange}
+          value={formData?.title || ''}
         />
       </div>
       <p className={formStyles['section-heading']}>Issue details</p>
-      <TextInput required={true} name='vol' placeholder='Volume no. (in Romans)' onChange={handleInput} value={vol} />
-      <TextInput type="number" attrs={{ min: 1 }} required={true} name='iss' placeholder='Issue' onChange={handleInput} value={iss} />
+      <TextInput required={true} name="vol" placeholder='Volume no. (in Romans)' onChange={handleChange} value={formData?.vol} />
+      <TextInput type="number" attrs={{ min: 1 }} required={true} name='iss' placeholder='Issue' onChange={handleChange} value={formData?.iss} />
       <p className={formStyles['section-heading']}>Month and year</p>
-      <DateInput type="month" required={true} name='month' onChange={handleInput} value={month} />
+      <DateInput type="month" required={true} name='month' onChange={handleChange} value={formData?.month} />
     </form>
   )
 }
@@ -63,16 +63,25 @@ const SmallScreenError = () => (
 )
 
 export default function Draft() {
-  const [state, setState] = useState({
-    title: '',
-    vol: '',
-    iss: '',
-    month: '',
-    formView: true,
-    preview: null,
-    published: false,
-    loading: false,
-    orders: {
+  const [formData, setFormData] = useState({});
+  const [formView, setFormView] = useState(true);
+  const [preview, setPreview] = useState(null);
+  const [published, setPublished] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState(null);
+
+  const fetchData = async () => {
+    // fetch all approved submissions
+    const queryApproved = query(collection(db, 'submissions'), where('approved', '==', true));
+
+    // fetch previews if any and populate the dnd with this data
+    const year = formData.month.slice(0, 4);
+    const biMonth = BiMonthlyNames[getBiMonth(formData.month)][0];
+    const previewRef = doc(db, 'previews', year + biMonth);
+    setLoading(true);
+
+    let approved = {};
+    let dndData = {
       activities: {},
       subSections: {},
       sections: {
@@ -86,96 +95,103 @@ export default function Draft() {
         's6': { id: 's6', title: 'Upcoming Events', subSecIds: [] },
       },
       sectionOrder: ['default', 's0', 's1', 's2', 's3', 's4', 's5', 's6']
-    },
-  });
+    };
+    try {
+      const querySnapshot = await getDocs(queryApproved);
+      querySnapshot.forEach(doc => {
+        approved[doc.id] = {
+          id: doc.id,
+          author: doc.data().author,
+          created: doc.data().created,
+          eventDate: doc.data().eventDate,
+          content: doc.data().desc,
+          brochureUrl: doc.data().brochureUrl,
+          imgCaption: doc.data().imgCaption,
+          imgUrl: doc.data().imgUrl,
+          title: doc.data().title,
+          categoryId: doc.data().categoryId
+        };
+      });
 
-  const fetchData = async () => {
-    const q = query(collection(db, 'submissions'), where('approved', '==', true));
-    const querySnapshot = await getDocs(q);
-
-    const fetchedOrders = state.orders;
-
-    querySnapshot.forEach(doc => {
-      const sub = doc.data()
-      const subObj = {
-        id: doc.id,
-        author: sub.author,
-        created: sub.created,
-        eventDate: sub.eventDate,
-        content: sub.desc,
-        brochureUrl: sub.brochureUrl,
-        imgCaption: sub.imgCaption,
-        imgUrl: sub.imgUrl,
-        title: sub.title,
-        categoryId: sub.categoryId
+      const preview = await getDoc(previewRef);
+      if (preview.exists()) {
+        dndData = { ...preview.data().orders };
+        // populate subsections
+        Object.keys(dndData.subSections).forEach(subSecId => {
+          const subSec = dndData.subSections[subSecId];
+          const activities = subSec.activityIds.filter(id => approved[id]);
+          if (activities.length === 0) {
+            delete dndData.subSections[subSecId];
+          } else {
+            dndData.subSections[subSecId].activityIds = [...activities];
+          }
+        })
+        // populate sections
+        Object.keys(dndData.sections).forEach(secId => {
+          const sec = dndData.sections[secId];
+          dndData.sections[secId].subSecIds = sec.subSecIds.filter(id => dndData.subSections[id]);
+        })
+        // set preview link
+        setPreview('previews/' + year + biMonth);
+      } else {
+        // populate subsections
+        Object.keys(approved).forEach(id => {
+          dndData.subSections[approved[id].categoryId] = {
+            id: approved[id].categoryId,
+            title: CategoryTitles[approved[id].categoryId],
+            activityIds: dndData.subSections[approved[id].categoryId] ? [
+              ...dndData.subSections[approved[id].categoryId].activityIds, id
+            ] : [id],
+          }
+        })
+        // populate sections
+        dndData.sections.default.subSecIds = Object.keys(dndData.subSections);
       }
-
-      fetchedOrders.activities[subObj.id] = subObj;
-
-      fetchedOrders.subSections[sub.categoryId] = {
-        id: sub.categoryId,
-        title: CategoryTitles[sub.categoryId],
-        activityIds: fetchedOrders.subSections[sub.categoryId] ? [
-          ...fetchedOrders.subSections[sub.categoryId].activityIds, subObj.id
-        ] : [subObj.id],
-      }
-    })
-    fetchedOrders.sections.default.subSecIds = Object.keys(fetchedOrders.subSections)
-    setState(prevData => ({ ...prevData, orders: fetchedOrders }))
+      // populate activities
+      dndData.activities = approved;
+      setOrders({ ...dndData });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const handlePreviewIssue = async (e) => {
     e.preventDefault();
-    const { orders, title, vol, iss, month } = state;
-    setState(prevData => ({ ...prevData, loading: true }));
-
-    document.getElementById("publishBtn").setAttribute("disabled", "");
-
-    const year = month.slice(0, 4)
-    const biMonth = BiMonthlyNames[getBiMonth(month)][0]
+    setLoading(true);
+    const year = formData.month.slice(0, 4)
+    const biMonth = BiMonthlyNames[getBiMonth(formData.month)][0]
     const publishObj = {
-      orders: {
-        activities: orders.activities,
-        subSections: orders.subSections,
-        sections: orders.sections,
-        sectionOrder: orders.sectionOrder
-      },
-      title: title,
-      vol: vol,
-      iss: iss,
-      month: month,
+      orders: orders,
+      ...formData,
     }
 
-    console.log(publishObj);
-
     const previewLink = `previews/${year}${biMonth}`
-
-    // add or update(if exists) preview link in db
     const docRef = doc(db, 'previews', `${year}${biMonth}`);
     try {
       await setDoc(docRef, publishObj);
+      setPreview(previewLink);
     } catch (err) {
       throw err;
     } finally {
-      setState(prevData => ({ ...prevData, loading: false, preview: previewLink }));
+      setLoading(false);
     }
   }
 
-  const handleForm = (name, value) => {
-    setState(prevData => ({ ...prevData, [name]: value }));
+  const handleForm = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevData => ({ ...prevData, [name]: value }));
   }
 
   const handleUpdateOrders = (orders) => {
-    setState(prevData => ({ ...prevData, orders: orders, preview: null }));
+    setOrders(prevData => ({ ...prevData, ...orders }));
+    setPreview(null);
   }
 
   const switchView = (e) => {
-    setState(prevData => ({ ...prevData, formView: !state.formView }))
+    setFormView(!formView);
   }
-
-  useEffect(() => {
-    fetchData();
-  }, [])
 
   return (<>
     <SmallScreenError />
@@ -183,53 +199,50 @@ export default function Draft() {
       <header className={cx(pageStyles['page-header'], pageStyles.container)}>
         <h1 className={pageStyles.heading}>Draft Issue</h1>
         <div className={pageStyles["btns-group"]}>
-          {!state.formView && !state.preview && (
-            !state.loading ? <button
-              form="draftForm"
-              className={pageStyles.btn}
-              id="publishBtn"
-              onClick={handlePreviewIssue}
-              type="submit"
-            >
-              <span className={pageStyles['btn-text']}>Get preview</span> <PreviewIcon />
-            </button> :
-              <SpinnerIcon />
-          )}
-
-          {state.preview && (<>
-            <p className={pageStyles.status}><a target="_blank" rel="noreferrer" href={`/${state.preview}`}>
-              Show preview
-            </a></p>
-            <button
-              form="draftForm"
-              className={pageStyles.btn}
-              id="publishBtn"
-              onClick={() => { }}
-              type="submit"
-            >
-              <span className={pageStyles['btn-text']}>Publish</span>
-              <SendIcon />
-            </button>
-          </>)}
-          {state.formView ? (
+          {formView ? (
             <button className={pageStyles.btn} title="Next" onClick={(e) => {
               if (document.getElementById('draftForm').checkValidity()) {
                 e.preventDefault();
+                fetchData();
                 switchView();
               };
             }} type="submit" form='draftForm' >
               <span className={pageStyles['btn-text']}>Next</span> <NavigateNextIcon />
             </button>
-          ) : (
+          ) : (<>
+            {loading ? <SpinnerIcon /> : preview ? (<>
+              <p className={pageStyles.status}><a target="_blank" rel="noreferrer" href={`/${preview}`}>
+                Show preview
+              </a></p>
+              <button
+                form="draftForm"
+                className={pageStyles.btn}
+                id="publishBtn"
+                onClick={() => { }}
+                type="submit"
+              >
+                <span className={pageStyles['btn-text']}>Publish</span>
+                <SendIcon />
+              </button>
+            </>) : (
+              <button
+                form="draftForm"
+                className={pageStyles.btn}
+                id="publishBtn"
+                onClick={handlePreviewIssue}
+                type="submit"
+              >
+                <span className={pageStyles['btn-text']}>Get preview</span> <PreviewIcon />
+              </button>
+            )}
             <button className={pageStyles.btn} title="Back" onClick={switchView} type="button">
               <span className={pageStyles['btn-text']}>Back</span> <NavigateBeforeIcon />
             </button>
-          )}
+          </>)}
         </div>
       </header >
-
       <main className={cx("workspace", pageStyles.container)}>
-        {state.published && (
+        {published && (
           <div className="container" >
             <div style={{
               color: '#155724',
@@ -238,19 +251,19 @@ export default function Draft() {
               padding: '1.75rem 1.25rem',
               margin: '2rem 0',
             }}>
-              <h3>Published! <a href={`/${state.preview}`}>Check it out</a></h3>
+              <h3>Published! <a href={`/${preview}`}>Check it out</a></h3>
             </div>
           </div>
         )}
-
-        {
-          state.formView ? (
-            <DraftForm handleChange={handleForm} title={state.title} vol={state.vol} iss={state.iss} month={state.month} />
-          ) : (
-            Object.keys(state.orders.activities).length !== 0 &&
-            <DndMain orders={state.orders} updateOrders={handleUpdateOrders} />
-          )
-        }
+        {formView ? (
+          <DraftForm handleChange={handleForm} formData={formData} submitForm={fetchData} />
+        ) : (
+          (loading && !orders)
+            ? <div style={{ position: 'fixed', top: '50%', left: '50%' }}>
+              <SpinnerIcon />
+            </div>
+            : orders?.activities.length !== 0 && <DndMain orders={orders} updateOrders={handleUpdateOrders} />
+        )}
       </main >
     </div >
   </>)
