@@ -1,10 +1,10 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { DndMain } from '@/components/admin/dnd/dndMain'
 import { fs, db } from '@/firebasse.config'
 import { getBiMonth, BiMonthlyNames, CategoryTitles } from '@/helpers/helpers'
 import SpinnerIcon from '@/components/icons/spinner-icon'
-import { collection, doc, getDoc, getDocs, or, query, setDoc, where, orderBy } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, query, setDoc, where, orderBy } from 'firebase/firestore'
 import { DateInput, TextInput } from '@/components/form/InputComponents'
 import formStyles from '@/components/form/Form.module.scss'
 import pageStyles from '../page.module.scss';
