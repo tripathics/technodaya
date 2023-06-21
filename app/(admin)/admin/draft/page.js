@@ -63,12 +63,7 @@ const SmallScreenError = () => (
 )
 
 export default function Draft() {
-  const [formData, setFormData] = useState({
-    title: 'a',
-    vol: '2',
-    iss: 1,
-    month: '2023-04'
-  });
+  const [formData, setFormData] = useState({});
   const [formView, setFormView] = useState(true);
   const [preview, setPreview] = useState(null);
   const [published, setPublished] = useState(false);
