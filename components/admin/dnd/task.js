@@ -137,9 +137,11 @@ const Created = styled.time`
 
 class Activities extends PureComponent {
   render() {
-    return this.props.activities.map((activity, index) => (
-      <Activity key={activity.id} activity={activity} index={index} isDragDisabled={this.props.isDragDisabled} />
-    ))
+    return this.props.activities.map((activity, index) => {
+      return (
+        <Activity key={activity.id} activity={activity} index={index} isDragDisabled={this.props.isDragDisabled} />
+      )
+    })
   }
 }
 

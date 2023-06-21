@@ -1,10 +1,10 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DndMain } from '@/components/admin/dnd/dndMain'
 import { fs, db } from '@/firebasse.config'
 import { getBiMonth, BiMonthlyNames, CategoryTitles } from '@/helpers/helpers'
 import SpinnerIcon from '@/components/icons/spinner-icon'
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, or, query, setDoc, where } from 'firebase/firestore'
 import { DateInput, TextInput } from '@/components/form/InputComponents'
 import formStyles from '@/components/form/Form.module.scss'
 import pageStyles from '../page.module.scss';
@@ -63,7 +63,12 @@ const SmallScreenError = () => (
 )
 
 export default function Draft() {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    title: 'a',
+    vol: '2',
+    iss: 1,
+    month: '2023-04'
+  });
   const [formView, setFormView] = useState(true);
   const [preview, setPreview] = useState(null);
   const [published, setPublished] = useState(false);
@@ -81,6 +86,7 @@ export default function Draft() {
     setLoading(true);
 
     let approved = {};
+    let a = {};
     let dndData = {
       activities: {},
       subSections: {},
@@ -99,7 +105,7 @@ export default function Draft() {
     try {
       const querySnapshot = await getDocs(queryApproved);
       querySnapshot.forEach(doc => {
-        approved[doc.id] = {
+        a[doc.id] = {
           id: doc.id,
           author: doc.data().author,
           created: doc.data().created,
@@ -112,9 +118,11 @@ export default function Draft() {
           categoryId: doc.data().categoryId
         };
       });
+      approved = { ...a };
 
       const preview = await getDoc(previewRef);
       if (preview.exists()) {
+        console.log('preview exists');
         dndData = { ...preview.data().orders };
         // populate subsections
         Object.keys(dndData.subSections).forEach(subSecId => {
@@ -126,13 +134,37 @@ export default function Draft() {
             dndData.subSections[subSecId].activityIds = [...activities];
           }
         })
+
         // populate sections
         Object.keys(dndData.sections).forEach(secId => {
           const sec = dndData.sections[secId];
           dndData.sections[secId].subSecIds = sec.subSecIds.filter(id => dndData.subSections[id]);
         })
+
+        const newActivities = Object.keys(approved).filter(id => !dndData.activities[id]);
+
         // set preview link
-        setPreview('previews/' + year + biMonth);
+        if (!newActivities.length === 0) {
+          setPreview('previews/' + year + biMonth);
+        } else {
+          setPreview(null);
+          newActivities.forEach(id => {
+            const subSecId = approved[id].categoryId;
+            console.log(subSecId);
+            console.log(id);
+            // create the subsection under default section if its id doesn't exist in subsections
+            if (!dndData.subSections[subSecId]) {
+              dndData.sections.default.subSecIds.push(subSecId);
+            }
+            dndData.subSections[subSecId] = {
+              id: subSecId,
+              title: CategoryTitles[subSecId],
+              activityIds: dndData.subSections[subSecId] ? [
+                ...dndData.subSections[subSecId].activityIds, id
+              ] : [id],
+            }
+          })
+        }
       } else {
         // populate subsections
         Object.keys(approved).forEach(id => {
@@ -151,7 +183,7 @@ export default function Draft() {
       dndData.activities = approved;
       setOrders({ ...dndData });
     } catch (error) {
-      console.log(error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -262,7 +294,8 @@ export default function Draft() {
             ? <div style={{ position: 'fixed', top: '50%', left: '50%' }}>
               <SpinnerIcon />
             </div>
-            : orders?.activities.length !== 0 && <DndMain orders={orders} updateOrders={handleUpdateOrders} />
+            : (orders && orders?.activities.length !== 0) &&
+            <DndMain orders={orders} updateOrders={handleUpdateOrders} />
         )}
       </main >
     </div >
