@@ -1,11 +1,11 @@
-import Link from "next/link"
 import Image from "next/image"
 import styles from './admin-nav.module.scss'
 import NavProvider, { NavLink, NavToggle } from "./NavLink"
 import LogoutBtn from "./LogoutBtn"
 
 const links = [
-  { href: '/admin', label: 'Submissions' },
+  { href: '/submit', label: 'Submit an activity' },
+  { href: '/admin', label: 'View submissions' },
   { href: '/admin/draft', label: 'Draft issue' },
 ]
 

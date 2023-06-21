@@ -70,6 +70,9 @@ const TitleEdit = styled.input`
   padding: 0.325rem 0.625rem;
   font-size: inherit;
   font-family: 'Zilla Slab', serif;
+  white-space: pre;
+  overflow: hidden;
+  text-overflow: ellipsis;
   width: 100%;
 `
 const Btn = styled.div`

@@ -79,6 +79,26 @@ const SubmitFC = () => {
       caption = `${categoryFormData.lectureType} by ${categoryFormData.speakerName}`
     }
 
+    const imgLinks = [];
+    const uploadImages = () => {
+      let imagesLen = images.length;
+      images.forEach((image, index) => {
+        const storageRef = ref(storage, `Images/${Categories[category_Id]}/${image.name.split(/(\\|\/)/g).pop()}/`);
+        uploadBytes(storageRef, image).then(snapshot => getDownloadURL(snapshot.ref).then(url => {
+          imgLinks.push(url);
+        }))
+          .catch(error => {
+            setAlertMessage(error.message);
+            setAlertSeverity('error');
+            console.log(error);
+          })
+          .then(() => {
+            if (index === imagesLen - 1) uploadOnFirestore();
+          })
+      })
+      if (imagesLen === 0) uploadOnFirestore();
+    }
+
     if (eventBrochure) {
       const storageRef = ref(storage, `Brochure/${Categories[category_Id]}/${eventBrochure.name.split(/(\\|\/)/g).pop()}/`);
       uploadBytes(storageRef, eventBrochure).then(snapshot => getDownloadURL(snapshot.ref).then(url => {
@@ -90,69 +110,12 @@ const SubmitFC = () => {
           setAlertSeverity('error');
           console.log(error);
         })
+        .finally(() => {
+          uploadImages();
+        })
+    } else {
+      uploadImages();
     }
-    let imagesLen = images.length;
-    const imgLinks = [];
-    images.forEach((image, index) => {
-      const storageRef = ref(storage, `Images/${Categories[category_Id]}/${image.name.split(/(\\|\/)/g).pop()}/`);
-      uploadBytes(storageRef, image).then(snapshot => getDownloadURL(snapshot.ref).then(url => {
-        imgLinks.push(url);
-      }))
-        .catch(error => {
-          setAlertMessage(error.message);
-          setAlertSeverity('error');
-          console.log(error);
-        })
-        .then(() => {
-          if (index === imagesLen - 1) uploadOnFirestore();
-        })
-    })
-    if (imagesLen === 0) uploadOnFirestore();
-
-    // if (eventBrochure) {
-    //   const uploadTask = storage.ref(`Brochure/${Categories[category_Id]}/${eventBrochure.name.split(/(\\|\/)/g).pop()}/`).put(eventBrochure);
-    //   uploadTask.on('state_changed', (snapshot) => {
-    //     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-    //     console.log(progress);
-    //   },
-    //     (error) => {
-    //       setAlertMessage(error.message);
-    //       setAlertSeverity('error');
-    //       console.log(error);
-    //     },
-    //     () => {
-    //       storage.ref(`Brochure/${Categories[category_Id]}/`).child(`${eventBrochure.name.split(/(\\|\/)/g).pop()}`).getDownloadURL().then(url => {
-    //         brochureUrl = url
-    //       })
-    //     }
-    //   )
-    // }
-
-    // images
-    // let total_size = images.length;
-    // const imageLinks = [];
-    // for (let i = 0; i < total_size; i++) {
-    //   const Image = images[i];
-    //   const uploadTask = storage.ref(`Images/${Categories[category_Id]}/${Image.name.split(/(\\|\/)/g).pop()}/`).put(Image);
-
-    //   uploadTask.on('state_changed', (snapshot) => {
-    //     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-    //     console.log(progress);
-    //   }, (error) => {
-    //     console.log(error)
-    //   }, () => {
-    //     storage.ref(`Images/${Categories[category_Id]}/`).child(`${Image.name.split(/(\\|\/)/g).pop()}`).getDownloadURL().then(url => {
-
-    //       imageLinks.push(url);
-    //       if (i === total_size - 1) {
-    //         uploadOnFirestore()
-    //       }
-    //     })
-    //   })
-    // }
-    // if (total_size === 0) {
-    //   uploadOnFirestore()
-    // }
   }
 
   const resetForm = () => {

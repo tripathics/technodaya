@@ -4,7 +4,7 @@ import { DndMain } from '@/components/admin/dnd/dndMain'
 import { fs, db } from '@/firebasse.config'
 import { getBiMonth, BiMonthlyNames, CategoryTitles } from '@/helpers/helpers'
 import SpinnerIcon from '@/components/icons/spinner-icon'
-import { collection, doc, getDoc, getDocs, or, query, setDoc, where } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, or, query, setDoc, where, orderBy } from 'firebase/firestore'
 import { DateInput, TextInput } from '@/components/form/InputComponents'
 import formStyles from '@/components/form/Form.module.scss'
 import pageStyles from '../page.module.scss';
@@ -32,7 +32,7 @@ const DraftForm = ({ formData, handleChange, submitForm }) => {
           placeholder="Title of newsletter *"
           required={true}
           onChange={handleChange}
-          value={formData?.title || ''}
+          value={formData.title || ''}
         />
       </div>
       <p className={formStyles['section-heading']}>Issue details</p>
@@ -72,12 +72,13 @@ export default function Draft() {
   const [formView, setFormView] = useState(true);
   const [preview, setPreview] = useState(null);
   const [published, setPublished] = useState(false);
+  const [previewAfresh, setIsPreviewAfresh] = useState(false);
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState(null);
 
   const fetchData = async () => {
     // fetch all approved submissions
-    const queryApproved = query(collection(db, 'submissions'), where('approved', '==', true));
+    const queryApproved = query(collection(db, 'submissions'), orderBy('createdInSeconds', 'asc'), where('approved', '==', true));
 
     // fetch previews if any and populate the dnd with this data
     const year = formData.month.slice(0, 4);
@@ -86,7 +87,6 @@ export default function Draft() {
     setLoading(true);
 
     let approved = {};
-    let a = {};
     let dndData = {
       activities: {},
       subSections: {},
@@ -105,7 +105,7 @@ export default function Draft() {
     try {
       const querySnapshot = await getDocs(queryApproved);
       querySnapshot.forEach(doc => {
-        a[doc.id] = {
+        approved[doc.id] = {
           id: doc.id,
           author: doc.data().author,
           created: doc.data().created,
@@ -118,10 +118,10 @@ export default function Draft() {
           categoryId: doc.data().categoryId
         };
       });
-      approved = { ...a };
 
       const preview = await getDoc(previewRef);
       if (preview.exists()) {
+        setPreview('previews/' + year + biMonth);
         console.log('preview exists');
         dndData = { ...preview.data().orders };
         // populate subsections
@@ -147,7 +147,6 @@ export default function Draft() {
         if (!newActivities.length === 0) {
           setPreview('previews/' + year + biMonth);
         } else {
-          setPreview(null);
           newActivities.forEach(id => {
             const subSecId = approved[id].categoryId;
             console.log(subSecId);
@@ -192,6 +191,7 @@ export default function Draft() {
   const handlePreviewIssue = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setIsPreviewAfresh(false);
     const year = formData.month.slice(0, 4)
     const biMonth = BiMonthlyNames[getBiMonth(formData.month)][0]
     const publishObj = {
@@ -204,6 +204,7 @@ export default function Draft() {
     try {
       await setDoc(docRef, publishObj);
       setPreview(previewLink);
+      setIsPreviewAfresh(true);
     } catch (err) {
       throw err;
     } finally {
@@ -218,7 +219,7 @@ export default function Draft() {
 
   const handleUpdateOrders = (orders) => {
     setOrders(prevData => ({ ...prevData, ...orders }));
-    setPreview(null);
+    setIsPreviewAfresh(false);
   }
 
   const switchView = (e) => {
@@ -243,9 +244,20 @@ export default function Draft() {
             </button>
           ) : (<>
             {loading ? <SpinnerIcon /> : preview ? (<>
-              <p className={pageStyles.status}><a target="_blank" rel="noreferrer" href={`/${preview}`}>
-                Show preview
-              </a></p>
+              <p className={pageStyles.status}>{!previewAfresh && <strong>Unsaved changes!{'  '}</strong>}
+                <a target="_blank" rel="noreferrer" href={`/${preview}`}>View{!previewAfresh && ' last'} preview</a>
+              </p>
+              {!previewAfresh && (
+                <button
+                  form="draftForm"
+                  className={pageStyles.btn}
+                  id="publishBtn"
+                  onClick={handlePreviewIssue}
+                  type="submit"
+                >
+                  <span className={pageStyles['btn-text']}>Update preview</span> <PreviewIcon />
+                </button>
+              )}
               <button
                 form="draftForm"
                 className={pageStyles.btn}
