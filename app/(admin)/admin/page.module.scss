@@ -95,21 +95,18 @@
     .submissions {
         max-width: calc(100vw - 6px);
 
-        .page-header {
-            .heading {
-                margin-left: 2.2rem;
-            }
-        }
+    }
+
+    .page-header>.heading {
+        margin-left: 2.2rem;
     }
 }
 
 @media screen and (max-width: 550px) {
-    .page-header {
-        .heading {
-            width: 0;
-            opacity: 0;
-            user-select: none;
-            white-space: nowrap;
-        }
+    .page-header>.heading {
+        width: 0;
+        opacity: 0;
+        user-select: none;
+        white-space: nowrap;
     }
 }
