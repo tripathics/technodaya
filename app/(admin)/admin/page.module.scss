@@ -20,10 +20,6 @@
         color: var(--gray-9);
         line-height: 1.8rem;
         margin-right: 1.2rem;
-
-        @media screen and (max-width: 768px) {
-            margin-left: 2.2rem;
-        }
     }
 }
 
@@ -91,13 +87,19 @@
     max-width: calc(100vw - 256px - 6px);
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 950px) {
     .page-header {
         left: 0;
     }
 
     .submissions {
         max-width: calc(100vw - 6px);
+
+        .page-header {
+            .heading {
+                margin-left: 2.2rem;
+            }
+        }
     }
 }
 

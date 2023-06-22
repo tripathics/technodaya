@@ -164,6 +164,7 @@
                         text-transform: uppercase;
                         font-size: 0.9rem;
                         font-weight: 400;
+                        transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                     }
                 }
 
@@ -171,6 +172,10 @@
                     color: var(--nav-hover-color);
                     transition: border 300ms ease;
                     border: var(--nav-hover-color) 2px solid;
+                }
+
+                .nav-item:active>.nav-item-txt:not(.btn-txt) {
+                    transform: scale(105%, 95%);
                 }
 
                 .nav-item.active {

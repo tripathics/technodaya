@@ -1,9 +1,9 @@
 .main {
-    min-height: calc(100vh - var(--nav-height) - var(--footer-height));
+    min-height: calc(100vh - var(--footer-height));
 }
 
 .main-no-ftr {
-    min-height: calc(100vh - var(--nav-height));
+    min-height: 100vh;
 }
 
 .main,
