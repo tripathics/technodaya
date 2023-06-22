@@ -6,7 +6,7 @@ import MarkdownIcon from '../icons/markdown-icon';
 import SpinnerIcon from '../icons/spinner-icon';
 import NoPreview from './no-preview';
 import PreviewedInput from '../MdInput';
-import styles from './Preview.module.scss';
+import styles from './preview.module.scss';
 import cx from 'classnames';
 import Image from 'next/image';
 

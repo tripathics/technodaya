@@ -36,9 +36,9 @@ html {
 body {
   font-family: 'Crimson Text', serif;
 
-  @media screen and (min-width: 768px) {
-    overflow: auto !important;
-  }
+  // @media screen and (min-width: 768px) {
+  //   overflow: auto !important;
+  // }
 }
 
 ::-webkit-scrollbar {
@@ -628,11 +628,10 @@ body {
   }
 }
 
-
 .draft {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 6px);
+  height: calc(100vh - var(--nav-height) - 6px);
 
   .page-header.container {
     margin: 0 0 2.2rem;
@@ -684,6 +683,7 @@ body {
   display: flex;
   flex-direction: column;
   background-image: var(--page-bg);
+  background-color: rgb(199 224 227);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;

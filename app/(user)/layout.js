@@ -25,7 +25,7 @@ export default function Layout({ children }) {
         ? <div className={styles.loading}>Loading...</div>
         : user
           ? children
-          : <div className={styles.loading}>You must be logged in to view this page.</div>
+          : <div className={styles.loading}>You must be logged in to view this page. Redirecting to login...</div>
       }
     </main>
     <Footer className={styles2.footer} />

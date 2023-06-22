@@ -5,7 +5,7 @@ const MagazineCard = ({ imgsrc, title, vol, iss, month, year, link, pdfLink }) =
   return (
     <section className={styles["magazine-card"]}>
       <figure className={styles["cover-img"]}>
-        <Image src={imgsrc} alt={`Technodaya Vol ${vol} Iss ${iss} cover`} width={650} height={715} />
+        <Image src={imgsrc} alt={`Technodaya Vol ${vol} Iss ${iss} cover`} width={600} height={660} />
       </figure>
       <div className={styles["desc"]}>
         <a className={styles["title"]} href={link} target='_blank' rel='noreferrer'>

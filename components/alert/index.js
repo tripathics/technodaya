@@ -4,7 +4,7 @@ import SuccessIcon from "../icons/alerts/success-icon";
 import WarningIcon from "../icons/alerts/warning-icon";
 import InfoIcon from "../icons/alerts/info-icon";
 
-import styles from "./Alert.module.scss";
+import styles from "./alert.module.scss";
 import cx from "classnames";
 import { useEffect, useState } from "react";
 

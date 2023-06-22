@@ -18,7 +18,7 @@ const Navbar = ({ className = '' }) => {
       <div className={[styles['nav-content-wrapper'], 'container'].join(' ')} >
         <header className={styles.banner}>
           <Link exact="true" href='/'>
-            <Image width={821} height={100} src={'/images/logo/technodaya-logo1.png'} alt="Technodaya" id={styles.technodayaLogo} /></Link>
+            <Image width={200} height={24.36} src={'/images/logo/technodaya-logo1.png'} alt="Technodaya" id={styles.technodayaLogo} /></Link>
         </header>
 
         <div className={styles['nav-items-wrapper']}>

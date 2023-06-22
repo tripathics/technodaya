@@ -5,3 +5,8 @@
 .main-no-ftr {
     min-height: calc(100vh - var(--nav-height));
 }
+
+.main,
+.main-no-ftr {
+    padding-top: var(--nav-height);
+}

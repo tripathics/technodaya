@@ -11,7 +11,7 @@ const Footer = ({ className = '' }) => {
     <footer className={[styles.footer, crimson_text.className, className].join(' ')}>
       <div className={['container', styles['info-Footer']].join(' ')}>
         <section>
-          <Image id={styles.technodayaLogo} width={821} height={100} src='/images/logo/technodaya-logo-white.png' alt="Technodaya" />
+          <Image id={styles.technodayaLogo} width={200} height={24.36} src='/images/logo/technodaya-logo-white.png' alt="Technodaya" />
           <div>
             <p className={[styles.tagline, cormorant.className].join(' ')}>The Technical Meraki of Arunachal</p>
             <p>National Institute of Technology,<br />Arunachal Pradesh</p>

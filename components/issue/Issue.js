@@ -1,5 +1,4 @@
 'use client'
-import useFetchCollection from "@/hooks/fetchCollection";
 import { useEffect, useState } from "react";
 import { getBiMonth, BiMonthlyNames } from "@/helpers/helpers";
 import LoadingPage from "@/components/icons/spinner-icon";

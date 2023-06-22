@@ -6,20 +6,20 @@
     --nav-active-bg: rgb(39, 39, 39);
     --nav-sticky-top: 0;
     height: var(--nav-height);
-    position: sticky;
+    position: fixed;
     top: var(--nav-sticky-top);
+    left: 0;
+    right: 0;
     z-index: 1000;
     background-color: var(--navbar-bg);
 
     box-shadow: 0 -2px 8px rgb(0 0 0 / 32%);
-    transition: background-color 0.3s;
 
     .nav-content-wrapper {
         display: flex;
         align-items: center;
         height: 100%;
         margin: auto;
-        transition: all 0.5s cubic-bezier(1, 0, 0.8, 1);
 
         .banner {
             height: fit-content;
@@ -169,7 +169,7 @@
 
                 .nav-item:hover>.nav-item-txt {
                     color: var(--nav-hover-color);
-                    transition: 500ms ease;
+                    transition: border 300ms ease;
                     border: var(--nav-hover-color) 2px solid;
                 }
 
@@ -190,6 +190,12 @@
                 width: 32px;
                 height: 32px;
                 position: relative;
+
+                >button {
+                    border: none;
+                    background-color: transparent;
+                }
+
 
                 svg {
                     position: absolute;

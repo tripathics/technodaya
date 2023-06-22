@@ -239,8 +239,8 @@ export default function Draft() {
             </button>
           ) : (<>
             {loading ? <SpinnerIcon /> : preview ? (<>
-              <p className={pageStyles.status}>{!previewAfresh && <strong>Unsaved changes!{'  '}</strong>}
-                <a target="_blank" rel="noreferrer" href={`/${preview}`}>View{!previewAfresh && ' last'} preview</a>
+              <p className={pageStyles.status}>
+                <a target="_blank" rel="noreferrer" href={`/${preview}`}>{!previewAfresh ? 'Preview is outdated' : 'View preview'}</a>
               </p>
               {!previewAfresh && (
                 <button

@@ -17,6 +17,12 @@ const toggleSideNav = () => {
   }
 }
 
+const closeSideNav = () => {
+  const mobileNavRef = document.getElementById('mobile-nav');
+  mobileNavRef.style.width = "0%";
+  document.body.style.overflow = "auto";
+}
+
 export const NavBtn = ({ children, title }) => {
   return (
     <button title={title} type="button" onClick={toggleSideNav} >
@@ -30,7 +36,7 @@ export const NavItem = ({ link, name, replace = false }) => {
   return (
     <li>
       <Link
-        onClick={toggleSideNav}
+        onClick={closeSideNav}
         className={cx(styles['nav-item'], crimson_text.className, { [styles.active]: pathname === link })}
         href={link}
         replace={replace}
