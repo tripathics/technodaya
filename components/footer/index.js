@@ -21,7 +21,7 @@ const Footer = ({ className = '' }) => {
           <h3 className={open_sans.className}>External links</h3>
           <ul>
             <li><a href='https://nitap.ac.in' target='_blank' rel='noreferrer'>NIT Arunachal Pradesh</a></li>
-            <li><a href='https://github.com/Pursottam6003/Designathon-for-one/issues' target='_blank' rel='noreferrer'>Report a bug 🐞</a></li>
+            <li><a href='https://github.com/tripathics/technodaya/issues' target='_blank' rel='noreferrer'>Report a bug 🐞</a></li>
           </ul>
         </section>
         <section>

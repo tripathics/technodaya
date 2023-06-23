@@ -1470,13 +1470,14 @@ table {
 
 .error-bw {
   display: none;
-  background-color: black;
-  color: white;
-  height: 100vh;
+  background-color: white;
+  color: black;
+  height: calc(100vh - var(--nav-height));
   position: relative;
 
   .error-gif,
   .error-message {
+    color: white;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
