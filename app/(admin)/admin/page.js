@@ -23,7 +23,8 @@ export default function Submissions() {
     docs: pending,
     setDocs: setPending,
     fetching: fetchingPending,
-    refetch: refetchPending
+    refetch: refetchPending,
+    error: errorPending
   } = useFetchCollection('submissions', [
     orderBy('createdInSeconds', 'desc'),
     where("approved", "==", false)
@@ -33,7 +34,8 @@ export default function Submissions() {
     docs: approved,
     setDocs: setApproved,
     fetching: fetchingApproved,
-    refetch: refetchApproved
+    refetch: refetchApproved,
+    error: errorApproved
   } = useFetchCollection('submissions', [
     orderBy('createdInSeconds', 'desc'),
     where("approved", "==", true)
@@ -145,7 +147,7 @@ export default function Submissions() {
       <header className={cx(styles['page-header'], styles.container)}>
         <h1 className={styles.heading}>Submissions</h1>
         <div className={styles["btns-group"]}>
-          {(fetchingApproved || fetchingPending) || uploading ? <SpinnerIcon /> : (<>
+          {!(errorPending || errorApproved) && (fetchingApproved || fetchingPending) || uploading ? <SpinnerIcon /> : (<>
             <p className={styles.status}>Last updated: {lastUpdated}</p>
             {Object.keys(unsaved).length !== 0 && (
               <button className={styles.btn} onClick={saveChanges}>
@@ -159,7 +161,9 @@ export default function Submissions() {
         </div>
       </header>
       <main className={cx("workspace", styles.container)}>
-        {fetchingPending || fetchingApproved ? <LoadingPage /> : (
+        {errorApproved || errorPending ? (
+          <div className="error">{errorApproved || errorPending}</div>
+        ) : fetchingPending || fetchingApproved ? <LoadingPage /> : (
           <div className="submissions-wrapper">
             <div className="submission pending">
               <SubmissionSection type='pending'

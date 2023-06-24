@@ -210,6 +210,10 @@ export default function Draft() {
   const handleForm = (e) => {
     const { name, value } = e.target;
     setFormData(prevData => ({ ...prevData, [name]: value }));
+    if (name === 'month') {
+      setIsPreviewAfresh(false);
+      setPreview(null);
+    }
   }
 
   const handleUpdateOrders = (orders) => {
@@ -279,7 +283,7 @@ export default function Draft() {
             </button>
           </>)}
         </div>
-      </header >
+      </header>
       <main className={cx("workspace", pageStyles.container)}>
         {published && (
           <div className="container" >
@@ -294,17 +298,16 @@ export default function Draft() {
             </div>
           </div>
         )}
-        {formView ? (
-          <DraftForm handleChange={handleForm} formData={formData} submitForm={fetchData} />
-        ) : (
-          (loading && !orders)
+        {formView
+          ? <DraftForm handleChange={handleForm} formData={formData} submitForm={fetchData} />
+          : loading
             ? <div style={{ position: 'fixed', top: '50%', left: '50%' }}>
               <SpinnerIcon />
             </div>
             : (orders && orders?.activities.length !== 0) &&
             <DndMain orders={orders} updateOrders={handleUpdateOrders} />
-        )}
-      </main >
-    </div >
+        }
+      </main>
+    </div>
   </>)
 }

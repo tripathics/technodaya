@@ -13,7 +13,7 @@ const MagazineActivity = ({ title, content, brochureUrl, imgUrl, imgCaption }) =
   const images = imgUrl.map((url) => (
     <a key={url} href={url} target='_blank' rel='noreferrer'>
       <div className={styles['img-wrapper']}>
-        <Image className={styles.bg} src={url} alt="" fill={true} />
+        <Image className={styles.bg} src={url} alt="" width={20} height={20} />
         <Image className={styles.img} src={url} alt={imgCaption} fill={true} />
       </div>
     </a>

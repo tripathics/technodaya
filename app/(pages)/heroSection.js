@@ -28,17 +28,24 @@ const HeroSection = () => {
   return (<>
     <section className={cx(styles.hero, 'parallax', styles.parallax, styles.home, cormorant.className)}>
       <div className="container">
-        {latestIssueId && (<>
+        {latestIssueId ? (<>
           <h4>Latest issue published</h4>
           <h1 className={open_sans.className}>{issues[latestIssueId].Title}</h1>
           <div className={styles["issue-info"]}>
             <p>Vol-{issues[latestIssueId].Vol} Issue-{issues[latestIssueId].Issue}</p>
             <p>{issues[latestIssueId].Month} {issues[latestIssueId].Year}</p>
           </div>
-          <Link href="/read" className={[styles.btn, open_sans.className].join(' ')}>
-            Read more
-          </Link>
+        </>) : (<>
+          <h4>The Technical Meraki of Arunachal</h4>
+          <h1 className={open_sans.className}>Technodaya</h1>
+          <div className={styles["issue-info"]}>
+            <p>A Bimonthly Newsletter of</p>
+            <p>NIT Arunachal Pradesh</p>
+          </div>
         </>)}
+        <Link href="/read" className={[styles.btn, open_sans.className].join(' ')}>
+          Read more
+        </Link>
       </div>
     </section>
 
