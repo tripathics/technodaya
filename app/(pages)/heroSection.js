@@ -37,7 +37,7 @@ const HeroSection = () => {
           </div>
         </>) : (<>
           <h4>The Technical Meraki of Arunachal</h4>
-          <h1 className={open_sans.className}>Technodaya</h1>
+          <h1 className={open_sans.className}>Technodaya Newsletter</h1>
           <div className={styles["issue-info"]}>
             <p>A Bimonthly Newsletter of</p>
             <p>NIT Arunachal Pradesh</p>
@@ -58,7 +58,7 @@ const HeroSection = () => {
           </Link>
         </header>
         <div className={styles.issues}>
-          {loading ? <Loading /> :
+          {true ? <Loading /> :
             <div className="grid-gallery">
               {Object.keys(issues).map((id) => {
                 const { ImageUrl, Title, Vol, Issue, Month, Year, Link, PdfUrl, } = issues[id];

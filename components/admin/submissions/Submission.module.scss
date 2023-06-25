@@ -54,3 +54,12 @@
         max-width: fit-content;
     }
 }
+
+.table-desc {
+    min-width: 45vw;
+    max-width: 2080px;
+
+    @media screen and (max-width: 768px) {
+        min-width: calc(80vw - 3.2rem);
+    }
+}

@@ -100,7 +100,7 @@ const Submission = ({ type, created, title, desc, imgUrl }) => (
         remarkPlugins={[remarkGfm]}
       >{title}</ReactMarkdown>
     </td>
-    <td>
+    <td className={styles['table-desc']}>
       <div>
         <ReactMarkdown rehypePlugins={[rehypeRaw]}
           remarkPlugins={[remarkGfm]}

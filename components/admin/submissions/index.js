@@ -16,7 +16,7 @@ const Submission = ({ id, categoryId, author, title, created, desc, type, imgUrl
         updateVal={(txt) => { update(id, type, 'title', txt) }}
       />
     </td>
-    <td>
+    <td className={styles['table-desc']}>
       <MdInput value={desc}
         placeholder='Description'
         updateVal={(txt) => { update(id, type, 'desc', txt) }}

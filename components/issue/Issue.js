@@ -7,7 +7,9 @@ import MagazineSection from "@/components/issue/MagazineSection";
 import { Cormorant } from 'next/font/google'
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebasse.config";
-const cormorant = Cormorant({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], styles: ['normal', 'italic'] })
+import NotFound from "@/app/not-found";
+
+const cormorant = Cormorant({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], styles: ['normal', 'italic'] });
 
 export default function Issue({ params, draft = false }) {
   const [bimonthYear] = params.slug;
@@ -40,7 +42,7 @@ export default function Issue({ params, draft = false }) {
   }, [])
 
   return (
-    loading ? <LoadingPage /> : !currentSectionIds.length ? <>Not found</> :
+    loading ? <LoadingPage /> : !currentSectionIds.length ? <NotFound /> :
       <div className='container'>
         <div className={styles['page-header']}>
           <div className={styles['issue-meta']}>

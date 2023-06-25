@@ -32,3 +32,11 @@
         height: unset !important;
     }
 }
+
+.table-desc {
+    min-width: 50vw;
+
+    @media screen and (max-width: 768px) {
+        min-width: calc(100vw - 3.2rem);
+    }
+}
