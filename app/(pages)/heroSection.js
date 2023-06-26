@@ -6,8 +6,7 @@ import useFetchCollection from "@/hooks/fetchCollection";
 import styles from "./page.module.scss";
 import { useEffect, useState } from "react";
 import cx from "classnames";
-import Loading from "../../components/icons/spinner-icon";
-import MagazineCard from "@/components/magazine-card/";
+import MagazineCard, { MagazineCardSkeleton } from "@/components/magazine-card/";
 
 import { Cormorant, Open_Sans } from "next/font/google";
 const open_sans = Open_Sans({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], styles: ['normal', 'italic'] })
@@ -28,24 +27,17 @@ const HeroSection = () => {
   return (<>
     <section className={cx(styles.hero, 'parallax', styles.parallax, styles.home, cormorant.className)}>
       <div className="container">
-        {latestIssueId ? (<>
-          <h4>Latest issue published</h4>
-          <h1 className={open_sans.className}>{issues[latestIssueId].Title}</h1>
-          <div className={styles["issue-info"]}>
-            <p>Vol-{issues[latestIssueId].Vol} Issue-{issues[latestIssueId].Issue}</p>
-            <p>{issues[latestIssueId].Month} {issues[latestIssueId].Year}</p>
-          </div>
-        </>) : (<>
-          <h4>The Technical Meraki of Arunachal</h4>
-          <h1 className={open_sans.className}>Technodaya Newsletter</h1>
-          <div className={styles["issue-info"]}>
-            <p>A Bimonthly Newsletter of</p>
-            <p>NIT Arunachal Pradesh</p>
-          </div>
-        </>)}
-        <Link href="/read" className={[styles.btn, open_sans.className].join(' ')}>
-          Read more
-        </Link>
+        <h1 className={open_sans.className}>Technodaya Newsletter</h1>
+        <h4>The Technical Meraki of Arunachal</h4>
+        {latestIssueId ? (
+          <a href={`${issues[latestIssueId].PdfUrl}`} target="_blank" rel="noreferrer" className={[styles.btn, open_sans.className].join(' ')}>
+            Read latest issue
+          </a>
+        ) : (
+          <Link href="/read" className={[styles.btn, open_sans.className].join(' ')}>
+            View all issues
+          </Link>
+        )}
       </div>
     </section>
 
@@ -58,9 +50,16 @@ const HeroSection = () => {
           </Link>
         </header>
         <div className={styles.issues}>
-          {true ? <Loading /> :
-            <div className="grid-gallery">
-              {Object.keys(issues).map((id) => {
+          {loading
+            ? <div className="grid-gallery"
+              aria-label="Loading recent releases"
+            >
+              <MagazineCardSkeleton />
+              <MagazineCardSkeleton />
+              <MagazineCardSkeleton />
+            </div>
+            : <div className="grid-gallery">
+              {Object.keys(issues).map((id, i) => {
                 const { ImageUrl, Title, Vol, Issue, Month, Year, Link, PdfUrl, } = issues[id];
                 return (
                   <MagazineCard key={id} imgsrc={ImageUrl} title={Title}

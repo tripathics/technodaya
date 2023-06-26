@@ -28,4 +28,27 @@ const MagazineCard = ({ imgsrc, title, vol, iss, month, year, link, pdfLink }) =
   )
 }
 
+export const MagazineCardSkeleton = () => {
+  return (
+    <section className={styles["magazine-card"]}>
+      <figure className={styles["cover-img"]}>
+        <div className={styles["skeleton"]}></div>
+      </figure>
+      <div className={styles["desc"]}>
+        <div className={styles["title"]}>
+          <div className={styles["skeleton"]}></div>
+        </div>
+        <div className={styles["date"]}>
+          <time><div className={styles["skeleton"]}></div></time>
+          <div className={styles["issue"]}><div className={styles["skeleton"]}></div></div>
+        </div>
+        <div className={styles["actions"]}>
+          <div className={styles["skeleton"]}></div>
+          <div className={styles["skeleton"]}></div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default MagazineCard;

@@ -7,6 +7,13 @@
     .cover-img {
         width: 100%;
 
+        .skeleton {
+            width: 100%;
+            // background-color: var(--skeleton-bg);
+            border-radius: 0.4rem;
+        }
+
+        .skeleton,
         img {
             width: 100%;
             height: auto;
@@ -29,25 +36,47 @@
 
         .date {
             display: flex;
+            gap: 0.8rem;
             justify-content: space-between;
             flex-direction: row;
             font-size: 0.9rem;
+            line-height: 1;
             font-family: 'Crimson Text', serif;
             padding: .8rem 0;
 
-            time {
+            .skeleton {
+                width: 100%;
+                height: 0.9rem;
+                // background-color: var(--skeleton-bg);
+                border-radius: 0.4rem;
+            }
+
+            time,
+            .issue {
+                flex-grow: 1;
                 font-size: inherit;
+                line-height: inherit;
+            }
+
+            time {
+                text-align: left;
             }
 
             .issue {
-                font-size: inherit;
-
+                text-align: right;
             }
         }
 
         .title {
             text-decoration: none;
             font-family: 'Open Sans', sans-serif;
+
+            .skeleton {
+                width: 100%;
+                height: calc(1.2rem * 1.5);
+                // background-color: var(--skeleton-bg);
+                border-radius: 0.4rem;
+            }
 
             p {
                 text-transform: uppercase;
@@ -67,10 +96,17 @@
         .actions {
             position: absolute;
             margin: 1.6rem 0;
+            display: flex;
+            flex-direction: row;
+            left: 1.6rem;
+            right: 1.6rem;
+            gap: 0.8rem;
             bottom: 0;
-            font-family: 'Open Sans', sans-serif;
 
-            .action-btn {
+            .action-btn,
+            .skeleton {
+                flex-grow: 1;
+                display: inline-block;
                 font-family: inherit;
                 text-decoration: none;
                 color: var(--gray-8);
@@ -82,7 +118,13 @@
                 letter-spacing: 0.075rem;
                 font-weight: 600;
                 text-transform: uppercase;
-                margin-right: 1.2rem;
+                text-align: center;
+            }
+
+            .skeleton {
+                background-color: var(--gray-3);
+                border-color: transparent;
+                height: 2.4rem;
             }
 
             .action-btn:hover {
@@ -97,9 +139,40 @@
     }
 }
 
+.skeleton {
+    overflow: hidden;
+    position: relative;
+    background-color: var(--gray-3);
+}
+
+.skeleton::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(90deg,
+            rgba(#fff, 0) 0,
+            rgba(#fff, 0.2) 20%,
+            rgba(#fff, 0.5) 60%,
+            rgba(#fff, 0));
+    animation: shimmer 2s infinite;
+    content: '';
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+
 @media screen and (max-width: 650px) {
     .magazine-card {
         .cover-img {
+
+            .skeleton,
             img {
                 aspect-ratio: 1 / 0.5;
                 object-position: top center;

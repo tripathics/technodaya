@@ -1,294 +1,295 @@
 .home-component {
 
-  .issues {
-      min-height: 600px;
-  }
+    .issues {
+        min-height: 600px;
+    }
 
-  a.btn {
-      // font-family: "Open Sans", sans-serif;
-      text-decoration: none;
-      height: fit-content;
-      color: white;
-      background-color: transparent;
-      padding: 0.6rem 1.2rem;
-      padding: 1.5625rem 2.875rem;
-      border: solid 2px white;
-      border-radius: 4rem;
-      font-size: 0.75rem;
-      letter-spacing: 0.1rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      transition: all 0.2s ease;
-  }
+    a.btn {
+        text-decoration: none;
+        height: fit-content;
+        color: white;
+        background-color: transparent;
+        padding: 0.6rem 1.2rem;
+        padding: 1.5625rem 2.875rem;
+        border: solid 2px white;
+        border-radius: 4rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        transition: all 0.2s ease;
+        margin-top: 1.2rem;
+    }
 
-  a.btn:hover {
-      background-color: white;
-      color: black;
-  }
+    a.btn:hover {
+        background-color: white;
+        color: black;
+    }
 
-  section.home {
-      padding: 2rem 0;
+    section.home {
+        padding: 2rem 0;
 
-      header {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 2.2rem;
+        header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.2rem;
 
-          @media screen and (max-width: 548px) {
-              gap: 0.5rem;
-          }
-      }
+            @media screen and (max-width: 548px) {
+                gap: 0.5rem;
+            }
+        }
 
-      h1 {
-          @media screen and (max-width: 548px) {
-              font-size: 1.2rem;
-          }
-      }
-  }
-
-
-  h1 {
-      // font-family: "Open Sans", sans-serif;
-      font-size: 2.25rem;
-      letter-spacing: 0.2rem;
-      line-height: 1.45;
-      text-transform: uppercase;
-      font-weight: 600;
-  }
-
-  .home.hero {
-      background-image: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0)), url(/images/basar.jpg);
-      // background-position: center top;
-      height: 36rem;
-      padding: 0;
-
-      >div {
-          color: #f8f8f8;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          gap: 2rem;
-          height: 100%;
-
-          .issue-info>p {
-              margin-bottom: 0.8rem;
-          }
-
-          h1 {
-              font-size: 2.25rem;
-              line-height: 1.1;
-          }
-      }
-
-      @media screen and (max-width: 650px) {
-          min-height: calc(100vh - var(--nav-height));
-      }
-  }
-
-  .issues {
-      .release-list {
-          display: flex;
-          gap: 3rem;
-          justify-content: center;
-          align-items: center;
-          flex-wrap: wrap;
-
-          .issues-preview {
-              width: 15rem;
-              height: fit-content;
-
-              .image {
-                  width: 15rem;
-                  height: 15rem;
-              }
-
-              .overview {
-                  max-width: 13rem;
-                  margin: 1.2rem auto;
-                  display: flex;
-                  flex-direction: column;
-                  justify-content: center;
-                  align-items: flex-start;
-                  gap: 1rem;
-
-                  .read-magazine {
-                      padding: .4rem 2rem;
-                      border-radius: 4rem;
-                      border: 2px solid rgba(184, 181, 181, 0.815);
-                  }
-              }
-          }
-      }
-  }
-
-  .counts {
-      background-image: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)), url(/images/nitap.jpg);
-
-      .publication-counts {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 2.5rem;
-          height: 100%;
-
-          .publication {
-              text-align: center;
-              color: white;
-
-              h1 {
-                  // font-family: 'Open Sans', sans-serif;
-                  font-size: 2.25rem;
-                  letter-spacing: 0.2rem;
-                  line-height: 1.45;
-                  text-transform: uppercase;
-                  font-weight: 600;
-                  margin-bottom: 0.8rem;
-              }
-
-              h4 {
-                  font-style: normal;
-              }
-          }
-      }
-
-  }
-
-  .subscription-cont {
-      display: flex;
-      // font-family: 'Open Sans', sans-serif;
-      margin: 3rem auto 0;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.2rem;
-
-      h1 {
-          text-align: center;
-      }
-
-      h4 {
-          font-style: oblique;
-          // font-family: 'Cormorant', serif;
-          font-weight: 400;
-          font-size: 1.2rem;
-      }
-
-      form {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          gap: 1.2rem;
-          margin: 1.6rem 0 0.8rem;
-
-          .inputs {
-              display: flex;
-              flex-wrap: wrap;
-              justify-content: center;
-
-              input {
-                  padding: 1rem;
-                  margin: .4rem;
-                  border: solid 1px rgba(0, 0, 0, 0.12);
-                  font-family: 'Cormorant', serif;
-                  font-size: 1rem;
-              }
-
-              input:focus {
-                  border: solid 1px rgba(0, 0, 0, 0.3);
-                  outline: none;
-              }
-          }
-
-          .submit {
-              position: relative;
-              padding: .4rem 0;
-              border-radius: 4rem;
-              border: none;
-              background-color: white;
-              cursor: pointer;
-              margin-top: 1.6rem;
-
-              .circle {
-                  position: absolute;
-                  width: 2.4rem;
-                  height: 2.4rem;
-                  --clr: rgba(0, 0, 0, 0.3);
-                  border: 1px solid var(--clr);
-                  border-radius: 50px;
-                  transition: all .3s ease-out;
-
-                  span {
-                      position: absolute;
-                      left: 1.2rem;
-                      top: 1.2rem;
-                      transform: translateY(-50%);
-                      width: 2rem;
-                      height: fit-content;
-
-                      svg {
-                          fill: var(--clr);
-                          width: 100%;
-                          transition: all 0.3s ease;
-                      }
-                  }
-              }
-
-              h3 {
-                font-size: 1.6rem;
-                line-height: 2.4rem;
-                  margin-left: 3.6rem;
-                  margin-right: 1rem;
-                  transition: all 0.3s ease;
-              }
-          }
-
-          .submit:hover {
-              h3 {
-                  color: rgb(160, 66, 71);
-              }
-
-              .circle {
-                  width: 100%;
-                  display: block;
-                  --clr: rgba(160, 66, 71, 0.692);
-              }
-          }
-      }
-  }
+        h1 {
+            @media screen and (max-width: 548px) {
+                font-size: 1.2rem;
+            }
+        }
+    }
 
 
-  .parallax {
-      --parallax-speed: 0.4;
-      font-size: 1.25rem;
-      height: 32rem;
+    h1 {
+        // font-family: "Open Sans", sans-serif;
+        font-size: 2.25rem;
+        letter-spacing: 0.2rem;
+        line-height: 1.45;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
 
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center calc(var(--parallax-speed) * var(--nav-height));
-      background-attachment: fixed;
+    .home.hero {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0)), url(/images/basar.jpg);
+        // background-position: center top;
+        height: 36rem;
+        padding: 0;
 
-      h4, h1, p {
-          text-shadow: rgba(0, 0, 0, 0.5) 0 2px 2px;
-      }
+        >div {
+            color: #f8f8f8;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            height: 100%;
 
-      h1 {
-          text-align: center;
-      }
+            .issue-info>p {
+                margin-bottom: 0.8rem;
+            }
 
-      h4 {
-          font-family: inherit;
-          font-weight: 400;
-          font-size: inherit;
-          font-style: oblique;
-          text-transform: capitalize;
-      }
+            h1 {
+                font-size: 2.25rem;
+                line-height: 1.1;
+            }
+        }
 
-      p {
-          font-size: inherit;
-      }
-  }
+        @media screen and (max-width: 650px) {
+            min-height: calc(100vh - var(--nav-height));
+        }
+    }
+
+    .issues {
+        .release-list {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+
+            .issues-preview {
+                width: 15rem;
+                height: fit-content;
+
+                .image {
+                    width: 15rem;
+                    height: 15rem;
+                }
+
+                .overview {
+                    max-width: 13rem;
+                    margin: 1.2rem auto;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: flex-start;
+                    gap: 1rem;
+
+                    .read-magazine {
+                        padding: .4rem 2rem;
+                        border-radius: 4rem;
+                        border: 2px solid rgba(184, 181, 181, 0.815);
+                    }
+                }
+            }
+        }
+    }
+
+    .counts {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)), url(/images/nitap.jpg);
+
+        .publication-counts {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2.5rem;
+            height: 100%;
+
+            .publication {
+                text-align: center;
+                color: white;
+
+                h1 {
+                    // font-family: 'Open Sans', sans-serif;
+                    font-size: 2.25rem;
+                    letter-spacing: 0.2rem;
+                    line-height: 1.45;
+                    text-transform: uppercase;
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                }
+
+                h4 {
+                    font-style: normal;
+                }
+            }
+        }
+
+    }
+
+    .subscription-cont {
+        display: flex;
+        // font-family: 'Open Sans', sans-serif;
+        margin: 3rem auto 0;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+
+        h1 {
+            text-align: center;
+        }
+
+        h4 {
+            font-style: oblique;
+            // font-family: 'Cormorant', serif;
+            font-weight: 400;
+            font-size: 1.2rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1.2rem;
+            margin: 1.6rem 0 0.8rem;
+
+            .inputs {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+
+                input {
+                    padding: 1rem;
+                    margin: .4rem;
+                    border: solid 1px rgba(0, 0, 0, 0.12);
+                    font-family: 'Cormorant', serif;
+                    font-size: 1rem;
+                }
+
+                input:focus {
+                    border: solid 1px rgba(0, 0, 0, 0.3);
+                    outline: none;
+                }
+            }
+
+            .submit {
+                position: relative;
+                padding: .4rem 0;
+                border-radius: 4rem;
+                border: none;
+                background-color: white;
+                cursor: pointer;
+                margin-top: 1.6rem;
+
+                .circle {
+                    position: absolute;
+                    width: 2.4rem;
+                    height: 2.4rem;
+                    --clr: rgba(0, 0, 0, 0.3);
+                    border: 1px solid var(--clr);
+                    border-radius: 50px;
+                    transition: all .3s ease-out;
+
+                    span {
+                        position: absolute;
+                        left: 1.2rem;
+                        top: 1.2rem;
+                        transform: translateY(-50%);
+                        width: 2rem;
+                        height: fit-content;
+
+                        svg {
+                            fill: var(--clr);
+                            width: 100%;
+                            transition: all 0.3s ease;
+                        }
+                    }
+                }
+
+                h3 {
+                    font-size: 1.6rem;
+                    line-height: 2.4rem;
+                    margin-left: 3.6rem;
+                    margin-right: 1rem;
+                    transition: all 0.3s ease;
+                }
+            }
+
+            .submit:hover {
+                h3 {
+                    color: rgb(160, 66, 71);
+                }
+
+                .circle {
+                    width: 100%;
+                    display: block;
+                    --clr: rgba(160, 66, 71, 0.692);
+                }
+            }
+        }
+    }
+
+
+    .parallax {
+        --parallax-speed: 0.4;
+        font-size: 1.25rem;
+        height: 32rem;
+
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center calc(var(--parallax-speed) * var(--nav-height));
+        background-attachment: fixed;
+
+        h4,
+        h1,
+        p {
+            text-shadow: rgba(0, 0, 0, 0.5) 0 2px 2px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h4 {
+            font-family: inherit;
+            font-weight: 400;
+            font-size: inherit;
+            font-style: oblique;
+        }
+
+        p {
+            font-size: inherit;
+        }
+    }
 }
