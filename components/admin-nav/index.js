@@ -6,6 +6,7 @@ const links = [
   { href: '/submit', label: 'Submit an activity' },
   { href: '/admin', label: 'View submissions' },
   { href: '/admin/draft', label: 'Draft issue' },
+  { href: '/admin/manage-users', label: 'Manage users' },
 ]
 
 export default function AdminNav() {

@@ -1,3 +1,7 @@
+.page {
+    max-width: calc(100vw - 6px);
+}
+
 .page-header {
     background-color: var(--gray-2);
     position: fixed;
@@ -21,6 +25,10 @@
         line-height: 1.8rem;
         margin-right: 1.2rem;
     }
+
+    .btn {
+        background-color: white;
+    }
 }
 
 .container {
@@ -36,7 +44,7 @@
 }
 
 .btn {
-    background-color: white;
+    background-color: var(--gray-2);
     position: relative;
     border: none;
     padding-right: 1.8rem;
@@ -77,10 +85,105 @@
     background-color: var(--gray-2);
 }
 
+.btn[disabled] {
+    background-color: var(--gray-0);
+    color: var(--gray-4);
+    border-color: transparent;
+
+    svg {
+        fill: var(--gray-4);
+    }
+}
+
+.form-btn {
+    background-color: #d8ffe3;
+    position: relative;
+    border: none;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    padding-right: 2.4rem;
+    min-width: 1.8rem;
+    width: fit-content;
+    height: 2.4rem;
+    border-radius: 1.8rem;
+    outline: none;
+    border: solid 1px transparent;
+
+    .btn-text {
+        font-size: 1rem;
+        margin-left: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.1ch;
+    }
+
+    svg {
+        fill: var(--gray-8);
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translate(-50%, -50%);
+        width: 1.4rem;
+        height: 1.4rem;
+    }
+}
+
+.form-btn:hover {
+    border: solid 1px var(--gray-65);
+}
+
+.form-btn:active {
+    border: solid 1px var(--gray-65);
+    background-color: #b3ffb8;
+}
+
+.form-btn[disabled] {
+    background-color: var(--gray-0);
+    color: var(--gray-4);
+    border-color: transparent;
+
+    svg {
+        fill: var(--gray-4);
+    }
+}
+
 .status {
     color: var(--gray-65);
     font-size: 0.8rem;
     text-align: right;
+}
+
+.form {
+    max-width: 550px;
+    margin-bottom: 3rem;
+}
+
+.form-header {
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+
+    >input.form-title {
+        border-bottom: solid 2px var(--gray-3);
+    }
+}
+
+.sub-section-header {
+    display: flex;
+    flex-direction: row;
+    // justify-content: space-between;
+    margin: 1.5rem 0 0.5rem 0;
+}
+
+.section-heading {
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin: 1.5rem 0 0.5rem 0;
+}
+
+.sub-section-heading {
+    font-size: 1.2rem;
+    font-weight: 400;
+    letter-spacing: 0.2ch;
+    text-transform: uppercase;
 }
 
 .submissions {

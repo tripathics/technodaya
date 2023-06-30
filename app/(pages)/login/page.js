@@ -5,8 +5,8 @@ import ErrorIcon from '@/components/icons/error-icon';
 import SpinnerIcon from '@/components/icons/spinner-icon';
 import EmailIcon from '@/components/icons/email-icon';
 import LockIcon from '@/components/icons/lock-icon';
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { getDoc, doc } from 'firebase/firestore'
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { getDoc, setDoc, doc, deleteDoc } from 'firebase/firestore'
 import cx from 'classnames';
 import styles from './styles/Login.module.scss';
 import { useUser } from '@/contexts/user';
@@ -22,38 +22,81 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const handleLogin = (e) => {
+  const signUpIfAuthorized = async () => {
+    // Check if user is present in the authorized users signup collection
+    try {
+      const docSnap = await getDoc(doc(db, 'authorized-users', email));
+      if (docSnap.exists()) {
+        // check if password matches
+        if (docSnap.data().Password !== password) {
+          throw new Error('Invalid password!');
+        }
+        // If user is present, sign them up and update profile
+        const res = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(res.user, { displayName: docSnap.data().FullName });
+        // Add user to users collection
+        await setDoc(doc(db, 'users', auth.currentUser.uid), {
+          FullName: docSnap.data().FullName,
+          Email: email,
+          Password: password,
+          Role: docSnap.data().Role || 'user'
+        });
+        await deleteDoc(doc(db, 'authorized-users', email));
+        // Redirect to admin page if user is admin
+        if (redirected === true) {
+          setRedirected(false);
+          router.back();
+        } else {
+          router.push(docSnap.data().Role === 'admin' ? '/admin' : '/submit');
+        }
+      } else {
+        throw new Error('Invalid username or password!');
+      }
+    } catch (err) {
+      setErrorMsg(err.message);
+      resetForm();
+      logout();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setErrorMsg('');
 
-    signInWithEmailAndPassword(auth, email, password).then(async (res) => {
+    try {
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      console.log('user signed in:', res.user);
       const docSnap = await getDoc(doc(db, 'users', res.user.uid));
       if (docSnap.exists()) {
         const authUser = {
           user: res.user,
           admin: docSnap.data().Role === 'admin'
         }
+        console.log(authUser);
 
         if (redirected === true) {
           setRedirected(false);
           router.back();
         } else {
-          router.push(authUser.admin ? '/admin' : '/submit');
+          router.push(docSnap.data().Role === 'admin' ? '/admin' : '/submit');
         }
       }
       else {
-        logout();
-        setErrorMsg('Invalid user!');
+        throw new Error('Invalid username or password!');
+      }
+    } catch (err) {
+      if (err.code === 'auth/user-not-found') {
+        signUpIfAuthorized();
+      } else {
+        setErrorMsg(err.message);
         resetForm();
+        logout();
         setLoading(false);
       }
-    }).catch(err => {
-      setErrorMsg(err.message);
-      resetForm();
-      logout();
-      setLoading(false);
-    })
+    }
   }
 
   const resetForm = () => {
