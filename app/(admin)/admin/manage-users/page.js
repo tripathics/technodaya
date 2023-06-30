@@ -61,9 +61,8 @@ export default function Register() {
     getDocs(collection(db, type)).then((querySnapshot) => {
       let users = [];
       querySnapshot.forEach((doc) => {
-        users.push(doc.data());
+        users.push({ ...doc.data(), uid: doc.id });
       });
-      console.log(users);
       if (type === 'users') setRegisteredUsers(users);
       else setAuthUsers(users);
     }).catch(err => {
@@ -136,6 +135,7 @@ export default function Register() {
             <table>
               <thead>
                 <tr>
+                  <th>UID</th>
                   <th>Full Name</th>
                   <th>Email</th>
                   <th>Password</th>
@@ -145,6 +145,7 @@ export default function Register() {
               <tbody>
                 {!!registeredUsers.length ? registeredUsers.map(user => (
                   <tr key={user.Email}>
+                    <td>{user.uid}</td>
                     <td>{user.FullName}</td>
                     <td>{user.Email}</td>
                     <td>{user.Password}</td>
