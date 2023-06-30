@@ -6,7 +6,6 @@ import { getDocs, setDoc, doc, collection } from 'firebase/firestore';
 import { db } from '@/firebasse.config';
 import { RadioInput, TextInput } from '@/components/form/InputComponents';
 import RefreshIcon from '@/components/icons/refresh-icon';
-import DoneIcon2 from '@/components/icons/done2-icon';
 
 export default function Register() {
   const [formData, setFormData] = useState({});
@@ -81,7 +80,7 @@ export default function Register() {
       </header>
       <main className={pageStyles.container}>
         <div>{errorMsg}{successMsg}</div>
-        <section>
+        <section className={pageStyles.section}>
           <h3 className={pageStyles['section-heading']}>Authorize a new user to register</h3>
           <form className={pageStyles.form} autoComplete="off" onSubmit={addAuthorizedUser}>
             <TextInput placeholder="Full Name" name="fullName" required onChange={handleFormUpdate} value={formData.fullName} />
@@ -92,12 +91,11 @@ export default function Register() {
             ]} />
 
             <button className={pageStyles['form-btn']} type="submit" disabled={loading}>
-              <div className={pageStyles['btn-text']}>Authorize credentials</div>
-              <DoneIcon2 />
+              Authorize credentials
             </button>
           </form>
         </section>
-        <section>
+        <section className={pageStyles.section}>
           <h3 className={pageStyles['section-heading']}>View users</h3>
           <header className={pageStyles['sub-section-header']}>
             <h4 className={pageStyles['sub-section-heading']}>Authorized users</h4>

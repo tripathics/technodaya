@@ -99,32 +99,16 @@
     background-color: #d8ffe3;
     position: relative;
     border: none;
-    padding-top: 0.3rem;
-    padding-bottom: 0.3rem;
-    padding-right: 2.4rem;
+    padding: 0.3rem 1.2rem;
     min-width: 1.8rem;
     width: fit-content;
     height: 2.4rem;
     border-radius: 1.8rem;
     outline: none;
     border: solid 1px transparent;
-
-    .btn-text {
-        font-size: 1rem;
-        margin-left: 1rem;
-        font-weight: 600;
-        letter-spacing: 0.1ch;
-    }
-
-    svg {
-        fill: var(--gray-8);
-        position: absolute;
-        top: 50%;
-        right: 0;
-        transform: translate(-50%, -50%);
-        width: 1.4rem;
-        height: 1.4rem;
-    }
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.1ch;
 }
 
 .form-btn:hover {
@@ -140,10 +124,6 @@
     background-color: var(--gray-0);
     color: var(--gray-4);
     border-color: transparent;
-
-    svg {
-        fill: var(--gray-4);
-    }
 }
 
 .status {
@@ -154,7 +134,6 @@
 
 .form {
     max-width: 550px;
-    margin-bottom: 3rem;
 }
 
 .form-header {
@@ -166,10 +145,14 @@
     }
 }
 
+.section {
+    margin-bottom: 3.2rem;
+}
+
 .sub-section-header {
     display: flex;
     flex-direction: row;
-    // justify-content: space-between;
+    align-items: center;
     margin: 1.5rem 0 0.5rem 0;
 }
 
@@ -180,8 +163,9 @@
 }
 
 .sub-section-heading {
-    font-size: 1.2rem;
-    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1;
+    font-weight: 500;
     letter-spacing: 0.2ch;
     text-transform: uppercase;
 }

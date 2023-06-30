@@ -13,7 +13,7 @@ import { useUser } from '@/contexts/user';
 import { useRouter } from 'next/navigation';
 
 const Login = () => {
-  const { user, redirected, setRedirected, logout } = useUser();
+  const { user, admin, redirected, setRedirected, logout } = useUser();
 
   const router = useRouter();
 
@@ -57,7 +57,7 @@ const Login = () => {
       resetForm();
       logout();
     } finally {
-      setLoading(false);
+      if (!user) setLoading(false);
     }
   }
 
@@ -68,14 +68,12 @@ const Login = () => {
 
     try {
       const res = await signInWithEmailAndPassword(auth, email, password);
-      console.log('user signed in:', res.user);
       const docSnap = await getDoc(doc(db, 'users', res.user.uid));
       if (docSnap.exists()) {
         const authUser = {
           user: res.user,
           admin: docSnap.data().Role === 'admin'
         }
-        console.log(authUser);
 
         if (redirected === true) {
           setRedirected(false);
@@ -105,7 +103,7 @@ const Login = () => {
   }
 
   useEffect(() => {
-    if (user && !loading) router.push('/');
+    if (user && !loading) router.push(admin ? '/admin' : '/submit');
   })
 
   return (
