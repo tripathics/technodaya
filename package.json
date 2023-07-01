@@ -21,6 +21,7 @@
     "rehype-raw": "^6.1.1",
     "remark-gfm": "^3.0.1",
     "sass": "^1.63.4",
+    "sharp": "^0.32.1",
     "styled-components": "^5.3.10"
   }
 }
