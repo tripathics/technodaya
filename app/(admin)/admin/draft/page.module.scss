@@ -1,4 +1,6 @@
 .draft {
+    max-width: unset;
+
     @media screen and (max-width: 548px) {
         display: none;
     }
