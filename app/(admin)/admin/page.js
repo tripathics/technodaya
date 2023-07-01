@@ -193,14 +193,13 @@ const SubmissionSection = ({ type, ls, approve, reject, update, moveBack }) => {
           <table>
             <thead>
               <tr>
-                <th style={{ minWidth: '120px' }}>Author</th>
-                <th style={{ minWidth: '160px' }}>Title</th>
-                <th style={{ minWidth: '400px' }}>Content</th>
-                <th style={{ minWidth: '120px' }}>Date added</th>
                 {type === 'pending'
                   ? <><th>Reject</th><th>Approve</th></>
-                  : <th style={{ minWidth: '150px' }}>Await</th>
-                }
+                  : <th>Await</th>}
+                <th style={{ minWidth: '120px' }}>Date added</th>
+                <th>Author</th>
+                <th>Title</th>
+                <th>Activity description</th>
               </tr>
             </thead>
             <tbody>

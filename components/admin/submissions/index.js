@@ -9,6 +9,28 @@ import styles from './Submission.module.scss';
 
 const Submission = ({ id, categoryId, author, title, created, desc, type, imgUrl, imgCaption, update, reject, approve, moveBack }) => (
   <tr className={styles.submission}>
+    {type === 'pending' ? (<>
+      <td>
+        <button className="action-btn remove" type="button"
+          onClick={(e) => { reject(id) }}>
+          <RemoveIcon />
+        </button>
+      </td>
+      <td>
+        <button className="action-btn add" type="button"
+          onClick={(e) => { approve(id) }}>
+          <DoneIcon />
+        </button>
+      </td>
+    </>) : (
+      <td>
+        <button className="action-btn" type="button"
+          onClick={(e) => { moveBack(id) }}>
+          <UndoIcon />
+        </button>
+      </td>
+    )}
+    <td>{created}</td>
     <td>{author}</td>
     <td>
       <MdInput value={title}
@@ -41,28 +63,6 @@ const Submission = ({ id, categoryId, author, title, created, desc, type, imgUrl
         </div>
       </>)}
     </td>
-    <td>{created}</td>
-    {type === 'pending' ? (<>
-      <td>
-        <button className="action-btn remove" type="button"
-          onClick={(e) => { reject(id) }}>
-          <RemoveIcon />
-        </button>
-      </td>
-      <td>
-        <button className="action-btn add" type="button"
-          onClick={(e) => { approve(id) }}>
-          <DoneIcon />
-        </button>
-      </td>
-    </>) : (
-      <td>
-        <button className="action-btn" type="button"
-          onClick={(e) => { moveBack(id) }}>
-          <UndoIcon />
-        </button>
-      </td>
-    )}
   </tr>
 )
 

@@ -1435,35 +1435,44 @@ table {
       background-color: rgb(255, 169, 169);
       border-radius: 2rem;
       cursor: pointer;
-      transition: all 0.2s ease;
 
       svg {
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        fill: white;
+        fill: var(--gray-9);
       }
     }
 
     .action-btn {
-      background-color: #007E7C;
+      background-color: var(--gray-3);
+    }
+
+    .action-btn:hover,
+    .action-btn:active {
+      border: solid 1px var(--gray-65);
+    }
+
+    .action-btn:active {
+      background-color: var(--gray-4);
     }
 
     .action-btn.add {
-      background-color: rgb(117, 104, 84);
+      background-color: #d8ffe3;
     }
 
-    .add:hover {
-      background-color: rgb(3, 100, 3);
+    .add:active {
+      background-color: #b3ffb8;
+      border: solid 1px var(--gray-65);
     }
 
     .action-btn.remove {
-      background-color: rgb(182, 43, 43);
+      background-color: #ffd8d8;
     }
 
-    .remove:hover {
-      background-color: rgb(161, 12, 12);
+    .remove:active {
+      background-color: #fdb5b5;
     }
   }
 }
