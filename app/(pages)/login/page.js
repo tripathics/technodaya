@@ -70,11 +70,6 @@ const Login = () => {
       const res = await signInWithEmailAndPassword(auth, email, password);
       const docSnap = await getDoc(doc(db, 'users', res.user.uid));
       if (docSnap.exists()) {
-        const authUser = {
-          user: res.user,
-          admin: docSnap.data().Role === 'admin'
-        }
-
         if (redirected === true) {
           setRedirected(false);
           router.back();

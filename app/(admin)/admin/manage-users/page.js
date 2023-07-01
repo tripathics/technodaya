@@ -1,19 +1,33 @@
 'use client'
 import pageStyles from '../page.module.scss';
+import formStyles from '@/components/form/Form.module.scss'
 import cx from 'classnames'
 import { useState } from 'react';
-import { getDocs, setDoc, doc, collection } from 'firebase/firestore';
+import { setDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebasse.config';
 import { RadioInput, TextInput } from '@/components/form/InputComponents';
 import RefreshIcon from '@/components/icons/refresh-icon';
+import useFetchCollection from '@/hooks/fetchCollection';
 
 export default function Register() {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  const [authUsers, setAuthUsers] = useState([]);
-  const [registeredUsers, setRegisteredUsers] = useState([]);
+
+  const {
+    docs: authUsers,
+    setDocs: setAuthUsers,
+    fetching: loadingAuth,
+    refetch: getAuthUsers
+  } = useFetchCollection('authorized-users');
+
+  const {
+    docs: registeredUsers,
+    setDocs: setRegisteredUsers,
+    fetching: loadingRegistered,
+    refetch: getRegisteredUsers
+  } = useFetchCollection('users');
 
   const handleFormUpdate = (e) => {
     setFormData(prevData => ({
@@ -29,6 +43,14 @@ export default function Register() {
     setLoading(true);
     // Add user to authorized users collection
     const { fullName, email, password, role } = formData;
+
+    if (Object.keys(registeredUsers).map(id => registeredUsers[id].Email).includes(email)
+      || Object.keys(authUsers).map(id => authUsers[id].Email).includes(email)) {
+      setErrorMsg('User already exists with that email!');
+      setLoading(false);
+      resetForm();
+      return;
+    }
     setDoc(doc(db, 'authorized-users', email), {
       FullName: fullName,
       Email: email,
@@ -55,23 +77,6 @@ export default function Register() {
     setFormData({});
   }
 
-  const getUsers = (type) => {
-    // fetch authorized users
-    setLoading(true);
-    getDocs(collection(db, type)).then((querySnapshot) => {
-      let users = [];
-      querySnapshot.forEach((doc) => {
-        users.push({ ...doc.data(), uid: doc.id });
-      });
-      if (type === 'users') setRegisteredUsers(users);
-      else setAuthUsers(users);
-    }).catch(err => {
-      setErrorMsg(err.message);
-    }).finally(() => {
-      setLoading(false);
-    })
-  }
-
   return (
     <div className={pageStyles.page}>
       <header className={cx(pageStyles['page-header'], pageStyles.container)}>
@@ -84,12 +89,18 @@ export default function Register() {
           <form className={pageStyles.form} autoComplete="off" onSubmit={addAuthorizedUser}>
             <TextInput placeholder="Full Name" name="fullName" required onChange={handleFormUpdate} value={formData.fullName} />
             <TextInput placeholder="Email" name="email" required onChange={handleFormUpdate} value={formData.email} />
-            <TextInput placeholder="Password" name="password" required onChange={handleFormUpdate} value={formData.password} />
+            <p className={cx(formStyles['section-heading'], 'sub-label')}>Password must be of atleast 6 characters and contain atleast one special character from set '?@#$%^&+='</p>
+            <TextInput
+              placeholder="Password"
+              name="password"
+              pattern="^(?=.*[?@#$%^&+=])(.{6,})$"
+              title="Must be of atleast 6 characters and must contain atleast one special character from the set '?@#$%^&+='"
+              required onChange={handleFormUpdate} value={formData.password} />
             <RadioInput label='User type *' required={true} name="role" onChange={handleFormUpdate} radios={[
               { value: 'user', label: 'User' }, { value: 'admin', label: 'Admin' }
             ]} />
 
-            <button className={pageStyles['form-btn']} type="submit" disabled={loading}>
+            <button className={pageStyles['form-btn']} type="submit" disabled={loading || loadingRegistered || loadingAuth}>
               Authorize credentials
             </button>
           </form>
@@ -98,7 +109,7 @@ export default function Register() {
           <h3 className={pageStyles['section-heading']}>View users</h3>
           <header className={pageStyles['sub-section-header']}>
             <h4 className={pageStyles['sub-section-heading']}>Authorized users</h4>
-            <button disabled={loading} className={pageStyles.btn} onClick={(e) => { getUsers('authorized-users') }} aria-label='Fetch authorized users'>
+            <button disabled={loadingAuth} className={pageStyles.btn} onClick={getAuthUsers} aria-label='Fetch authorized users'>
               <RefreshIcon />
             </button>
           </header>
@@ -113,12 +124,12 @@ export default function Register() {
                 </tr>
               </thead>
               <tbody>
-                {!!authUsers.length ? authUsers.map(user => (
-                  <tr key={user.Email}>
-                    <td>{user.FullName}</td>
-                    <td>{user.Email}</td>
-                    <td>{user.Password}</td>
-                    <td>{user.Role}</td>
+                {!!Object.keys(authUsers).length ? Object.keys(authUsers).map(id => (
+                  <tr key={id}>
+                    <td>{authUsers[id].FullName}</td>
+                    <td>{authUsers[id].Email}</td>
+                    <td>{authUsers[id].Password}</td>
+                    <td>{authUsers[id].Role}</td>
                   </tr>
                 )) : <tr><td colSpan="4">No pending users for signup</td></tr>}
               </tbody>
@@ -127,7 +138,7 @@ export default function Register() {
 
           <header className={pageStyles['sub-section-header']}>
             <h4 className={pageStyles['sub-section-heading']}>Registered users</h4>
-            <button disabled={loading} className={pageStyles.btn} onClick={(e) => { getUsers('users') }} aria-label='Fetch registered users'>
+            <button disabled={loadingRegistered} className={pageStyles.btn} onClick={getRegisteredUsers} aria-label='Fetch registered users'>
               <RefreshIcon />
             </button>
           </header>
@@ -143,13 +154,13 @@ export default function Register() {
                 </tr>
               </thead>
               <tbody>
-                {!!registeredUsers.length ? registeredUsers.map(user => (
-                  <tr key={user.Email}>
-                    <td>{user.uid}</td>
-                    <td>{user.FullName}</td>
-                    <td>{user.Email}</td>
-                    <td>{user.Password}</td>
-                    <td>{user.Role}</td>
+                {!!Object.keys(registeredUsers).length ? Object.keys(registeredUsers).map(id => (
+                  <tr key={id}>
+                    <td style={{ fontFamily: 'monospace', letterSpacing: '0.15ch' }}>{id}</td>
+                    <td>{registeredUsers[id].FullName}</td>
+                    <td>{registeredUsers[id].Email}</td>
+                    <td style={{ fontFamily: 'monospace', letterSpacing: '0.15ch' }}>{registeredUsers[id].Password}</td>
+                    <td>{registeredUsers[id].Role}</td>
                   </tr>
                 )) : <tr><td colSpan="4">No registered users</td></tr>}
               </tbody>
