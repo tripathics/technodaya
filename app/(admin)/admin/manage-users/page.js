@@ -89,7 +89,7 @@ export default function Register() {
           <form className={pageStyles.form} autoComplete="off" onSubmit={addAuthorizedUser}>
             <TextInput placeholder="Full Name" name="fullName" required onChange={handleFormUpdate} value={formData.fullName} />
             <TextInput placeholder="Email" name="email" required onChange={handleFormUpdate} value={formData.email} />
-            <p className={cx(formStyles['section-heading'], 'sub-label')}>Password must be of atleast 6 characters and contain atleast one special character from set '?@#$%^&+='</p>
+            <p className={cx(formStyles['section-heading'], 'sub-label')}>Password must be of atleast 6 characters and contain atleast one special character from set &#39;?@#$%^&+=&#39;</p>
             <TextInput
               placeholder="Password"
               name="password"
