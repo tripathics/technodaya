@@ -57,12 +57,15 @@ export default function Register() {
       Password: password,
       Role: role || 'user',
     }).then(() => {
-      setAuthUsers(prevUsers => [...prevUsers, {
-        FullName: fullName,
-        Email: email,
-        Password: password,
-        Role: role || 'user',
-      }]);
+      setAuthUsers(prevUsers => ({
+        ...prevUsers,
+        [email]: {
+          FullName: fullName,
+          Email: email,
+          Password: password,
+          Role: role || 'user',
+        }
+      }));
       setSuccessMsg('User added successfully!');
       resetForm();
     }).catch(err => {
