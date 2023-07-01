@@ -227,7 +227,7 @@ export default function Draft() {
 
   return (<>
     <SmallScreenError />
-    <div className={cx("draft", styles.draft, pageStyles.page)}>
+    <div className={cx("draft", pageStyles.page, styles.draft)}>
       <header className={cx(pageStyles['page-header'], pageStyles.container)}>
         <h1 className={pageStyles.heading}>Draft Issue</h1>
         <div className={pageStyles["btns-group"]}>
