@@ -8,7 +8,7 @@ const MagazineCard = ({ imgsrc, title, vol, iss, month, year, link, pdfLink }) =
         <Image src={imgsrc} alt={`Technodaya Vol ${vol} Iss ${iss} cover`} width={600} height={660} />
       </figure>
       <div className={styles["desc"]}>
-        <a className={styles["title"]} href={link} target='_blank' rel='noreferrer'>
+        <a className={styles["title"]} href={link || pdfLink} target='_blank' rel='noreferrer'>
           <p>{title}</p>
         </a>
         <div className={styles["date"]}>

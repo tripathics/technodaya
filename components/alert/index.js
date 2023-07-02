@@ -6,7 +6,7 @@ import InfoIcon from "../icons/alerts/info-icon";
 
 import styles from "./alert.module.scss";
 import cx from "classnames";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 const Icon = ({ severity }) => {
   if (severity === "success") return <SuccessIcon />;
@@ -17,34 +17,50 @@ const Icon = ({ severity }) => {
 
 const Alert = ({ severity = "info", message = "", handleDismiss = null }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [alertText, setAlertText] = useState("");
 
   useEffect(() => {
-    if (!message.length) {
+    let timeout, timeout2;
+    if (!!message.length) {
+      setAlertText(message);
+      setIsVisible(true);
+    } else {
       setIsVisible(false);
-      return;
+      timeout = setTimeout(() => {
+        setAlertText("");
+      }, 1000);
     }
 
-    setIsVisible(true);
-    const timeout = setTimeout(() => {
-      setIsVisible(false);
-    }, 8000)
+    if (!handleDismiss || ['info', 'success'].includes(severity)) {
+      timeout2 = setTimeout(() => {
+        setIsVisible(false);
+      }, 8000);
+    }
 
     return () => {
       clearTimeout(timeout);
+      clearTimeout(timeout2);
     }
-  }, [message])
+  }, [message, handleDismiss]);
+
+  const dismissAlert = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      handleDismiss();
+    }, 300);
+  };
 
   return (
     <div className={cx(styles.alert, styles[severity], { [styles.active]: isVisible })} >
       <div className={styles.icon}>
         <Icon severity={severity} />
       </div>
-      <div className={styles.message}>{message}</div>
+      <div className={styles.message}>{alertText}</div>
       {handleDismiss && (
         <button
           type="button"
           className={styles.dismiss}
-          onClick={handleDismiss}
+          onClick={dismissAlert}
         >
           <DismissIcon />
         </button>
@@ -52,5 +68,11 @@ const Alert = ({ severity = "info", message = "", handleDismiss = null }) => {
     </div>
   );
 };
+
+export const AlertWrapper = ({ children }) => (
+  <div className={styles['alert-wrapper']}>
+    {children}
+  </div>
+)
 
 export default Alert;

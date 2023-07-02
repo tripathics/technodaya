@@ -8,12 +8,12 @@ import { db } from '@/firebasse.config';
 import { RadioInput, TextInput } from '@/components/form/InputComponents';
 import RefreshIcon from '@/components/icons/refresh-icon';
 import useFetchCollection from '@/hooks/fetchCollection';
+import Alert, { AlertWrapper } from '@/components/alert';
 
 export default function Register() {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
+  const [alerts, setAlerts] = useState([]); // [{ message: '', severity: '' }
 
   const {
     docs: authUsers,
@@ -38,17 +38,15 @@ export default function Register() {
 
   const addAuthorizedUser = (e) => {
     e.preventDefault();
-    setSuccessMsg('');
-    setErrorMsg('');
+    setAlerts([]);
     setLoading(true);
     // Add user to authorized users collection
     const { fullName, email, password, role } = formData;
 
     if (Object.keys(registeredUsers).map(id => registeredUsers[id].Email).includes(email)
       || Object.keys(authUsers).map(id => authUsers[id].Email).includes(email)) {
-      setErrorMsg('User already exists with that email!');
+      setAlerts(prevAlerts => [...prevAlerts, { message: 'User already exists with that email!', severity: 'error' }]);
       setLoading(false);
-      resetForm();
       return;
     }
     setDoc(doc(db, 'authorized-users', email), {
@@ -66,10 +64,10 @@ export default function Register() {
           Role: role || 'user',
         }
       }));
-      setSuccessMsg('User added successfully!');
+      setAlerts(prevAlerts => [...prevAlerts, { message: 'User added successfully!', severity: 'success' }]);
       resetForm();
     }).catch(err => {
-      setErrorMsg(err.message);
+      setAlerts(prevAlerts => [...prevAlerts, { message: `Error adding user: ${err.message}`, severity: 'error' }]);
       resetForm();
     }).finally(() => {
       setLoading(false);
@@ -86,7 +84,11 @@ export default function Register() {
         <h1 className={pageStyles.heading}>Manage users</h1>
       </header>
       <main className={pageStyles.container}>
-        <div>{errorMsg}{successMsg}</div>
+        <AlertWrapper>
+          {alerts.map(({ message, severity }, index) => (
+            <Alert key={message} severity={severity} message={message} handleDismiss={() => setAlerts(prevAlerts => prevAlerts.filter((_, i) => i !== index))} />
+          ))}
+        </AlertWrapper>
         <section className={pageStyles.section}>
           <h3 className={pageStyles['section-heading']}>Authorize a new user to register</h3>
           <form className={pageStyles.form} autoComplete="off" onSubmit={addAuthorizedUser}>

@@ -143,14 +143,16 @@ export default function Submissions() {
   }, [fetchingApproved, fetchingPending])
 
   return (
-    <div className={cx(styles.submissions, 'submissions', styles.page)}>
+    <div className={cx(
+      // styles.submissions, 
+      'submissions', styles.page)}>
       <header className={cx(styles['page-header'], styles.container)}>
         <h1 className={styles.heading}>Submissions</h1>
         <div className={styles["btns-group"]}>
           {!(errorPending || errorApproved) && (fetchingApproved || fetchingPending) || uploading ? <SpinnerIcon /> : (<>
             <p className={styles.status}>Last updated: {lastUpdated}</p>
             {Object.keys(unsaved).length !== 0 && (
-              <button className={styles.btn} onClick={saveChanges}>
+              <button className={cx(styles.btn, styles['btn-submit'])} onClick={saveChanges}>
                 <SaveIcon />
               </button>
             )}

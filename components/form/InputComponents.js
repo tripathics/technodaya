@@ -131,4 +131,36 @@ const FileInput = ({ name, onChange, required = false, accept = '*', attrs }) =>
   </div>
 )
 
-export { TextInput, TextareaInput, DateInput, DateRangeInput, FileInput, RadioInput };
+const SelectInput = ({
+  value = '',
+  title = '',
+  onChange,
+  name,
+  attrs = {},
+  placeholder = 'Select',
+  required = false, options = []
+}) => (
+  <div className={styles['form-field']}>
+    <select
+      className={styles['form-control']}
+      title={title}
+      required={required}
+      name={name}
+      id={name}
+      value={value}
+      {...attrs}
+      onChange={(e) => { onChange(e) }}
+    >
+      <option disabled value='' >{placeholder}</option>
+      {options.map((option, i) => (
+        <option key={i} value={option.value}>{option.label}</option>
+      ))}
+    </select>
+    <fieldset aria-hidden="true">
+      <legend >
+      </legend>
+    </fieldset>
+  </div>
+)
+
+export { TextInput, TextareaInput, DateInput, DateRangeInput, FileInput, RadioInput, SelectInput };

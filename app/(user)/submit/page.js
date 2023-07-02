@@ -7,7 +7,7 @@ import NextIcon from '@/components/icons/navigate-next-icon'
 import { storage, db } from '@/firebasse.config'
 import { arrayUnion, collection, doc, setDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import Alert from '@/components/alert'
+import Alert, { AlertWrapper } from '@/components/alert'
 import { Categories } from '@/helpers/helpers'
 import { useUser } from '@/contexts/user'
 
@@ -159,7 +159,9 @@ const SubmitFC = () => {
 
   return (
     <div className="add-blogs">
-      <Alert message={alertMessage} severity={alertSeverity} />
+      <AlertWrapper>
+        <Alert message={alertMessage} severity={alertSeverity} />
+      </AlertWrapper>
       <div className="mobile-bg" />
       <div className="activity-form container">
         <div className="tablist-wrapper">

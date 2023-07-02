@@ -14,7 +14,6 @@ import NavigateNextIcon from '@/components/icons/navigate-next-icon'
 import NavigateBeforeIcon from '@/components/icons/navigate-before-icon'
 import PreviewIcon from '@/components/icons/preview-icon'
 import Image from 'next/image'
-import SendIcon from '@/components/icons/send-icon'
 
 const DraftForm = ({ formData, handleChange, submitForm }) => {
   const handleSubmit = (e) => {
@@ -66,7 +65,6 @@ export default function Draft() {
   const [formData, setFormData] = useState({});
   const [formView, setFormView] = useState(true);
   const [preview, setPreview] = useState(null);
-  const [published, setPublished] = useState(false);
   const [previewAfresh, setIsPreviewAfresh] = useState(false);
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState(null);
@@ -249,7 +247,7 @@ export default function Draft() {
               {!previewAfresh && (
                 <button
                   form="draftForm"
-                  className={pageStyles.btn}
+                  className={cx(pageStyles.btn, pageStyles['btn-submit'])}
                   id="publishBtn"
                   onClick={handlePreviewIssue}
                   type="submit"
@@ -257,20 +255,10 @@ export default function Draft() {
                   <span className={pageStyles['btn-text']}>Update preview</span> <PreviewIcon />
                 </button>
               )}
-              <button
-                form="draftForm"
-                className={pageStyles.btn}
-                id="publishBtn"
-                onClick={() => { }}
-                type="submit"
-              >
-                <span className={pageStyles['btn-text']}>Publish</span>
-                <SendIcon />
-              </button>
             </>) : (
               <button
                 form="draftForm"
-                className={pageStyles.btn}
+                className={cx(pageStyles.btn, pageStyles['btn-submit'])}
                 id="publishBtn"
                 onClick={handlePreviewIssue}
                 type="submit"
@@ -285,19 +273,6 @@ export default function Draft() {
         </div>
       </header>
       <main className={cx("workspace", pageStyles.container)}>
-        {published && (
-          <div className="container" >
-            <div style={{
-              color: '#155724',
-              backgroundColor: '#d4edda',
-              borderColor: '#c3e6cb',
-              padding: '1.75rem 1.25rem',
-              margin: '2rem 0',
-            }}>
-              <h3>Published! <a href={`/${preview}`}>Check it out</a></h3>
-            </div>
-          </div>
-        )}
         {formView
           ? <DraftForm handleChange={handleForm} formData={formData} submitForm={fetchData} />
           : loading

@@ -59,13 +59,13 @@ const Sections = {
 }
 
 const BiMonthlyNames = [
-  ['', ''],
-  ['JanFeb', 'January - February'],
-  ['MarApril', 'March - April'],
-  ['MayJune', 'May - June'],
-  ['JulyAug', 'July - August'],
-  ['SeptOct', 'September - October'],
-  ['NovDec', 'November - December'],
+  ['', '', ''],
+  ['JanFeb', 'January - February', 'Jan - Feb'],
+  ['MarApril', 'March - April', 'Mar - Apr'],
+  ['MayJune', 'May - June', 'May - Jun'],
+  ['JulyAug', 'July - August', 'Jul - Aug'],
+  ['SeptOct', 'September - October', 'sep - Oct'],
+  ['NovDec', 'November - December', 'Nov - Dec'],
 ]
 
 const getBiMonth = (date) => {
