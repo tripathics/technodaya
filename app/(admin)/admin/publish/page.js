@@ -33,6 +33,7 @@ export default function Publish() {
 
   const handleFormUpdate = (e) => {
     const { name, value } = e.target;
+    // if draft is selected, populate form with draft data
     if (name === 'draftId' && value) {
       setFormData(prevData => ({
         ...prevData,
@@ -45,6 +46,7 @@ export default function Publish() {
       return;
     }
 
+    // if newsletter cover is selected, store image object
     if (name === 'newsletter-cover') {
       let imageObject = e.target.files[0];
       setFormData(prevData => ({
@@ -66,36 +68,40 @@ export default function Publish() {
     setAlerts([]);
     const { title, vol, iss, month, 'newsletter-link': newsletterLink, 'newsletter-cover': newsletterCover } = formData;
 
-    let index = parseInt(`${month.slice(0, 4)}${iss}`);
+    // create index string in the format YYYYII where YYYY is year and II is issue number
+    let index = `${month.slice(0, 4)}${iss.toString().padStart(2, '0')}`;
+    // publishId is in the format YYYY-BiMonth (e.g. 2021JanFeb)
+    let publishId = `${month.slice(0, 4)}${BiMonthlyNames[getBiMonth(month)][0]}`;
 
     try {
+      // upload newsletter cover image
       const uploadTask = await uploadBytes(ref(storage, `Technodaya/CoverImages/${newsletterCover.name}`), newsletterCover);
       const coverUrl = await getDownloadURL(uploadTask.ref);
 
-      if (formData.draftId) {
-        await setDoc(doc(db, 'issues', `${formData.draftId}`), {
-          orders: drafts[formData.draftId].orders,
-          title: title,
-          vol: vol,
-          iss: iss,
-          month: month,
-        })
-      }
-
-      await setDoc(doc(db, 'PastPublications', `${formData.draftId}`), {
+      // create magazine card for read section containing links, magazine cover and title
+      await setDoc(doc(db, 'PastPublications', `${publishId}`), {
         index: index,
         Title: title,
         Vol: vol,
         Issue: iss,
         Month: BiMonthlyNames[getBiMonth(month)][2],
         Year: month.slice(0, 4),
-        Link: formData.draftId ? `/issues/${index}` : '',
+        Link: formData.draftId ? `/issues/${publishId}` : '',
         PdfUrl: newsletterLink,
         ImageUrl: coverUrl,
       })
 
+      // if draft exist, create web magazine and delete draft
       if (formData.draftId) {
-        await deleteDoc(doc(db, 'previews', `${formData.draftId}`));
+        await setDoc(doc(db, 'issues', `${publishId}`), {
+          orders: drafts[formData.draftId].orders,
+          title: title,
+          vol: vol,
+          iss: iss,
+          month: month,
+        })
+
+        await deleteDoc(doc(db, 'previews', `${publishId}`));
         setDrafts(prevDrafts => {
           const newDrafts = { ...prevDrafts };
           delete newDrafts[formData.draftId];

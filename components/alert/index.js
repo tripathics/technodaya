@@ -31,7 +31,7 @@ const Alert = ({ severity = "info", message = "", handleDismiss = null }) => {
       }, 1000);
     }
 
-    if (!handleDismiss || ['info', 'success'].includes(severity)) {
+    if (!handleDismiss) {
       timeout2 = setTimeout(() => {
         setIsVisible(false);
       }, 8000);

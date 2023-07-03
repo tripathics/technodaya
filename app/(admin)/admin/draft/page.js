@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { DndMain } from '@/components/admin/dnd/dndMain'
-import { fs, db } from '@/firebasse.config'
+import { db } from '@/firebasse.config'
 import { getBiMonth, BiMonthlyNames, CategoryTitles } from '@/helpers/helpers'
 import SpinnerIcon from '@/components/icons/spinner-icon'
 import { collection, doc, getDoc, getDocs, query, setDoc, where, orderBy } from 'firebase/firestore'
@@ -12,7 +12,7 @@ import styles from './page.module.scss'
 import cx from 'classnames'
 import NavigateNextIcon from '@/components/icons/navigate-next-icon'
 import NavigateBeforeIcon from '@/components/icons/navigate-before-icon'
-import PreviewIcon from '@/components/icons/preview-icon'
+import SaveIcon from '@/components/icons/save-icon'
 import Image from 'next/image'
 
 const DraftForm = ({ formData, handleChange, submitForm }) => {
@@ -113,9 +113,8 @@ export default function Draft() {
       });
 
       const preview = await getDoc(previewRef);
-      if (preview.exists()) {
+      if (false && preview.exists()) {
         setPreview('previews/' + year + biMonth);
-        console.log('preview exists');
         dndData = { ...preview.data().orders };
         // populate subsections
         Object.keys(dndData.subSections).forEach(subSecId => {
@@ -174,6 +173,7 @@ export default function Draft() {
       // populate activities
       dndData.activities = approved;
       setOrders({ ...dndData });
+      setOrders(temp);
     } catch (error) {
       throw error;
     } finally {
@@ -240,11 +240,13 @@ export default function Draft() {
               <span className={pageStyles['btn-text']}>Next</span> <NavigateNextIcon />
             </button>
           ) : (<>
-            {loading ? <SpinnerIcon /> : preview ? (<>
-              <p className={pageStyles.status}>
-                <a target="_blank" rel="noreferrer" href={`/${preview}`}>{!previewAfresh ? 'Preview is outdated' : 'View preview'}</a>
-              </p>
-              {!previewAfresh && (
+            {loading ? <SpinnerIcon /> : (<>
+              {preview && (<>
+                <p className={pageStyles.status}>
+                  <a target="_blank" rel="noreferrer" href={`/${preview}`}>{!previewAfresh ? 'Draft is outdated' : 'View draft'}</a>
+                </p>
+              </>)}
+              {(!previewAfresh || !preview) && (
                 <button
                   form="draftForm"
                   className={cx(pageStyles.btn, pageStyles['btn-submit'])}
@@ -252,20 +254,10 @@ export default function Draft() {
                   onClick={handlePreviewIssue}
                   type="submit"
                 >
-                  <span className={pageStyles['btn-text']}>Update preview</span> <PreviewIcon />
+                  <span className={pageStyles['btn-text']}>Save draft</span> <SaveIcon />
                 </button>
               )}
-            </>) : (
-              <button
-                form="draftForm"
-                className={cx(pageStyles.btn, pageStyles['btn-submit'])}
-                id="publishBtn"
-                onClick={handlePreviewIssue}
-                type="submit"
-              >
-                <span className={pageStyles['btn-text']}>Get preview</span> <PreviewIcon />
-              </button>
-            )}
+            </>)}
             <button className={pageStyles.btn} title="Back" onClick={switchView} type="button">
               <span className={pageStyles['btn-text']}>Back</span> <NavigateBeforeIcon />
             </button>
