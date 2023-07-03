@@ -9,7 +9,7 @@ import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storage, db } from '@/firebasse.config';
 import { BiMonthlyNames, getBiMonth } from '@/helpers/helpers';
-import Alert, { AlertWrapper } from '@/components/alert';
+import { useAlerts } from '@/contexts/alerts';
 import SendIcon from '@/components/icons/send-icon';
 import RemoveIcon from '@/components/icons/remove-icon';
 
@@ -23,11 +23,13 @@ export default function Publish() {
 
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [alerts, setAlerts] = useState([]);
+  const [alertIds, setAlertIds] = useState([]);
+  const { addAlert, removeAlert } = useAlerts();
 
   useEffect(() => {
     if (draftsError) {
-      setAlerts(prevAlerts => [...prevAlerts, { message: `Error fetching drafts: ${draftsError.message}`, severity: 'error' }]);
+      let id = addAlert(`Error fetching drafts: ${draftsError.message}`, 'error');
+      setAlertIds(prevIds => [...prevIds, id]);
     }
   }, [draftsError])
 
@@ -65,7 +67,8 @@ export default function Publish() {
   const handlePublish = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setAlerts([]);
+    alertIds.forEach(id => removeAlert(id));
+    setAlertIds([]);
     const { title, vol, iss, month, 'newsletter-link': newsletterLink, 'newsletter-cover': newsletterCover } = formData;
 
     // create index string in the format YYYYII where YYYY is year and II is issue number
@@ -109,11 +112,13 @@ export default function Publish() {
         })
       }
 
-      setAlerts(prevAlerts => [...prevAlerts, { message: 'Issue published successfully', severity: 'success' }]);
+      let id = addAlert('Issue published successfully', 'success');
+      setAlertIds(prevIds => [...prevIds, id]);
       setFormData({});
     } catch (err) {
       console.log(err);
-      setAlerts(prevAlerts => [...prevAlerts, { message: `Error publishing issue: ${err.message}`, severity: 'error' }]);
+      let id = addAlert(`Error publishing issue: ${err.message}`, 'error');
+      setAlertIds(prevIds => [...prevIds, id]);
     } finally {
       setLoading(false);
     }
@@ -126,12 +131,6 @@ export default function Publish() {
       </header>
 
       <main className={pageStyles.container}>
-        <AlertWrapper>
-          {alerts.map(({ message, severity }, index) => (
-            <Alert key={message} severity={severity} message={message} handleDismiss={() => setAlerts(prevAlerts => prevAlerts.filter((_, i) => i !== index))} />
-          ))}
-        </AlertWrapper>
-
         <form className={pageStyles.form} autoComplete='off' onSubmit={handlePublish}>
           <p className={cx(formStyles['section-heading'], 'sub-label')}>Select existing draft (optional)</p>
           <SelectInput name={'draftId'} placeholder='Select draft' value={formData.draftId} onChange={handleFormUpdate} options={Object.keys(drafts).map(id => ({

@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { auth, db } from '@/firebasse.config';
-import ErrorIcon from '@/components/icons/error-icon';
 import SpinnerIcon from '@/components/icons/spinner-icon';
 import EmailIcon from '@/components/icons/email-icon';
 import LockIcon from '@/components/icons/lock-icon';
@@ -11,6 +10,7 @@ import cx from 'classnames';
 import styles from './styles/Login.module.scss';
 import { useUser } from '@/contexts/user';
 import { useRouter } from 'next/navigation';
+import { useAlerts } from '@/contexts/alerts';
 
 const Login = () => {
   const { user, admin, redirected, setRedirected, logout } = useUser();
@@ -20,7 +20,8 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [alertIds, setAlertIds] = useState([]); // [ id, ... ]
+  const { addAlert, removeAlert } = useAlerts();
 
   const signUpIfAuthorized = async () => {
     // Check if user is present in the authorized users signup collection
@@ -53,7 +54,8 @@ const Login = () => {
         throw new Error('Invalid username or password!');
       }
     } catch (err) {
-      setErrorMsg(err.message);
+      let id = addAlert(err.message, 'error');
+      setAlertIds(prevIds => [...prevIds, id]);
       resetForm();
       logout();
     } finally {
@@ -64,7 +66,8 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrorMsg('');
+    alertIds.forEach(id => removeAlert(id));
+    setAlertIds([]);
 
     try {
       const res = await signInWithEmailAndPassword(auth, email, password);
@@ -84,7 +87,8 @@ const Login = () => {
       if (err.code === 'auth/user-not-found') {
         signUpIfAuthorized();
       } else {
-        setErrorMsg(err.message);
+        let id = addAlert(err.message, 'error');
+        setAlertIds(prevIds => [...prevIds, id]);
         resetForm();
         logout();
         setLoading(false);
@@ -108,12 +112,6 @@ const Login = () => {
           <h1 className='heading'>Login</h1>
         </header>
         <div className={styles['form-box']}>
-          <div className='messages'>
-            {errorMsg && <div className={cx(styles['login-msg'], styles.error)}>
-              <div className={styles.icon}><ErrorIcon /></div>
-              {errorMsg}
-            </div>}
-          </div>
           <form className={styles['login-form']} onSubmit={handleLogin}>
             <div className={cx(styles['login-field'], styles.email)}>
               <EmailIcon />

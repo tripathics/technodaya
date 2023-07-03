@@ -7,7 +7,7 @@ import NextIcon from '@/components/icons/navigate-next-icon'
 import { storage, db } from '@/firebasse.config'
 import { arrayUnion, collection, doc, setDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import Alert, { AlertWrapper } from '@/components/alert'
+import { useAlerts } from '@/contexts/alerts'
 import { Categories } from '@/helpers/helpers'
 import { useUser } from '@/contexts/user'
 
@@ -19,21 +19,22 @@ const SubmitFC = () => {
   const [imgCaption, setImgCaption] = useState('');
   const [formView, setFormView] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [alertSeverity, setAlertSeverity] = useState('info');
+
+  const [alertIds, setAlertIds] = useState([]);   // [id, ...]
+  const { addAlert, removeAlert } = useAlerts();
 
   const { user } = useUser();
 
   const handleSubmit = (desc) => {
     if (!user) {
-      setAlertMessage('Please login to submit');
-      setAlertSeverity('error');
+      let id = addAlert('Please login to submit', 'error');
+      setAlertIds(prevIds => [...prevIds, id]);
       return;
     }
 
     setLoading(true);
-    setAlertMessage('');
-    setAlertSeverity('info');
+    alertIds.forEach(id => removeAlert(id));
+    setAlertIds([]);
     const heading = activityTitle
     const { date, eventBrochure } = categoryFormData
     const category_Id = category;
@@ -61,13 +62,13 @@ const SubmitFC = () => {
       try {
         await setDoc(doc(collection(db, 'submissions')), uploadObj)
         setCategory(0);
-        setAlertMessage('Submitted successfully');
-        setAlertSeverity('success');
+        let id = addAlert('Submitted successfully', 'success');
+        setAlertIds(prevIds => [...prevIds, id]);
         resetForm();
       } catch (err) {
         console.error(err);
-        setAlertMessage(err.message);
-        setAlertSeverity('error');
+        let id = addAlert(err.message, 'error');
+        setAlertIds(prevIds => [...prevIds, id]);
       } finally {
         setLoading(false);
       }
@@ -88,8 +89,8 @@ const SubmitFC = () => {
           imgLinks.push(url);
         }))
           .catch(error => {
-            setAlertMessage(error.message);
-            setAlertSeverity('error');
+            let id = addAlert(error.message, 'error');
+            setAlertIds(prevIds => [...prevIds, id]);
             console.log(error);
           })
           .then(() => {
@@ -106,8 +107,8 @@ const SubmitFC = () => {
         desc += ` [Download event brochure](${url})`;
       }))
         .catch(error => {
-          setAlertMessage(error.message);
-          setAlertSeverity('error');
+          let id = addAlert(error.message, 'error');
+          setAlertIds(prevIds => [...prevIds, id]);
           console.log(error);
         })
         .finally(() => {
@@ -159,9 +160,6 @@ const SubmitFC = () => {
 
   return (
     <div className="add-blogs">
-      <AlertWrapper>
-        <Alert message={alertMessage} severity={alertSeverity} />
-      </AlertWrapper>
       <div className="mobile-bg" />
       <div className="activity-form container">
         <div className="tablist-wrapper">

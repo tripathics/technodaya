@@ -1,6 +1,7 @@
 import './globals.scss'
 import { Cormorant, Crimson_Text, Open_Sans, Zilla_Slab } from 'next/font/google'
 import UserProvider from '@/contexts/user'
+import AlertsProvider, { Alerts } from '@/contexts/alerts'
 
 const open_sans = Open_Sans({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], styles: ['normal', 'italic'] })
 // const cormorant = Cormorant({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], styles: ['normal', 'italic'] })
@@ -16,7 +17,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={[open_sans.className].join(' ')}>
-        <UserProvider>{children}</UserProvider>
+        <AlertsProvider>
+          <Alerts />
+          <UserProvider>{children}</UserProvider>
+        </AlertsProvider>
       </body>
     </html>
   )

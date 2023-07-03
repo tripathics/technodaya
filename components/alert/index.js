@@ -6,7 +6,7 @@ import InfoIcon from "../icons/alerts/info-icon";
 
 import styles from "./alert.module.scss";
 import cx from "classnames";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const Icon = ({ severity }) => {
   if (severity === "success") return <SuccessIcon />;
