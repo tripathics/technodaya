@@ -8,6 +8,7 @@ import { Cormorant } from 'next/font/google'
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebasse.config";
 import NotFound from "@/app/not-found";
+import Alert from '@/components/alert';
 
 const cormorant = Cormorant({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], styles: ['normal', 'italic'] });
 
@@ -44,6 +45,7 @@ export default function Issue({ params, draft = false }) {
   return (
     loading ? <LoadingPage /> : !currentSectionIds.length ? <NotFound /> :
       <div className='container'>
+        {draft && <Alert message="You are viewing a draft copy of the issue. Changes may be made until the issue is published." severity="warning" />}
         <div className={styles['page-header']}>
           <div className={styles['issue-meta']}>
             <time className={styles['publish-date']}>{publishedAtStr}</time>
