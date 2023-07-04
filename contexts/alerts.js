@@ -10,6 +10,7 @@ const Provider = ({ children }) => {
     const id = Math.random().toString(36).slice(2, 9);
     timeout = timeout || (type === 'error' ? 10000 : 5000);
     setAlerts([{ id, message, type, timeout }, ...alerts]);
+    return id;
   };
 
   const removeAlert = (id) => {
