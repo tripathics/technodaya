@@ -3,7 +3,7 @@ import { createContext, useState, useEffect, useContext } from "react";
 import { auth, db } from '../firebasse.config'
 import { doc, getDoc } from "firebase/firestore";
 import { signOut } from "firebase/auth";
-import { useAlerts } from "./alerts";
+import usePageAlerts from "@/hooks/pageAlerts";
 
 const Context = createContext();
 const Provider = ({ children }) => {
@@ -11,13 +11,11 @@ const Provider = ({ children }) => {
   const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [redirected, setRedirected] = useState(false);
-  const [alertIds, setAlertIds] = useState([]);   // [{message, severity}]
-  const { addAlert, removeAlert } = useAlerts();
+  const { add: addAlert, clear: clearAlerts } = usePageAlerts();
 
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
-      alertIds.forEach(id => removeAlert(id));
-      setAlertIds([]);
+      clearAlerts();
 
       setUser(user);
       setLoading(true);
@@ -31,15 +29,13 @@ const Provider = ({ children }) => {
         const docSnap = await getDoc(doc(db, "users", user.uid));
         if (docSnap.exists()) {
           setAdmin(docSnap.data().Role === 'admin');
-          let id = addAlert(`Welcome back, ${docSnap.data().FullName}!`, 'success');
-          setAlertIds(prevIds => [...prevIds, id]);
+          addAlert(`Welcome back, ${docSnap.data().FullName}!`, 'success');
         } else {
           setAdmin(false);
         }
       } catch (e) {
         setAdmin(false);
-        let id = addAlert('Invalid user', 'error');
-        setAlertIds(prevIds => [...prevIds, id]);
+        addAlert('Invalid user', 'error');
       } finally {
         setLoading(false);
       }
@@ -47,8 +43,7 @@ const Provider = ({ children }) => {
   }, [])
 
   const logout = () => {
-    let id = addAlert('Logged out successfully', 'success');
-    setAlertIds(prevIds => [...prevIds, id]);
+    addAlert('Logging out...', 'info');
     signOut(auth);
   }
 

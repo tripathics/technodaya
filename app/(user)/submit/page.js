@@ -7,7 +7,7 @@ import NextIcon from '@/components/icons/navigate-next-icon'
 import { storage, db } from '@/firebasse.config'
 import { arrayUnion, collection, doc, setDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import { useAlerts } from '@/contexts/alerts'
+import usePageAlerts from '@/hooks/pageAlerts'
 import { Categories } from '@/helpers/helpers'
 import { useUser } from '@/contexts/user'
 
@@ -20,21 +20,18 @@ const SubmitFC = () => {
   const [formView, setFormView] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const [alertIds, setAlertIds] = useState([]);   // [id, ...]
-  const { addAlert, removeAlert } = useAlerts();
+  const { add: addAlert, clear: clearAlerts } = usePageAlerts();
 
   const { user } = useUser();
 
   const handleSubmit = (desc) => {
     if (!user) {
-      let id = addAlert('Please login to submit', 'error');
-      setAlertIds(prevIds => [...prevIds, id]);
+      addAlert('Please login to submit', 'error');
       return;
     }
 
     setLoading(true);
-    alertIds.forEach(id => removeAlert(id));
-    setAlertIds([]);
+    clearAlerts();
     const heading = activityTitle
     const { date, eventBrochure } = categoryFormData
     const category_Id = category;
@@ -62,13 +59,11 @@ const SubmitFC = () => {
       try {
         await setDoc(doc(collection(db, 'submissions')), uploadObj)
         setCategory(0);
-        let id = addAlert('Submitted successfully', 'success');
-        setAlertIds(prevIds => [...prevIds, id]);
+        addAlert('Submitted successfully', 'success');
         resetForm();
       } catch (err) {
         console.error(err);
-        let id = addAlert(err.message, 'error');
-        setAlertIds(prevIds => [...prevIds, id]);
+        addAlert(err.message, 'error');
       } finally {
         setLoading(false);
       }
@@ -89,8 +84,7 @@ const SubmitFC = () => {
           imgLinks.push(url);
         }))
           .catch(error => {
-            let id = addAlert(error.message, 'error');
-            setAlertIds(prevIds => [...prevIds, id]);
+            addAlert(error.message, 'error');
             console.log(error);
           })
           .then(() => {
@@ -107,8 +101,7 @@ const SubmitFC = () => {
         desc += ` [Download event brochure](${url})`;
       }))
         .catch(error => {
-          let id = addAlert(error.message, 'error');
-          setAlertIds(prevIds => [...prevIds, id]);
+          addAlert(error.message, 'error');
           console.log(error);
         })
         .finally(() => {
@@ -155,7 +148,6 @@ const SubmitFC = () => {
   useEffect(() => {
     if (category === 0) setActivityTitle('');
     resetForm();
-    // eslint-disable-next-line
   }, [category])
 
   return (

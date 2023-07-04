@@ -37,7 +37,9 @@ const DraftForm = ({ formData, handleChange, submitForm }) => {
       <p className={formStyles['section-heading']}>Issue details</p>
       <TextInput required={true} name="vol" placeholder='Volume no. (in Romans)' onChange={handleChange} value={formData?.vol} />
       <TextInput type="number" attrs={{ min: 1 }} required={true} name='iss' placeholder='Issue' onChange={handleChange} value={formData?.iss} />
-      <p className={formStyles['section-heading']}>Month and year</p>
+      <p className={formStyles['section-heading']}>
+        Pick where you left off by selecting the Month and Year of the last draft
+      </p>
       <DateInput type="month" required={true} name='month' onChange={handleChange} value={formData?.month} />
     </form>
   )

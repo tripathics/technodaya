@@ -15,15 +15,18 @@ const Icon = ({ severity }) => {
   else return <InfoIcon />;
 };
 
-const Alert = ({ severity = "info", message = "", timeout = null, handleDismiss = null }) => {
+const Alert = ({ severity = "info", message, timeout = null, handleDismiss = null }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [alertText, setAlertText] = useState("");
 
   useEffect(() => {
-    if (!!message.length) {
+    if (!!message) {
       setAlertText(message);
-      setIsVisible(true);
-    } else {
+      setTimeout(() => {
+        setIsVisible(true);
+      }, 300);
+    }
+    else {
       setIsVisible(false);
       setTimeout(() => {
         setAlertText("");
@@ -33,14 +36,9 @@ const Alert = ({ severity = "info", message = "", timeout = null, handleDismiss 
 
   useEffect(() => {
     if (timeout) {
-      let t = setTimeout(() => {
+      setTimeout(() => {
         dismissAlert();
       }, timeout);
-
-      return () => {
-        clearTimeout(t);
-        dismissAlert();
-      }
     }
   }, [])
 

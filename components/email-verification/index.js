@@ -4,27 +4,23 @@ import Alert from "../alert";
 import { sendEmailVerification } from "firebase/auth";
 import SpinnerIcon from "../icons/spinner-icon";
 import styles from './EmailVerification.module.scss';
-import { useAlerts } from "@/contexts/alerts";
+import usePageAlerts from "@/hooks/pageAlerts";
 
 const EmailVerification = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [alertIds, setAlertIds] = useState([]); // [ id, ... ]
-  const { addAlert, removeAlert } = useAlerts();
+  const { add: addAlert, clear: clearAlerts } = usePageAlerts();
 
   const verifyEmail = (e) => {
     e.preventDefault();
     setLoading(true);
-    alertIds.forEach(id => removeAlert(id));
-    setAlertIds([]);
+    clearAlerts();
     sendEmailVerification(user).then(() => {
       setLoaded(true);
-      let id = addAlert(`Verification link sent ${user.email}`, 'success');
-      setAlertIds(prevIds => [...prevIds, id]);
+      addAlert(`Verification link sent ${user.email}`, 'success');
     }).catch(err => {
       console.error(err);
-      let id = addAlert(err.message, 'error');
-      setAlertIds(prevIds => [...prevIds, id]);
+      addAlert(err.message, 'error');
     })
   }
 

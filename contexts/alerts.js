@@ -1,20 +1,21 @@
 'use client'
 import Alert, { AlertsWrapper } from "@/components/alert";
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useRef } from "react";
 
 const AlertsContext = createContext();
 const Provider = ({ children }) => {
   const [alerts, setAlerts] = useState([]); // [ { id, message, type, timeout }, ... ]
-
+  const alertsRef = useRef([]);
   const addAlert = (message, type, timeout = null) => {
-    const id = Math.random().toString(36).slice(2, 9);
+    const id = new Date().getTime().toString();
     timeout = timeout || (type === 'error' ? 10000 : 5000);
-    setAlerts([{ id, message, type, timeout }, ...alerts]);
+    alertsRef.current = [{ id, message, type, timeout }, ...alertsRef.current];
+    setAlerts(alertsRef.current);
     return id;
   };
-
   const removeAlert = (id) => {
-    setAlerts(alerts.filter((alert) => alert.id !== id));
+    alertsRef.current = alertsRef.current.filter((alert) => alert.id !== id);
+    setAlerts(alertsRef.current);
   };
 
   return (
@@ -33,7 +34,7 @@ const Alerts = () => {
         <Alert key={alert.id} severity={alert.type}
           timeout={alert.timeout}
           message={alert.message}
-          handleDismiss={() => removeAlert(alert.id)} />
+          handleDismiss={() => { removeAlert(alert.id) }} />
       ))}
     </AlertsWrapper>
   )

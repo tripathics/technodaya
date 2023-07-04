@@ -9,9 +9,9 @@ import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storage, db } from '@/firebasse.config';
 import { BiMonthlyNames, getBiMonth } from '@/helpers/helpers';
-import { useAlerts } from '@/contexts/alerts';
 import SendIcon from '@/components/icons/send-icon';
 import RemoveIcon from '@/components/icons/remove-icon';
+import usePageAlerts from '@/hooks/pageAlerts';
 
 export default function Publish() {
   const {
@@ -23,15 +23,16 @@ export default function Publish() {
 
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [alertIds, setAlertIds] = useState([]);
-  const { addAlert, removeAlert } = useAlerts();
+  const { add: addAlert, clear: clearAlerts } = usePageAlerts();
 
   useEffect(() => {
     if (draftsError) {
-      let id = addAlert(`Error fetching drafts: ${draftsError.message}`, 'error');
-      setAlertIds(prevIds => [...prevIds, id]);
+      addAlert(`Error fetching drafts: ${draftsError.message}`, 'error');
     }
-  }, [draftsError])
+    if (!loadingDrafts && drafts) {
+      addAlert('Drafts exist', 'info');
+    }
+  }, [loadingDrafts, drafts, draftsError])
 
   const handleFormUpdate = (e) => {
     const { name, value } = e.target;
@@ -67,8 +68,7 @@ export default function Publish() {
   const handlePublish = async (e) => {
     e.preventDefault();
     setLoading(true);
-    alertIds.forEach(id => removeAlert(id));
-    setAlertIds([]);
+    clearAlerts();
     const { title, vol, iss, month, 'newsletter-link': newsletterLink, 'newsletter-cover': newsletterCover } = formData;
 
     // create index string in the format YYYYII where YYYY is year and II is issue number
@@ -111,14 +111,11 @@ export default function Publish() {
           return newDrafts;
         })
       }
-
-      let id = addAlert('Issue published successfully', 'success');
-      setAlertIds(prevIds => [...prevIds, id]);
+      addAlert('Issue published successfully!', 'success');
       setFormData({});
     } catch (err) {
       console.log(err);
-      let id = addAlert(`Error publishing issue: ${err.message}`, 'error');
-      setAlertIds(prevIds => [...prevIds, id]);
+      addAlert(`Error publishing issue: ${err.message}`, 'error');
     } finally {
       setLoading(false);
     }

@@ -8,13 +8,12 @@ import { db } from '@/firebasse.config';
 import { RadioInput, TextInput } from '@/components/form/InputComponents';
 import RefreshIcon from '@/components/icons/refresh-icon';
 import useFetchCollection from '@/hooks/fetchCollection';
-import { useAlerts } from '@/contexts/alerts';
+import usePageAlerts from '@/hooks/pageAlerts';
 
 export default function Register() {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [alertIds, setAlertIds] = useState([]); // [{ message: '', severity: '' }
-  const { addAlert, removeAlert } = useAlerts();
+  const { add: addAlert, clear: clearAlerts } = usePageAlerts();
 
   const {
     docs: authUsers,
@@ -38,8 +37,7 @@ export default function Register() {
 
   const addAuthorizedUser = (e) => {
     e.preventDefault();
-    alertIds.forEach(id => removeAlert(id));
-    setAlertIds([]);
+    clearAlerts();
 
     setLoading(true);
     // Add user to authorized users collection
@@ -47,8 +45,7 @@ export default function Register() {
 
     if (Object.keys(registeredUsers).map(id => registeredUsers[id].Email).includes(email)
       || Object.keys(authUsers).map(id => authUsers[id].Email).includes(email)) {
-      let id = addAlert('User already exists with that email!', 'error');
-      setAlertIds(prevIds => [...prevIds, id]);
+      addAlert('User already exists with that email!', 'error', 100000);
       setLoading(false);
       return;
     }
@@ -67,12 +64,10 @@ export default function Register() {
           Role: role || 'user',
         }
       }));
-      let id = addAlert('User added successfully!', 'success');
-      setAlertIds(prevIds => [...prevIds, id]);
+      addAlert('User added successfully!', 'success');
       resetForm();
     }).catch(err => {
-      let id = addAlert(`Error adding user: ${err.message}`, 'error');
-      setAlertIds(prevIds => [...prevIds, id]);
+      addAlert(`Error adding user: ${err.message}`, 'error');
       resetForm();
     }).finally(() => {
       setLoading(false);

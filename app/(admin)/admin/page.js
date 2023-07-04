@@ -12,16 +12,14 @@ import cx from "classnames"
 import styles from './page.module.scss'
 import SaveIcon from "@/components/icons/save-icon"
 import RefreshIcon from "@/components/icons/refresh-icon"
-import { useAlerts } from "@/contexts/alerts"
+import usePageAlerts from "@/hooks/pageAlerts"
 
 export default function Submissions() {
   const [unsaved, setUnsaved] = useState({});
   const [storageDeletes, setStorageDeletes] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
-  const { addAlert, removeAlert } = useAlerts();
-  const [alertIds, setAlertIds] = useState([]); // [ id1, id2, ... ]
-
+  const { add: addAlert, clear: clearAlerts } = usePageAlerts();
 
   const {
     docs: pending,
@@ -100,8 +98,7 @@ export default function Submissions() {
   }
 
   const saveChanges = () => {
-    alertIds.forEach(id => removeAlert(id));
-    setAlertIds([]);
+    clearAlerts();
     const updateDoc = (id) => {
       const docRef = doc(db, 'submissions', id);
       if (unsaved[id].delete) {
@@ -119,8 +116,7 @@ export default function Submissions() {
           delete unsaved[id];
           if (i === n - 1) {
             setUploading(false);
-            let id = addAlert('Changes saved', 'success');
-            setAlertIds([...alertIds, id]);
+            addAlert('Changes saved', 'success');
           };
         })
         .catch(err => { console.log(err) });
@@ -153,9 +149,7 @@ export default function Submissions() {
   }, [fetchingApproved, fetchingPending])
 
   return (
-    <div className={cx(
-      // styles.submissions, 
-      'submissions', styles.page)}>
+    <div className={cx('submissions', styles.page)}>
       <header className={cx(styles['page-header'], styles.container)}>
         <h1 className={styles.heading}>Submissions</h1>
         <div className={styles["btns-group"]}>

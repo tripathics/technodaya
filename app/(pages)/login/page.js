@@ -10,7 +10,7 @@ import cx from 'classnames';
 import styles from './styles/Login.module.scss';
 import { useUser } from '@/contexts/user';
 import { useRouter } from 'next/navigation';
-import { useAlerts } from '@/contexts/alerts';
+import usePageAlerts from '@/hooks/pageAlerts';
 
 const Login = () => {
   const { user, admin, redirected, setRedirected, clearUser } = useUser();
@@ -20,8 +20,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [alertIds, setAlertIds] = useState([]); // [ id, ... ]
-  const { addAlert, removeAlert } = useAlerts();
+  const { add: addAlert, clear: clearAlerts } = usePageAlerts();
 
   const signUpIfAuthorized = async () => {
     // Check if user is present in the authorized users signup collection
@@ -54,8 +53,7 @@ const Login = () => {
         throw new Error('Invalid username or password!');
       }
     } catch (err) {
-      let id = addAlert(err.message, 'error');
-      setAlertIds(prevIds => [...prevIds, id]);
+      addAlert(err.message, 'error');
       resetForm();
       clearUser();
     } finally {
@@ -66,8 +64,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    alertIds.forEach(id => removeAlert(id));
-    setAlertIds([]);
+    clearAlerts();
 
     try {
       const res = await signInWithEmailAndPassword(auth, email, password);
@@ -87,8 +84,7 @@ const Login = () => {
       if (err.code === 'auth/user-not-found') {
         signUpIfAuthorized();
       } else {
-        let id = addAlert(err.message, 'error');
-        setAlertIds(prevIds => [...prevIds, id]);
+        addAlert(err.message, 'error');
         resetForm();
         clearUser();
         setLoading(false);
