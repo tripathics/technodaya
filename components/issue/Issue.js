@@ -45,8 +45,8 @@ export default function Issue({ params, draft = false }) {
   return (
     loading ? <LoadingPage /> : !currentSectionIds.length ? <NotFound /> :
       <div className='container'>
-        {draft && <Alert message="You are viewing a draft copy of the issue. Changes may be made until the issue is published." severity="warning" />}
         <div className={styles['page-header']}>
+          {draft && <Alert message="You are viewing a draft copy of the issue. Changes may be made until the issue is published." severity="warning" />}
           <div className={styles['issue-meta']}>
             <time className={styles['publish-date']}>{publishedAtStr}</time>
             <span className={styles['iss-vol']}>Vol-{issueData.vol}, Issue-{issueData.iss}</span>
