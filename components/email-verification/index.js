@@ -9,7 +9,7 @@ import usePageAlerts from "@/hooks/pageAlerts";
 const EmailVerification = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const { add: addAlert, clear: clearAlerts } = usePageAlerts();
+  const { add: addAlert, clear: clearAlerts, alertIds } = usePageAlerts();
 
   const verifyEmail = (e) => {
     e.preventDefault();

@@ -69,10 +69,8 @@ const FormFC = ({
           handleInputChange={handleInputChange}
           addPerson={addPerson}
           removePerson={removePerson}
-          onSubmit={() => { console.log('todo schemaform submit') }}
         />
-
-        <p className="sub-label">Upload images (optional)</p>
+        <p className={cx(styles['section-heading'], 'sub-label')}>Upload images (optional)</p>
         <FileInput
           key={`i${category}`}
           name='images'
