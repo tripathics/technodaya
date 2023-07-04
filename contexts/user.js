@@ -47,10 +47,18 @@ const Provider = ({ children }) => {
   }, [])
 
   const logout = () => {
+    let id = addAlert('Logged out successfully', 'success');
+    setAlertIds(prevIds => [...prevIds, id]);
     signOut(auth);
   }
 
-  const exposed = { user, admin, loading, logout, redirected, setRedirected }
+  const clearUser = () => {
+    setUser(null);
+    setAdmin(false);
+    signOut(auth);
+  }
+
+  const exposed = { user, admin, loading, logout, clearUser, redirected, setRedirected }
 
   return (<Context.Provider value={exposed}>
     {children}

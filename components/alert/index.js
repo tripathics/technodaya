@@ -15,33 +15,34 @@ const Icon = ({ severity }) => {
   else return <InfoIcon />;
 };
 
-const Alert = ({ severity = "info", message = "", handleDismiss = null }) => {
+const Alert = ({ severity = "info", message = "", timeout = null, handleDismiss = null }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [alertText, setAlertText] = useState("");
 
   useEffect(() => {
-    let timeout, timeout2;
     if (!!message.length) {
       setAlertText(message);
       setIsVisible(true);
     } else {
       setIsVisible(false);
-      timeout = setTimeout(() => {
+      setTimeout(() => {
         setAlertText("");
-      }, 1000);
+      }, 300);
     }
+  }, [message]);
 
-    if (!handleDismiss) {
-      timeout2 = setTimeout(() => {
-        setIsVisible(false);
-      }, 8000);
-    }
+  useEffect(() => {
+    if (timeout) {
+      let t = setTimeout(() => {
+        dismissAlert();
+      }, timeout);
 
-    return () => {
-      clearTimeout(timeout);
-      clearTimeout(timeout2);
+      return () => {
+        clearTimeout(t);
+        dismissAlert();
+      }
     }
-  }, [message, handleDismiss]);
+  }, [])
 
   const dismissAlert = () => {
     setIsVisible(false);
@@ -51,7 +52,7 @@ const Alert = ({ severity = "info", message = "", handleDismiss = null }) => {
   };
 
   return (
-    <div className={cx(styles.alert, styles[severity], { [styles.active]: isVisible })} >
+    <div className={cx(styles.alert, styles[severity], { [styles.active]: isVisible }, { [styles.static]: !timeout && !handleDismiss })} >
       <div className={styles.icon}>
         <Icon severity={severity} />
       </div>
@@ -69,7 +70,7 @@ const Alert = ({ severity = "info", message = "", handleDismiss = null }) => {
   );
 };
 
-export const AlertWrapper = ({ children }) => (
+export const AlertsWrapper = ({ children }) => (
   <div className={styles['alert-wrapper']}>
     {children}
   </div>

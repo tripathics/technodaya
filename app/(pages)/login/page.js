@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 import { useAlerts } from '@/contexts/alerts';
 
 const Login = () => {
-  const { user, admin, redirected, setRedirected, logout } = useUser();
+  const { user, admin, redirected, setRedirected, clearUser } = useUser();
 
   const router = useRouter();
 
@@ -57,7 +57,7 @@ const Login = () => {
       let id = addAlert(err.message, 'error');
       setAlertIds(prevIds => [...prevIds, id]);
       resetForm();
-      logout();
+      clearUser();
     } finally {
       if (!user) setLoading(false);
     }
@@ -90,7 +90,7 @@ const Login = () => {
         let id = addAlert(err.message, 'error');
         setAlertIds(prevIds => [...prevIds, id]);
         resetForm();
-        logout();
+        clearUser();
         setLoading(false);
       }
     }
