@@ -1,12 +1,12 @@
 'use client'
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { auth, db } from '../firebasse.config'
 import { doc, getDoc } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import usePageAlerts from "@/hooks/pageAlerts";
 
 const Context = createContext();
-const Provider = ({ children }) => {
+const UserProvider = ({ children }) => {
   const [user, setUser] = useState(auth.currentUser);
   const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -15,8 +15,6 @@ const Provider = ({ children }) => {
 
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
-      clearAlerts();
-
       setUser(user);
       setLoading(true);
 
@@ -25,11 +23,12 @@ const Provider = ({ children }) => {
         setLoading(false);
         return;
       }
+      clearAlerts();
       try {
         const docSnap = await getDoc(doc(db, "users", user.uid));
         if (docSnap.exists()) {
           setAdmin(docSnap.data().Role === 'admin');
-          addAlert(`Welcome back, ${docSnap.data().FullName}!`, 'success');
+          addAlert(`Welcome back, ${docSnap.data().FullName}!`, 'success', 3000);
         } else {
           setAdmin(false);
         }
@@ -43,8 +42,8 @@ const Provider = ({ children }) => {
   }, [])
 
   const logout = () => {
-    addAlert('Logging out...', 'info');
     signOut(auth);
+    addAlert('Logged out', 'success', 3000);
   }
 
   const clearUser = () => {
@@ -62,4 +61,4 @@ const Provider = ({ children }) => {
 
 export const useUser = () => useContext(Context);
 
-export default Provider;
+export default UserProvider;

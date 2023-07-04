@@ -3,7 +3,7 @@ import Alert, { AlertsWrapper } from "@/components/alert";
 import { createContext, useState, useContext, useRef } from "react";
 
 const AlertsContext = createContext();
-const Provider = ({ children }) => {
+const AlertsProvider = ({ children }) => {
   const [alerts, setAlerts] = useState([]); // [ { id, message, type, timeout }, ... ]
   const alertsRef = useRef([]);
   const addAlert = (message, type, timeout = null) => {
@@ -42,5 +42,5 @@ const Alerts = () => {
 
 const useAlerts = () => useContext(AlertsContext);
 
-export { Alerts, Provider, useAlerts };
-export default Provider;
+export { Alerts, AlertsProvider as Provider, useAlerts };
+export default AlertsProvider;
