@@ -115,7 +115,7 @@ export default function Draft() {
       });
 
       const preview = await getDoc(previewRef);
-      if (false && preview.exists()) {
+      if (preview.exists()) {
         setPreview('previews/' + year + biMonth);
         dndData = { ...preview.data().orders };
         // populate subsections
