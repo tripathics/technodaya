@@ -18,6 +18,7 @@ import NavigateNextIcon from '@/components/icons/navigate-next-icon'
 import SpinnerIcon from '@/components/icons/spinner-icon'
 import RemoveIcon from '@/components/icons/remove-icon'
 import LoadingScreen from '@/components/loading-screen'
+import mockDraft from './mockDraft'
 
 const DraftForm = ({ formData, handleChange, submitForm, drafts = {} }) => {
   const handleSubmit = (e) => {
@@ -94,8 +95,9 @@ export default function Draft() {
   const { add: addAlert, clear: clearAlerts } = usePageAlerts();
 
   useEffect(() => {
-    if (!fetchingDrafts && drafts) {
-      addAlert('Draft(s) available', 'info');
+    if (!fetchingDrafts) {
+      if (Object.keys(drafts).length) addAlert('Draft(s) available', 'info');
+      else addAlert('No drafts available', 'info');
     }
   }, [fetchingDrafts, drafts])
 
@@ -187,8 +189,9 @@ export default function Draft() {
       const { 'desc': desc, ...rest } = approved[id];
       dndData.activities[id] = { ...rest, content: desc };
     })
-    setOrders({ ...dndData });
-    console.log(dndData);
+    // setOrders({ ...dndData });
+
+    setOrders(mockDraft);
 
     switchView();
   }

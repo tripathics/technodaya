@@ -27,6 +27,7 @@ export default function Publish() {
   const { add: addAlert, clear: clearAlerts } = usePageAlerts();
 
   useEffect(() => {
+    if (loading) return;
     if (draftsError) {
       addAlert(`Error fetching drafts: ${draftsError.message}`, 'error');
     }
@@ -77,6 +78,7 @@ export default function Publish() {
     let index = `${month.slice(0, 4)}${iss.toString().padStart(2, '0')}`;
     // publishId is in the format YYYY-BiMonth (e.g. 2021JanFeb)
     let publishId = `${month.slice(0, 4)}${BiMonthlyNames[getBiMonth(month)][0]}`;
+    addAlert('Publishing issue. Do not refresh, close or press back button', 'warning', 10000)
 
     try {
       // upload newsletter cover image
@@ -112,6 +114,12 @@ export default function Publish() {
           delete newDrafts[formData.draftId];
           return newDrafts;
         })
+
+        // delete approved submissions as already published
+        const approvedSubmissionsIds = Object.keys(drafts[formData.draftId].orders.activities);
+        approvedSubmissionsIds.forEach(async (id) => {
+          await deleteDoc(doc(db, 'submissions', id));
+        });
       }
       addAlert('Issue published successfully!', 'success');
       setFormData({});
