@@ -4,6 +4,7 @@ import styles from './layout.module.scss';
 import AdminNav from '@/components/admin-nav';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import LoadingScreen from '@/components/loading-screen';
 
 export default function Layout({ children }) {
   const { user, admin, loading, setRedirected } = useUser();
@@ -21,7 +22,7 @@ export default function Layout({ children }) {
       <AdminNav />
       <main className={styles.main}>
         {loading
-          ? <div className={styles.loading}>Loading...</div>
+          ? <LoadingScreen />
           : user && admin ? children : <div className={styles.loading}>You must be logged in as an admin to view this page.</div>
         }
       </main>

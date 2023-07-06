@@ -393,6 +393,10 @@ $form-muted: #ced4da;
     padding: 0.8rem;
 }
 
+.form-control[disabled] {
+    background-color: #f1f2f3;
+}
+
 // .form-page {
 //     .form-box {
 //         .login-form {

@@ -61,7 +61,7 @@ const TextareaInput = ({
 )
 
 const DateInput = ({
-  name, onChange, required = false, value = '', type
+  name, onChange, required = false, disabled = false, value = '', type
 }) => (
   <div className={styles['form-field']}>
     <input type={type}
@@ -70,6 +70,7 @@ const DateInput = ({
       value={value}
       onChange={onChange}
       required={required}
+      disabled={disabled}
       placeholder={`${type === 'month' ? 'YYYY-MM' : ''} ${required ? '*' : ''}`}
       pattern={type === 'month' ? '[0-9]{4}-[0-9]{2}' : '[0-9]{4}-[0-9]{2}-[0-9]{2}'}
       title={type === 'month' ? 'YYYY-MM' : 'YYYY-MM-DD'}

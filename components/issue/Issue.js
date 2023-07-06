@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from "react";
 import { getBiMonth, BiMonthlyNames } from "@/helpers/helpers";
-import LoadingPage from "@/components/icons/spinner-icon";
 import styles from './issue.module.scss';
 import MagazineSection from "@/components/issue/MagazineSection";
 import { Cormorant } from 'next/font/google'
@@ -9,6 +8,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebasse.config";
 import NotFound from "@/app/not-found";
 import Alert from '@/components/alert';
+import LoadingScreen from "../loading-screen";
 
 const cormorant = Cormorant({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], styles: ['normal', 'italic'] });
 
@@ -43,7 +43,7 @@ export default function Issue({ params, draft = false }) {
   }, [])
 
   return (
-    loading ? <LoadingPage /> : !currentSectionIds.length ? <NotFound /> :
+    loading ? <LoadingScreen /> : !currentSectionIds.length ? <NotFound /> :
       <div className='container'>
         <div className={styles['page-header']}>
           {draft && <Alert message="You are viewing a draft copy of the issue. Changes may be made until the issue is published." severity="warning" />}

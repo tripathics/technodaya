@@ -6,6 +6,7 @@ import styles2 from './layout.module.scss';
 import { useUser } from '@/contexts/user';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import LoadingScreen from '@/components/loading-screen';
 
 export default function Layout({ children }) {
   const { user, loading, setRedirected } = useUser();
@@ -22,7 +23,7 @@ export default function Layout({ children }) {
     <Navbar />
     <main className={styles.main}>
       {loading
-        ? <div className={styles.loading}>Loading...</div>
+        ? <LoadingScreen />
         : user
           ? children
           : <div className={styles.loading}>You must be logged in to view this page. Redirecting to login...</div>

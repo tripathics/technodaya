@@ -2,6 +2,7 @@
 import { useUser } from '@/contexts/user';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import LoadingScreen from '@/components/loading-screen';
 
 export default function Layout({ children }) {
   const { user, loading, setRedirected } = useUser();
@@ -16,7 +17,7 @@ export default function Layout({ children }) {
 
   return (
     loading
-      ? <div>Loading...</div>
+      ? <LoadingScreen />
       : user
         ? children
         : <div>You must be logged in to view this page.</div>

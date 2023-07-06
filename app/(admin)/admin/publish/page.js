@@ -12,6 +12,7 @@ import { BiMonthlyNames, getBiMonth } from '@/helpers/helpers';
 import SendIcon from '@/components/icons/send-icon';
 import RemoveIcon from '@/components/icons/remove-icon';
 import usePageAlerts from '@/hooks/pageAlerts';
+import Image from 'next/image';
 
 export default function Publish() {
   const {
@@ -29,8 +30,9 @@ export default function Publish() {
     if (draftsError) {
       addAlert(`Error fetching drafts: ${draftsError.message}`, 'error');
     }
-    if (!loadingDrafts && drafts) {
-      addAlert('Drafts exist', 'info');
+    if (!loadingDrafts) {
+      if (Object.keys(drafts).length) addAlert('Draft(s) available', 'info');
+      else addAlert('No draft(s) available', 'info');
     }
   }, [loadingDrafts, drafts, draftsError])
 
@@ -145,13 +147,15 @@ export default function Publish() {
           <TextInput name={'title'} placeholder={'Title of newsletter'} onChange={handleFormUpdate} required={true} type='text' value={formData.title || ''} />
           <TextInput name={'vol'} placeholder={'Volume no. (in romans)'} onChange={handleFormUpdate} required={true} type='text' value={formData.vol || ''} />
           <TextInput type="number" attrs={{ min: 1 }} required={true} name='iss' placeholder='Issue' onChange={handleFormUpdate} value={formData?.iss} />
-          <p className={cx(formStyles['section-heading'], 'sub-label')}>Issue month</p>
-          <DateInput type="month" required={true} name='month' onChange={handleFormUpdate} value={formData?.month} />
+          <p className={formStyles['section-heading']}>Issue month (e.g. January-February issue, select January) *</p>
+          <DateInput type="month" required={true} name='month' onChange={handleFormUpdate} value={formData.month} disabled={(formData.draftId && formData.month)} />
           <TextInput name={'newsletter-link'} placeholder={'Link to newsletter (PDF)'} onChange={handleFormUpdate} required={true} type='url' value={formData['newsletter-link'] || ''} />
 
           <p className={cx(formStyles['section-heading'], 'sub-label')}>Upload newsletter cover *</p>
           <FileInput name='newsletter-cover' onChange={handleFormUpdate} required={true} accept='image/*' />
-          {formData['newsletter-cover'] && <img style={{ maxWidth: '100%' }} src={URL.createObjectURL(formData['newsletter-cover'])} alt="Newsletter cover" />}
+          {formData['newsletter-cover'] && (<div className={pageStyles['image-container']}>
+            <Image className={pageStyles.image} fill={true} src={URL.createObjectURL(formData['newsletter-cover'])} alt="Newsletter cover" />
+          </div>)}
 
           <button className={pageStyles['form-btn']} type="submit" disabled={loading || loadingDrafts}>
             <div className={pageStyles['btn-text']}>Publish Issue</div>
