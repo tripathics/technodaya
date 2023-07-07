@@ -8,18 +8,18 @@ import { usePathname } from "next/navigation"
 
 const toggleSideNav = () => {
   const mobileNavRef = document.getElementById('mobile-nav');
-  if (!mobileNavRef.offsetWidth) {
-    mobileNavRef.style.width = "100%";
-    document.body.style.overflow = "hidden";
-  } else {
-    mobileNavRef.style.width = "0%";
+  if (mobileNavRef.classList.contains(styles['nav-open'])) {
+    mobileNavRef.classList.remove(styles['nav-open']);
     document.body.style.overflow = "auto";
+  } else {
+    mobileNavRef.classList.add(styles['nav-open']);
+    document.body.style.overflow = "hidden";
   }
 }
 
 const closeSideNav = () => {
   const mobileNavRef = document.getElementById('mobile-nav');
-  mobileNavRef.style.width = "0%";
+  mobileNavRef.classList.remove(styles['nav-open']);
   document.body.style.overflow = "auto";
 }
 
