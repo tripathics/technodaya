@@ -187,6 +187,9 @@ export default function Draft() {
           ] : [id],
         }
       })
+
+      // populate sections
+      dndData.sections.default.subSecIds = Object.keys(dndData.subSections);
     }
     // populate activities
     Object.keys(approved).forEach(id => {
