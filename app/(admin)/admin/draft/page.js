@@ -18,7 +18,6 @@ import NavigateNextIcon from '@/components/icons/navigate-next-icon'
 import SpinnerIcon from '@/components/icons/spinner-icon'
 import RemoveIcon from '@/components/icons/remove-icon'
 import LoadingScreen from '@/components/loading-screen'
-import mockDraft from './mockDraft'
 
 const DraftForm = ({ formData, handleChange, submitForm, drafts = {} }) => {
   const handleSubmit = (e) => {
@@ -100,6 +99,11 @@ export default function Draft() {
       else addAlert('No drafts available', 'info');
     }
   }, [fetchingDrafts, drafts])
+
+  useEffect(() => {
+    if (fetchingApproved) return;
+    if (!Object.keys(approved).length) addAlert('Please approve some submissions first to create a draft.', 'warning', 0);
+  }, [approved, fetchingApproved])
 
   useEffect(() => {
     if (draftsError) {
@@ -189,9 +193,7 @@ export default function Draft() {
       const { 'desc': desc, ...rest } = approved[id];
       dndData.activities[id] = { ...rest, content: desc };
     })
-    // setOrders({ ...dndData });
-
-    setOrders(mockDraft);
+    setOrders({ ...dndData });
 
     switchView();
   }
@@ -247,11 +249,16 @@ export default function Draft() {
   }
 
   const switchView = (e) => {
+    if (!Object.keys(approved).length) {
+      clearAlerts();
+      addAlert('Please approve some submissions first to create a draft.', 'warning');
+      return;
+    };
     setFormView(!formView);
   }
 
   return (<>
-    <SmallScreenError />
+    {/* <SmallScreenError /> */}
     <div className={cx("draft", pageStyles.page, styles.draft)}>
       <header className={cx(pageStyles['page-header'], pageStyles.container)}>
         <h1 className={pageStyles.heading}>Draft Issue</h1>

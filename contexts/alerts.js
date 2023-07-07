@@ -7,8 +7,8 @@ const AlertsProvider = ({ children }) => {
   const [alerts, setAlerts] = useState([]); // [ { id, message, type, timeout }, ... ]
   const alertsRef = useRef([]);
   const addAlert = (message, type, timeout = null) => {
-    const id = new Date().getTime().toString();
-    timeout = timeout || (type === 'error' ? 10000 : 5000);
+    const id = Math.random().toString(36).slice(2, 9) + new Date().getTime().toString(36);
+    if (timeout === null) timeout = type === 'error' ? 10000 : 5000;
     alertsRef.current = [{ id, message, type, timeout }, ...alertsRef.current];
     setAlerts(alertsRef.current);
     return id;

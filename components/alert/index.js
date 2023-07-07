@@ -35,6 +35,7 @@ const Alert = ({ severity = "info", message, timeout = null, handleDismiss = nul
   }, [message]);
 
   useEffect(() => {
+    if (timeout === 0) return;
     if (timeout) {
       setTimeout(() => {
         dismissAlert();
