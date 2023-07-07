@@ -26,7 +26,7 @@ export default function Layout({ children }) {
         ? <LoadingScreen />
         : user
           ? children
-          : <div className={styles.loading}>You must be logged in to view this page. Redirecting to login...</div>
+          : <div className={'container'}>Redirecting to login...</div>
       }
     </main>
     <Footer className={styles2.footer} />

@@ -35,7 +35,7 @@ const UserProvider = ({ children }) => {
       } catch (e) {
         setAdmin(false);
         setUser(null);
-        addAlert('Invalid user', 'error');
+        addAlert('Auth error: Invalid user', 'error');
       } finally {
         setLoading(false);
       }
