@@ -41,7 +41,7 @@ const AuthNav = () => {
           <li className={[styles.logout, crimson_text.className].join(' ')}>
             <button className={styles['nav-item']} title="logout" onClick={logout}>
               <div className={[styles['btn-txt'], styles['nav-item-txt']].join(' ')}>
-                <span>{user?.displayName?.slice(0, user.displayName.search(' ')) || 'Logout'}</span>
+                <span>{user?.displayName.includes(' ') ? user.displayName.slice(0, user.displayName.search(' ')) : user?.displayName || 'Logout'}</span>
                 <LogoutIcon />
               </div>
             </button>

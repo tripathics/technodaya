@@ -33,8 +33,18 @@ const UserProvider = ({ children }) => {
           setAdmin(false);
         }
       } catch (e) {
+        if (e.code === 'permission-denied') {
+          const authorizedUserSnap = await getDoc(doc(db, "authorized-users", user.email));
+          if (authorizedUserSnap.exists()) {
+            setUser(user);
+            setAdmin(authorizedUserSnap.data().Role === 'admin');
+            addAlert(`Welcome, ${authorizedUserSnap.data().FullName}!`, 'success', 3000);
+            return;
+          }
+        }
         setAdmin(false);
         setUser(null);
+        console.error(e)
         addAlert('Auth error: Invalid user', 'error');
       } finally {
         setLoading(false);
