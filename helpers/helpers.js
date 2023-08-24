@@ -21,7 +21,7 @@ const Categories = [
   'Outreach Activity',
   'Announcement',
   'Awards',
-  'Other'
+  // 'Other'
 ]
 
 const CategoryTitles = [
@@ -44,7 +44,7 @@ const CategoryTitles = [
   'Outreach Activity',
   'Announcement',
   'Awards',
-  ''
+  // ''
 ]
 
 const Sections = {

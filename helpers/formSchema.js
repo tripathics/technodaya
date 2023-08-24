@@ -247,6 +247,7 @@ const  schema = {
     ],
     // Others
     '19': [
+        { type: 'sectionHeading', label: 'Note: Using this section for activities that fall under existing categories will lead to rejection of your submission' },
         { type: 'sectionHeading', label: 'Mention activity title' },
         { type: 'text', label: 'Activity title', name: 'activityTitle', required: true, placeholder: 'Activity title' },
         { type: 'sectionHeading', label: 'Activity description' },
