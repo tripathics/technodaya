@@ -132,7 +132,7 @@ const  schema = {
         { type: 'person', personType: 'author' },
         { type: 'sectionHeading', label: 'Publication details' },
         { type: 'text', label: 'Chapter title', name: 'title', required: true, placeholder: 'Chapter title' },
-        { type: 'text', label: 'Editors\' name', name: 'editors', required: true, placeholder: 'Chapter title' },
+        { type: 'text', label: 'Editors\' name', name: 'editors', required: true, placeholder: 'Editors\' name' },
         { type: 'text', label: 'Title of Book', name: 'bookTitle', required: true, placeholder: 'Title of Book' },
         { type: 'number', label: 'Publication year', name: 'year', required: true, placeholder: 'Publication year', attrs: { min: 1950 } },
         { type: 'text', label: 'Page no.', name: 'pageNos', required: true, placeholder: 'Page no.' },
