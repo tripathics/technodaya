@@ -3,7 +3,7 @@ import styles from './Form.module.scss';
 import cx from "classnames";
 import { TextInput } from "./InputComponents";
 
-const Person = ({ personType, first = false, handleSubmit }) => {
+const Person = ({ type, first = false, handleSubmit }) => {
   const [state, setState] = useState({});
 
   const handleChange = (e) => {
@@ -28,17 +28,17 @@ const Person = ({ personType, first = false, handleSubmit }) => {
   }
 
   useEffect(() => {
-    if (!personType) return;
-    if (personType === 'author') {
+    if (!type) return;
+    if (type === 'author') {
       setState(prevData => ({ ...prevData, type: 'author' }))
     } else {
       setState(prevData => ({ ...prevData, type: 'PI' }))
     }
-  }, [personType])
+  }, [type])
 
   return (
     <div className={styles['person-form']}>
-      {personType === 'author' ? (<>
+      {type === 'author' ? (<>
         <TextInput
           name="lastName"
           onChange={handleChange}

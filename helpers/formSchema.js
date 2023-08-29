@@ -1,4 +1,4 @@
-const  schema = {
+const schema = {
     '0': [],
     // Memorandum of Understanding (MoU)
     '1': [
@@ -49,7 +49,7 @@ const  schema = {
         { type: 'sectionHeading', label: 'Principal and Co-principal Investigators\' details' },
         { type: 'list', itemType: 'PI', name: 'pi', label: 'Principal Investigators', placeholder: 'Principal Investigators' },
         { type: 'list', itemType: 'CoPI', name: 'copi', label: 'Co-principal Investigators', placeholder: '' },
-        { type: 'person', personType: 'investigator', itemType: 'pi' },
+        { type: 'person', itemType: 'investigator', itemType: 'pi' },
         { type: 'sectionHeading', label: 'Person details' },
         { type: 'text', label: 'Project title', name: 'title', required: true, placeholder: 'Project title' },
         { type: 'text', label: 'Funding Agency', name: 'fundAgency', required: true, placeholder: 'Funding Agency' },
@@ -86,7 +86,7 @@ const  schema = {
         },
         { type: 'sectionHeading', label: 'Author details' },
         { type: 'list', itemType: 'author', name: 'author', label: 'Authors', placeholder: 'Author(s)' },
-        { type: 'person', personType: 'author', itemType: 'author' },
+        { type: 'person', itemType: 'author', itemType: 'author' },
         { type: 'sectionHeading', label: 'Research details' },
         { type: 'number', label: 'Publication year', name: 'year', required: true, placeholder: 'Publication year', attrs: { min: 1950 } },
         { type: 'text', label: 'Article Title', name: 'title', required: true, placeholder: 'Article Title' },
@@ -100,7 +100,7 @@ const  schema = {
     '8': [
         { type: 'sectionHeading', label: 'Author details' },
         { type: 'list', itemType: 'author', name: 'author', label: 'Authors', placeholder: 'Author(s)' },
-        { type: 'person', personType: 'author', itemType: 'author' },
+        { type: 'person', itemType: 'author', itemType: 'author' },
         { type: 'sectionHeading', label: 'Book details' },
         { type: 'number', label: 'Publication year', name: 'year', required: true, placeholder: 'Publication year', attrs: { min: 1950 } },
         { type: 'text', label: 'Book title, subtitle', name: 'title', required: true, placeholder: 'Book title, subtitle' },
@@ -111,7 +111,7 @@ const  schema = {
     '9': [
         { type: 'sectionHeading', label: 'Author details' },
         { type: 'list', itemType: 'author', name: 'author', label: 'Authors', placeholder: 'Author(s)' },
-        { type: 'person', personType: 'author' },
+        { type: 'person', itemType: 'author' },
         { type: 'sectionHeading', label: 'Research details' },
         {
             type: 'radio', label: 'Conference type', name: 'confType', required: true, radios: [
@@ -129,7 +129,7 @@ const  schema = {
     '10': [
         { type: 'sectionHeading', label: 'Author details' },
         { type: 'list', itemType: 'author', name: 'author', label: 'Authors', placeholder: 'Author(s)' },
-        { type: 'person', personType: 'author' },
+        { type: 'person', itemType: 'author' },
         { type: 'sectionHeading', label: 'Publication details' },
         { type: 'text', label: 'Chapter title', name: 'title', required: true, placeholder: 'Chapter title' },
         { type: 'text', label: 'Editors\' name', name: 'editors', required: true, placeholder: 'Editors\' name' },

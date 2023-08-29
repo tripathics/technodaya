@@ -46,7 +46,7 @@ const SchemaForm = ({ currentCategory, formData, handleInputChange, addPerson, r
         )
       } else if (field.type === 'person') {
         return (
-          <Person key={i} personType={field.personType}
+          <Person key={i} type={field.itemType}
             first={formData[field.itemType] ? formData[field.itemType].length === 0 : 1}
             handleSubmit={addPerson}
           />
