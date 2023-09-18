@@ -211,6 +211,9 @@ export default function Draft() {
       orders: orders,
       ...formData,
     }
+    console.log(publishObj);
+    // setLoading(false);
+    // return;
 
     const previewLink = `previews/${year}${biMonth}`
     const docRef = doc(db, 'previews', `${year}${biMonth}`);
