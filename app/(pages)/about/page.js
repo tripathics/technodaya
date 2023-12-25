@@ -85,7 +85,7 @@ const People = {
       role: 'Designer and Editor',
       designation: 'UG Student, CSE 3rd year',
       description: 'None',
-      profile: 'https://scontent.fmaa8-1.fna.fbcdn.net/v/t39.30808-6/343521559_1654178948388917_6796477082981265128_n.jpg?stp=c0.62.526.526a_dst-jpg_p526x296&_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=hsGs_emVZ_gAX-ub6jU&_nc_ht=scontent.fmaa8-1.fna&oh=00_AfBIOikf-Nf3axcsDGElY1OlIMRlgejzCDxZJYl5b9oAuw&oe=65486239',
+      profile: '/images/Omsubhra.jpg',
       links: [
         { to: 'https://www.linkedin.com/in/omsubhra-singha-30447a254', icon: 'linkedin' },
         { to: 'https://www.facebook.com/omsubhra.singha', icon: 'facebook' },
@@ -103,7 +103,7 @@ const People = {
       ],
     },
     {
-      name: 'Aaryan raj',
+      name: 'Aaryan',
       role: 'Developer and Maintainer',
       designation: 'UG Student, CSE 3rd year',
       description: 'None',
