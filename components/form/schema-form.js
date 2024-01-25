@@ -5,8 +5,8 @@ import schema from "../../helpers/formSchema";
 import styles from './Form.module.scss'
 import cx from "classnames";
 
-const SchemaForm = ({ currentCategory, formData, handleInputChange, addPerson, removePerson }) => {
-  const fields = schema[currentCategory];
+const SchemaForm = ({ currentCategory, formData, handleInputChange, addPerson, removePerson,Fields }) => {
+  const fields = Fields ? Fields:schema[currentCategory];
 
   return (
     fields ? fields.map((field, i) => {
@@ -17,7 +17,7 @@ const SchemaForm = ({ currentCategory, formData, handleInputChange, addPerson, r
           <TextInput
             key={i}
             {...field}
-            value={formData[field.name]}
+            value={""}
             onChange={handleInputChange}
           />
         )
