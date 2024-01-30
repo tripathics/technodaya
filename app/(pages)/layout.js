@@ -8,7 +8,7 @@ export default function Layout({ children }) {
   const [Visitors, setVisitors] = useState(0)
   useEffect(()=>{
     const storedCount = localStorage.getItem("page-Visits");
-    const initialCount = Number(storedCount) || 1052;
+    const initialCount = Number(storedCount) || 0;
     setVisitors(initialCount+1);
     localStorage.setItem("page-Visits",initialCount+1);
   },[]);
