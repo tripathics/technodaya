@@ -17,20 +17,20 @@ const SchemaForm = ({ currentCategory, formData, handleInputChange, addPerson, r
           <TextInput
             key={i}
             {...field}
-            value={""}
+            value={formData?formData[field.name]:""}
             onChange={handleInputChange}
           />
         )
       } else if (field.type === 'date' || field.type === 'month') {
         return (
-          <DateInput key={i} {...field} onChange={handleInputChange} value={formData[field.name]} />
+          <DateInput key={i} {...field} onChange={handleInputChange} value={formData?formData[field.name]:""} />
         )
       } else if (field.type === 'dateRange') {
         const { from, to } = field;
         return (
           <DateRangeInput key={i} {...field}
-            fromValue={formData[from.name]}
-            toValue={formData[to.name]}
+            fromValue={formData?formData[from.name]:""}
+            toValue={formData?formData[to.name]:""}
             onChange={handleInputChange}
           />
         )
