@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { CategoryTitles } from '../../helpers/helpers';
-import formSchema from '../../helpers/formSchema';
 import templates from '../../helpers/previewTemplate';
 import MarkdownIcon from '../icons/markdown-icon';
 import SpinnerIcon from '../icons/spinner-icon';
@@ -10,13 +8,13 @@ import styles from './preview.module.scss';
 import cx from 'classnames';
 import Image from 'next/image';
 
-const PreviewFC = ({ display, category, fields, images = [], imgCaption, submit, switchForm, loading = false }) => {
+const PreviewFC = ({ display, category, fields,Formfields, images = [], imgCaption, submit, switchForm, loading = false }) => {
   const [desc, setDesc] = useState('');
   const [editing, setEditing] = useState(false);
   const [labels, setLabels] = useState({});
 
   const getPreviewFields = (fields) => {
-    if (category === '0' || !labels) return fields;
+    if (category === '' || !labels) return fields;
     const newFields = {};
 
     Object.keys(labels).forEach(field => {
@@ -72,7 +70,7 @@ const PreviewFC = ({ display, category, fields, images = [], imgCaption, submit,
 
   useEffect(() => {
     let labels = {};
-    formSchema[category].filter(field => (
+    Formfields.filter(field => (
       field.type !== 'sectionHeading'
       && field.type !== 'person'
       && field.type !== 'file'
@@ -85,7 +83,7 @@ const PreviewFC = ({ display, category, fields, images = [], imgCaption, submit,
       }
     })
     setLabels(labels);
-  }, [category])
+  }, [Formfields]);
 
   useEffect(() => {
     updatePreview();
@@ -94,10 +92,10 @@ const PreviewFC = ({ display, category, fields, images = [], imgCaption, submit,
 
   return (
     <div className={styles.preview} style={{ display: display }} >
-      {parseInt(category) === 0 ? <NoPreview /> : (<>
+      {category === '' ? <NoPreview /> : (<>
         <div className={cx(styles['formatted-preview-wrapper'], { [styles.active]: editing })}>
           <div className={styles.previews}>
-            <h1>{fields.activityTitle ? fields.activityTitle : CategoryTitles[parseInt(category)]?.length > 0 ? CategoryTitles[parseInt(category)] : <em>Untitled</em>}</h1>
+            <h1>{fields.activityTitle ? fields.activityTitle : category!=='' ? category : <em>Untitled</em>}</h1>
             <PreviewedInput
               placeholder='Your output will show here'
               value={desc}

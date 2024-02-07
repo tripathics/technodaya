@@ -8,12 +8,14 @@ const templates = {
     `${speakerName}, ${designation}, ${department}, ${insName} visited and delivered a ${lectureType} on "${title}" organised by ${organizer}, ${date}`,
   '4': ({ pi, copi, title, fundAgency, date }) =>
     `${pi} ${copi ? (copi.length === 1 ? `and ${copi} as a Co-Principal Investigator` : `and ${copi} as Co-Principal Investigators`) : ''} received an external project titled "${title}". Funding Agency: ${fundAgency}, ${date}.`,
-  '5': ({ title, fundAgency, facultyName, designation, department }) =>
+    
+  'Consultancy Projects': ({ title, sponsoredAgency, facultyName, designation, department }) =>
     `Name of the job: ${title}
-Name of the Client: ${fundAgency}  
+Name of the Client: ${sponsoredAgency}  
 Principal Investigator: ${facultyName}, ${designation}, ${department}`,
-  '6': ({ invName, year, patId, patOffice }) =>
-    `${invName}. (${year}). ${patId}. ${patOffice}.`,
+
+  'Patent': ({ nameOf, yearPatent, uniquePatent, patentOffice }) =>
+    `${nameOf}. (${yearPatent}). ${uniquePatent}. ${patentOffice}.`,
   '7': ({ author, year, title, journalTitle, volNo, issueNo, pageNos, doiUrl }) =>
     `${author} (${year}). ${title}. *${journalTitle}*${volNo ? ` *${volNo}*` : ""}${issueNo ? `(${issueNo})` : ""}${pageNos ? `, ${pageNos}` : ""}. ${doiUrl ? doiUrl : ''}`,
   '8': ({ author, year, title, publisher, doiUrl }) =>
@@ -24,8 +26,8 @@ Principal Investigator: ${facultyName}, ${designation}, ${department}`,
     `${author}. (${year}). ${title}. In ${editors} (Eds.), *${bookTitle}* (pp. ${pageNos}). ${publisher}. ${doiUrl}`,
   '11': ({ facultyName, designation, department, eventType, title, organizer, date, toDate }) =>
     `${facultyName}, ${designation}, ${department} attended ${eventType} on "${title}", organised by ${organizer}${toDate ? `, from ${date} to ${toDate}` : date ? `, ${date}` : ''}.`,
-  '12': ({ facultyName, designation, department, journalTitle, publisher, date }) =>
-    `${facultyName}, ${designation}, ${department} served as a *Reviewer* of "${journalTitle}". ${publisher}. ${date}.`,
+  'Reviewers': ({ facultyName, designation, department, journalTitle, publishingHouse, reviewerDate }) =>
+    `${facultyName}, ${designation}, ${department} served as a *Reviewer* of "${journalTitle}". ${publishingHouse}. ${reviewerDate}.`,
   '13': ({ facultyName, designation, department, eventName, organizer, date, toDate }) =>
     `${facultyName}, ${designation}, ${department} was *The Chair of Panel Session* at ${eventName}, organised by ${organizer}${toDate ? `, from ${date} to ${toDate}` : date ? `, ${date}` : ''}.`,
   '14': ({ winner, insName, rank, eventName, theme, organizer, collaboration, date }) =>

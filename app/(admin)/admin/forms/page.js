@@ -19,8 +19,9 @@ import SaveIcon from "@/components/icons/save-icon";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebasse.config";
 import SpinnerIcon from "@/components/icons/spinner-icon";
+import ArrowIcon from "@/components/icons/arrow-icon";
 
-const EditForm = ({ FormTitle, setTitle, Fields, setFields  }) => {
+const EditForm = ({ FormTitle, setTitle, Fields, setFields }) => {
   const [Formview, setFormview] = useState(true);
 
   function formatString(inputString) {
@@ -254,13 +255,12 @@ export default function Form() {
   const [Formview, setFormview] = useState(true);
   const [loading, setloading] = useState(false);
   const { add: addAlert } = usePageAlerts();
-  const {docs: forms,fetching: fetchingForms,error: formError,} = useFetchCollection("activity-forms");
-  const [newOption, setNewOption] = useState([
-    {
-      label: "Add a New Form",
-      value: "New Form",
-    },
-]);
+  const {
+    docs: forms,
+    fetching: fetchingForms,
+    error: formError,
+  } = useFetchCollection("activity-forms");
+  const [newOption, setNewOption] = useState();
 
   useEffect(() => {
     if (!fetchingForms) {
@@ -273,7 +273,7 @@ export default function Form() {
             value: form,
           };
         });
-        setNewOption((prevOptions) => [...prevOptions, ...addingOptions]);
+        setNewOption([...addingOptions]);
       } else addAlert("No forms available", "info");
     }
   }, [fetchingForms, forms]);
@@ -286,32 +286,32 @@ export default function Form() {
 
   const handleChange = (e) => {
     const { value } = e.target;
-    if(value!=="New Form" && forms){
-      setFields(forms[value]["fields"])
+    if (value !== "New Form" && forms) {
+      setFields(forms[value]["fields"]);
     } else {
       setFields([]);
     }
     setForm(value);
   };
 
-  const handelForm = async (e)=>{
+  const handelForm = async (e) => {
     e.preventDefault();
     setloading(true);
     const publishForm = {
-      fields:Fields,
-    }
+      fields: Fields,
+    };
     console.log(publishForm);
 
-    const docRef = doc(db,"activity-forms",Form);
+    const docRef = doc(db, "activity-forms", Form);
     try {
-      await setDoc(docRef,publishForm);
-      addAlert('Form Added Successfully','success',2000);
+      await setDoc(docRef, publishForm);
+      addAlert("Form Added Successfully", "success", 2000);
     } catch (error) {
-      addAlert('Error, try after Sometime','warning')
+      addAlert("Error, try after Sometime", "warning");
     } finally {
       setloading(false);
     }
-  }
+  };
   return (
     <div>
       {fetchingForms ? (
@@ -350,7 +350,7 @@ export default function Form() {
                     className={cx(pageStyles.btn, pageStyles["btn-submit"])}
                   >
                     <span className={pageStyles["btn-text"]}>Save Form</span>
-                    {loading ? <SpinnerIcon />:<SaveIcon />}
+                    {loading ? <SpinnerIcon /> : <SaveIcon />}
                   </button>
                   <button
                     className={pageStyles.btn}
@@ -370,7 +370,7 @@ export default function Form() {
             {Formview ? (
               <form className={pageStyles.form} id="activityForm">
                 <p className={cx(formStyles["section-heading"], "sub-label")}>
-                  Select A Form (For New Form Select Add Form)
+                  Select A Current Form
                 </p>
                 <SelectInput
                   placeholder="Select Form"
@@ -379,6 +379,21 @@ export default function Form() {
                   options={newOption}
                   value={Form || ""}
                 />
+                <p className={cx(formStyles["section-heading"])}>
+                  Or Add a New Form
+                </p>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setForm("New Form");
+                    setFields([]);
+                    setFormview(false);
+                  }}
+                  className={pageStyles.btn}
+                >
+                  <span className={pageStyles["btn-text"]}>New Form</span>
+                  <ArrowIcon />
+                </button>
               </form>
             ) : (
               <EditForm
