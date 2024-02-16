@@ -14,8 +14,8 @@ const templates = {
 Name of the Client: ${sponsoredAgency}  
 Principal Investigator: ${facultyName}, ${designation}, ${department}`,
 
-  'Patent': ({ nameOf, yearPatent, uniquePatent, patentOffice }) =>
-    `${nameOf}. (${yearPatent}). ${uniquePatent}. ${patentOffice}.`,
+  'Patent': (props) =>
+    `${props.nameOf}. (${props.year}). ${props.uniquePatent}. ${props.patentOffice}.`,
   '7': ({ author, year, title, journalTitle, volNo, issueNo, pageNos, doiUrl }) =>
     `${author} (${year}). ${title}. *${journalTitle}*${volNo ? ` *${volNo}*` : ""}${issueNo ? `(${issueNo})` : ""}${pageNos ? `, ${pageNos}` : ""}. ${doiUrl ? doiUrl : ''}`,
   '8': ({ author, year, title, publisher, doiUrl }) =>

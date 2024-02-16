@@ -1,6 +1,7 @@
 "use client";
 import pageStyles from "../page.module.scss";
 import formStyles from "@/components/form/Form.module.scss";
+import styles from "./page.module.scss";
 import {
   RadioInput,
   SelectInput,
@@ -20,8 +21,16 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/firebasse.config";
 import SpinnerIcon from "@/components/icons/spinner-icon";
 import ArrowIcon from "@/components/icons/arrow-icon";
+import MdInput from "@/components/MdInput";
 
-const EditForm = ({ FormTitle, setTitle, Fields, setFields }) => {
+const EditForm = ({
+  FormTitle,
+  setTitle,
+  Fields,
+  setFields,
+  Preview,
+  setPreview,
+}) => {
   const [Formview, setFormview] = useState(true);
 
   function formatString(inputString) {
@@ -31,12 +40,17 @@ const EditForm = ({ FormTitle, setTitle, Fields, setFields }) => {
       // If only one word, return the lowercase
       return words[0].toLowerCase();
     } else if (words.length >= 2) {
-      // If more than one word, return camel case of the first two words
-      const firstWord = words[0].toLowerCase();
-      const secondWord =
-        words[1].charAt(0).toUpperCase() + words[1].slice(1).toLowerCase();
+      // If more than one word, format each word after the first one
+      const formattedWords = words.map((word, index) => {
+        // Capitalize the first letter of each word after the first one
+        if (index === 0) {
+          return word.toLowerCase();
+        } else {
+          return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        }
+      });
 
-      return `${firstWord}${secondWord}`;
+      return formattedWords.join("");
     }
     return "newName";
   }
@@ -130,8 +144,15 @@ const EditForm = ({ FormTitle, setTitle, Fields, setFields }) => {
     return;
   };
 
+  const handlePreview = (e) => {
+    setPreview(e.target.value);
+  };
+
   return (
-    <form className={pageStyles.form} id="editForm">
+    <form
+      className={cx("draft-form", formStyles.form, pageStyles.form)}
+      id="editForm"
+    >
       <div className={cx(formStyles["form-header"], pageStyles["form-header"])}>
         <input
           type="text"
@@ -152,15 +173,17 @@ const EditForm = ({ FormTitle, setTitle, Fields, setFields }) => {
           {Fields.map((field, key) => {
             if (field.type === "sectionHeading")
               return (
-                <div>
-                  <TextInput
-                    key={key}
-                    placeholder={"Section Heading"}
-                    required={true}
-                    name={`sectionHeading${key}`}
-                    onChange={handleChange}
-                    value={field.label}
-                  />
+                <div className={styles["field-wrapper"]}>
+                  <div className={styles["input-wrapper"]}>
+                    <TextInput
+                      key={key}
+                      placeholder={"Section Heading"}
+                      required={true}
+                      name={`sectionHeading${key}`}
+                      onChange={handleChange}
+                      value={field.label}
+                    />
+                  </div>
                   <button
                     className={pageStyles.btn}
                     onClick={(e) => deleteField(e, key)}
@@ -175,14 +198,16 @@ const EditForm = ({ FormTitle, setTitle, Fields, setFields }) => {
               field.type === "date"
             ) {
               return (
-                <div key={key}>
-                  <TextInput
-                    placeholder={`${field.type} Input Name`}
-                    required={true}
-                    name={`${field.type}${key}`}
-                    onChange={handleChange}
-                    value={field.label}
-                  />
+                <div key={key} className={styles["field-wrapper"]}>
+                  <div className={styles["input-wrapper"]}>
+                    <TextInput
+                      placeholder={`${field.type} Input Name`}
+                      required={true}
+                      name={`${field.type}${key}`}
+                      onChange={handleChange}
+                      value={field.label}
+                    />
+                  </div>
                   <RadioInput
                     radios={[
                       { value: "true", label: "Mandatory" },
@@ -204,13 +229,19 @@ const EditForm = ({ FormTitle, setTitle, Fields, setFields }) => {
               return (
                 <p
                   key={key}
-                  className={cx(pageStyles["section-heading"], "sub-label")}
+                  className={cx(pageStyles["sub-section-heading"], "sub-label")}
                 >
                   Date Range
                 </p>
               );
             }
           })}
+          <TextInput
+            placeholder={"Preview of Form"}
+            required={true}
+            value={Preview}
+            onChange={handlePreview}
+          />
           <SelectInput
             placeholder="Add New Field"
             onChange={selectField}
@@ -219,17 +250,25 @@ const EditForm = ({ FormTitle, setTitle, Fields, setFields }) => {
           />
         </>
       ) : (
+        <>
         <SchemaForm
           Fields={Fields}
           handleInputChange={dummy}
           addPerson={dummy}
           removePerson={dummy}
         />
+        <MdInput
+        placeholder='Your output will show here'
+        value={Preview}
+        updateVal={_ => {  }}
+        editing={_ => { }} />
+        </>
       )}
       <button
         className={cx(pageStyles["btn-submit"], pageStyles.btn)}
         onClick={(e) => {
           e.preventDefault();
+          console.log(Fields);
           setFormview((prev) => !prev);
         }}
       >
@@ -254,122 +293,120 @@ export default function Form() {
   const [Fields, setFields] = useState([]);
   const [Formview, setFormview] = useState(true);
   const [loading, setloading] = useState(false);
+  const [preview, setPreview] = useState("");
   const { add: addAlert } = usePageAlerts();
-  const {
-    docs: forms,
-    fetching: fetchingForms,
-    error: formError,
-  } = useFetchCollection("activity-forms");
-  const [newOption, setNewOption] = useState();
+  // const {
+  //   docs: forms,
+  //   fetching: fetchingForms,
+  //   error: formError,
+  // } = useFetchCollection("activity-forms");
 
-  useEffect(() => {
-    if (!fetchingForms) {
-      if (Object.keys(forms).length) {
-        addAlert("Form(s) available", "info");
-        const labels = Object.keys(forms);
-        let addingOptions = labels.map((form) => {
-          return {
-            label: form,
-            value: form,
-          };
-        });
-        setNewOption([...addingOptions]);
-      } else addAlert("No forms available", "info");
-    }
-  }, [fetchingForms, forms]);
+  /*  the code below is used in editing a existing form which functionality is on hold right now  */
 
-  useEffect(() => {
-    if (formError) {
-      addAlert("Error fetching forms: ", formError, "error");
-    }
-  }, [formError]);
+  // const [newOption, setNewOption] = useState();
 
-  const handleChange = (e) => {
-    const { value } = e.target;
-    if (value !== "New Form" && forms) {
-      setFields(forms[value]["fields"]);
-    } else {
-      setFields([]);
-    }
-    setForm(value);
-  };
+  // useEffect(() => {
+  //   if (!fetchingForms) {
+  //     if (Object.keys(forms).length) {
+  //       addAlert("Form(s) available", "info");
+  //       const labels = Object.keys(forms);
+  //       let addingOptions = labels.map((form) => {
+  //         return {
+  //           label: form,
+  //           value: form,
+  //         };
+  //       });
+  //       setNewOption([...addingOptions]);
+  //     } else addAlert("No forms available", "info");
+  //   }
+  // }, [fetchingForms, forms]);
+  // const handleChange = (e) => {
+  //   const { value } = e.target;
+  //   if (value !== "New Form" && forms) {
+  //     setFields(forms[value]["fields"]);
+  //   } else {
+  //     setFields([]);
+  //   }
+  //   setForm(value);
+  // };
+  // useEffect(() => {
+  //   if (formError) {
+  //     addAlert("Error fetching forms: ", formError, "error");
+  //   }
+  // }, [formError]);
 
   const handelForm = async (e) => {
-    e.preventDefault();
-    setloading(true);
-    const publishForm = {
-      fields: Fields,
-    };
-    console.log(publishForm);
+    if (document.getElementById("editForm").checkValidity()) {
+      e.preventDefault();
+      setloading(true);
+      const publishForm = {
+        fields: Fields,
+        name: Form,
+        preview: preview,
+      };
+      console.log(publishForm);
 
-    const docRef = doc(db, "activity-forms", Form);
-    try {
-      await setDoc(docRef, publishForm);
-      addAlert("Form Added Successfully", "success", 2000);
-    } catch (error) {
-      addAlert("Error, try after Sometime", "warning");
-    } finally {
-      setloading(false);
+      const docRef = doc(db, "activity-forms", Form);
+      try {
+        await setDoc(docRef, publishForm);
+        addAlert("Form Added Successfully", "success", 2000);
+      } catch (error) {
+        addAlert("Error, try after Sometime", "warning");
+      } finally {
+        setloading(false);
+      }
     }
   };
   return (
-    <div>
-      {fetchingForms ? (
-        <LoadingScreen />
-      ) : (
-        <div className={pageStyles.page}>
-          <header
-            className={cx(pageStyles["page-header"], pageStyles.container)}
-          >
-            <h1 className={pageStyles.heading}>Add/Edit Forms</h1>
-            <div className={pageStyles["btns-group"]}>
-              {Formview ? (
-                <button
-                  className={pageStyles.btn}
-                  onClick={(e) => {
-                    if (
-                      document.getElementById("activityForm").checkValidity()
-                    ) {
-                      e.preventDefault();
-                      setFormview(false);
-                    }
-                  }}
-                  type="submit"
-                  form="activityForm"
-                >
-                  <span className={pageStyles["btn-text"]}>Next</span>
-                  <NavigateNextIcon />
-                </button>
-              ) : (
-                <>
-                  <button
-                    type="submit"
-                    form="editForm"
-                    onClick={handelForm}
-                    disabled={loading}
-                    className={cx(pageStyles.btn, pageStyles["btn-submit"])}
-                  >
-                    <span className={pageStyles["btn-text"]}>Save Form</span>
-                    {loading ? <SpinnerIcon /> : <SaveIcon />}
-                  </button>
-                  <button
-                    className={pageStyles.btn}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setFormview(true);
-                    }}
-                  >
-                    <span className={pageStyles["btn-text"]}>Back</span>
-                    <NavigateBeforeIcon />
-                  </button>
-                </>
-              )}
-            </div>
-          </header>
-          <main className={pageStyles.container}>
-            {Formview ? (
-              <form className={pageStyles.form} id="activityForm">
-                <p className={cx(formStyles["section-heading"], "sub-label")}>
+    <div className={pageStyles.page}>
+      <header className={cx(pageStyles["page-header"], pageStyles.container)}>
+        <h1 className={pageStyles.heading}>Add/Edit Forms</h1>
+        <div className={pageStyles["btns-group"]}>
+          {Formview ? (
+            <button
+              className={pageStyles.btn}
+              onClick={(e) => {
+                if (document.getElementById("activityForm").checkValidity()) {
+                  e.preventDefault();
+                  setFormview(false);
+                }
+              }}
+              type="submit"
+              form="activityForm"
+            >
+              <span className={pageStyles["btn-text"]}>Next</span>
+              <NavigateNextIcon />
+            </button>
+          ) : (
+            <>
+              <button
+                type="submit"
+                form="editForm"
+                onClick={handelForm}
+                disabled={loading}
+                className={cx(pageStyles.btn, pageStyles["btn-submit"])}
+              >
+                <span className={pageStyles["btn-text"]}>Save Form</span>
+                {loading ? <SpinnerIcon /> : <SaveIcon />}
+              </button>
+              <button
+                className={pageStyles.btn}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setFormview(true);
+                }}
+              >
+                <span className={pageStyles["btn-text"]}>Back</span>
+                <NavigateBeforeIcon />
+              </button>
+            </>
+          )}
+        </div>
+      </header>
+      <main className={pageStyles.container}>
+        {Formview ? (
+          <form className={pageStyles.form} id="activityForm">
+            {/* <p className={cx(formStyles["section-heading"], "sub-label")}>
                   Select A Current Form
                 </p>
                 <SelectInput
@@ -378,34 +415,38 @@ export default function Form() {
                   onChange={handleChange}
                   options={newOption}
                   value={Form || ""}
-                />
-                <p className={cx(formStyles["section-heading"])}>
-                  Or Add a New Form
-                </p>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setForm("New Form");
-                    setFields([]);
-                    setFormview(false);
-                  }}
-                  className={pageStyles.btn}
-                >
-                  <span className={pageStyles["btn-text"]}>New Form</span>
-                  <ArrowIcon />
-                </button>
-              </form>
-            ) : (
-              <EditForm
-                FormTitle={Form}
-                setTitle={setForm}
-                Fields={Fields}
-                setFields={setFields}
-              />
-            )}
-          </main>
-        </div>
-      )}
+                /> */}{" "}
+            {/* this commented portion above is section for admin to select an edit a existing form. */}
+            <p className={cx(formStyles["form-header"], "sub-label")}>
+              <span className={pageStyles["section-heading"]}>
+                {" "}
+                Add a New Form
+              </span>
+            </p>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setForm("New Form");
+                setFields([]);
+                setFormview(false);
+              }}
+              className={cx(pageStyles.btn)}
+            >
+              <span className={pageStyles["btn-text"]}>New Form</span>
+              <ArrowIcon />
+            </button>
+          </form>
+        ) : (
+          <EditForm
+            FormTitle={Form}
+            setTitle={setForm}
+            Fields={Fields}
+            setFields={setFields}
+            Preview={preview}
+            setPreview={setPreview}
+          />
+        )}
+      </main>
     </div>
   );
 }

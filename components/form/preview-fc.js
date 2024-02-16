@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import templates from '../../helpers/previewTemplate';
 import MarkdownIcon from '../icons/markdown-icon';
 import SpinnerIcon from '../icons/spinner-icon';
 import NoPreview from './no-preview';
@@ -7,11 +6,18 @@ import PreviewedInput from '../MdInput';
 import styles from './preview.module.scss';
 import cx from 'classnames';
 import Image from 'next/image';
+import useFetchCollection from '@/hooks/fetchCollection';
+import { where } from 'firebase/firestore';
 
 const PreviewFC = ({ display, category, fields,Formfields, images = [], imgCaption, submit, switchForm, loading = false }) => {
   const [desc, setDesc] = useState('');
   const [editing, setEditing] = useState(false);
   const [labels, setLabels] = useState({});
+  const {docs:Form,refetch} = useFetchCollection("activity-forms",[where("name","==",category)]);
+
+  useEffect(()=>{
+    refetch();
+  },[category]);
 
   const getPreviewFields = (fields) => {
     if (category === '' || !labels) return fields;
@@ -54,9 +60,28 @@ const PreviewFC = ({ display, category, fields,Formfields, images = [], imgCapti
     return newFields;
   }
 
+  const replaceKeysWithValues=(oldFields , newFields , str)=> {
+    // Iterate through props object
+    for (const key in oldFields ) {
+        if (oldFields .hasOwnProperty(key) &&  newFields .hasOwnProperty(key)) {
+            // Create a regular expression to match the key within the string
+            const regex = new RegExp(oldFields [key], 'g');
+            // Replace all occurrences of the key with its value
+            str = str.replace(regex,  newFields [key]);
+        }
+    }
+    return str;
+}
+
   const updatePreview = () => {
-    if (!templates[category]) setDesc('');
-    else setDesc(templates[category](getPreviewFields(fields)));
+    if (Form[category]===undefined) setDesc('');
+    else {
+      const oldFields = {}
+      Form[category].fields.forEach(item=>{
+        oldFields[item.name]=item.placeholder;
+      })
+      setDesc(replaceKeysWithValues(oldFields,getPreviewFields(fields),Form[category].preview));
+    }
   }
 
   const handleSubmit = (event) => {
@@ -88,7 +113,7 @@ const PreviewFC = ({ display, category, fields,Formfields, images = [], imgCapti
   useEffect(() => {
     updatePreview();
     // eslint-disable-next-line
-  }, [fields])
+  }, [fields,Form])
 
   return (
     <div className={styles.preview} style={{ display: display }} >

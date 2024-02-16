@@ -1,0 +1,11 @@
+.field-wrapper{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:flex-start;
+
+    .input-wrapper{
+        flex: 0 1 250px; 
+        padding-right: 1rem;
+    }
+}
