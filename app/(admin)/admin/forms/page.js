@@ -9,11 +9,9 @@ import {
 } from "@/components/form/InputComponents";
 import SchemaForm from "@/components/form/schema-form";
 import DeleteIcon from "@/components/icons/delete-icon";
-import useFetchCollection from "@/hooks/fetchCollection";
-import LoadingScreen from "@/components/loading-screen";
 import usePageAlerts from "@/hooks/pageAlerts";
 import cx from "classnames";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import NavigateBeforeIcon from "@/components/icons/navigate-before-icon";
 import NavigateNextIcon from "@/components/icons/navigate-next-icon";
 import SaveIcon from "@/components/icons/save-icon";
@@ -201,22 +199,26 @@ const EditForm = ({
                 <div key={key} className={styles["field-wrapper"]}>
                   <div className={styles["input-wrapper"]}>
                     <TextInput
-                      placeholder={`${field.type} Input Name`}
+                      placeholder={`${
+                        field.type.charAt(0).toUpperCase() +
+                        field.type.slice(1).toLowerCase()
+                      } Input Name`}
                       required={true}
                       name={`${field.type}${key}`}
                       onChange={handleChange}
                       value={field.label}
                     />
                   </div>
-                  <RadioInput
-                    radios={[
-                      { value: "true", label: "Mandatory" },
-                      { value: "false", label: "Not Mandatory" },
-                    ]}
-                    label={"Mandatory"}
-                    onChange={handleChange}
-                    name={`radio${key}`}
-                  />
+                  <div className={styles.checkbox}>
+                    <label htmlFor="">Mandatory</label>
+                    <input
+                      id={`radio${key}`}
+                      defaultChecked
+                      type="checkbox"
+                      onChange={handleChange}
+                      name={`radio${key}`}
+                    />
+                  </div>
                   <button
                     className={pageStyles.btn}
                     onClick={(e) => deleteField(e, key)}
@@ -251,26 +253,28 @@ const EditForm = ({
         </>
       ) : (
         <>
-        <SchemaForm
-          Fields={Fields}
-          handleInputChange={dummy}
-          addPerson={dummy}
-          removePerson={dummy}
-        />
-        <MdInput
-        placeholder='Your output will show here'
-        value={Preview}
-        updateVal={_ => {  }}
-        editing={_ => { }} />
+          <SchemaForm
+            Fields={Fields}
+            handleInputChange={dummy}
+            addPerson={dummy}
+            removePerson={dummy}
+          />
+          <MdInput
+            placeholder="Your output will show here"
+            value={Preview}
+            updateVal={(_) => {}}
+            editing={(_) => {}}
+          />
         </>
       )}
       <button
-        className={cx(pageStyles["btn-submit"], pageStyles.btn)}
+        className={cx(pageStyles["btn-submit"], pageStyles.btn,styles.btn)}
         onClick={(e) => {
           e.preventDefault();
           console.log(Fields);
           setFormview((prev) => !prev);
         }}
+        type="submit"
       >
         {Formview ? (
           <span className={pageStyles["btn-text"]}>

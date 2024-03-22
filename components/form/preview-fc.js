@@ -68,6 +68,7 @@ const PreviewFC = ({ display, category, fields,Formfields, images = [], imgCapti
             const regex = new RegExp(oldFields [key], 'g');
             // Replace all occurrences of the key with its value
             str = str.replace(regex,  newFields [key]);
+            // oldFields[key]=newFields[key];
         }
     }
     return str;
@@ -80,7 +81,9 @@ const PreviewFC = ({ display, category, fields,Formfields, images = [], imgCapti
       Form[category].fields.forEach(item=>{
         oldFields[item.name]=item.placeholder;
       })
-      setDesc(replaceKeysWithValues(oldFields,getPreviewFields(fields),Form[category].preview));
+      const newFields = getPreviewFields(fields);
+      // console.log(oldFields,newFields);
+      setDesc(replaceKeysWithValues(oldFields,newFields,Form[category].preview));
     }
   }
 

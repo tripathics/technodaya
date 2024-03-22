@@ -8,4 +8,13 @@
         flex: 0 1 250px; 
         padding-right: 1rem;
     }
+
+    .checkbox{
+        display: flex;
+        gap: 5px;
+        flex-direction: row-reverse;
+    }
+}
+.btn{
+    margin-block: 10px;
 }
