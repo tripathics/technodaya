@@ -8,6 +8,7 @@ const links = [
   { href: '/admin/draft', label: 'Draft issue' },
   { href: '/admin/publish', label: 'Publish issue' },
   { href: '/admin/manage-users', label: 'Manage users' },
+  { href: '/admin/forms', label: 'Add/Edit Forms' },
 ]
 
 export default function AdminNav() {

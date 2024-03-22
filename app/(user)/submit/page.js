@@ -8,11 +8,11 @@ import { storage, db } from '@/firebasse.config'
 import { arrayUnion, collection, doc, setDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import usePageAlerts from '@/hooks/pageAlerts'
-import { Categories } from '@/helpers/helpers'
+import useFetchCollection from '@/hooks/fetchCollection'
 import { useUser } from '@/contexts/user'
 
 const SubmitFC = () => {
-  const [category, setCategory] = useState(0);
+  const [category, setCategory] = useState('');
   const [categoryFormData, setCategoryFormData] = useState({});
   const [activityTitle, setActivityTitle] = useState('');
   const [images, setImages] = useState([]);
@@ -24,6 +24,14 @@ const SubmitFC = () => {
 
   const { user } = useUser();
 
+  const [Categories, setCategories] = useState({});
+  const {
+    docs: forms,
+    fetching: fetchingForms,
+    error: formError,
+  } = useFetchCollection("activity-forms");
+
+
   const handleSubmit = (desc) => {
     if (!user) {
       addAlert('Please login to submit', 'error');
@@ -34,7 +42,7 @@ const SubmitFC = () => {
     clearAlerts();
     const heading = activityTitle
     const { date, eventBrochure } = categoryFormData
-    const category_Id = category;
+    // const category_Id = category;
     const { uid: userId, displayName: userName } = user;
     let caption = imgCaption
     let brochureUrl = ''
@@ -46,7 +54,7 @@ const SubmitFC = () => {
         createdInSeconds: currentTime,
         author: userName,
         uid: userId,
-        categoryId: category_Id,
+        categoryId: category,
         title: heading,
         desc: desc,
         eventDate: date ? date : '',
@@ -58,7 +66,7 @@ const SubmitFC = () => {
 
       try {
         await setDoc(doc(collection(db, 'submissions')), uploadObj)
-        setCategory(0);
+        setCategory('');
         addAlert('Submitted successfully', 'success');
         resetForm();
       } catch (err) {
@@ -69,9 +77,9 @@ const SubmitFC = () => {
       }
     }
 
-    if (category_Id === 1) {
+    if (category === 'Memorandum of Understanding (MoU)') {
       caption = `MoU between ${categoryFormData.insName} and ${categoryFormData.partnerInsName}`
-    } else if (category_Id === 3) {
+    } else if (category === 'Visits and Invited/Expert Lectures to NITAP from other insitutes') {
       caption = `${categoryFormData.lectureType} by ${categoryFormData.speakerName}`
     }
 
@@ -79,7 +87,7 @@ const SubmitFC = () => {
     const uploadImages = () => {
       let imagesLen = images.length;
       images.forEach((image, index) => {
-        const storageRef = ref(storage, `Images/${Categories[category_Id]}/${image.name.split(/(\\|\/)/g).pop()}/`);
+        const storageRef = ref(storage, `Images/${category}/${image.name.split(/(\\|\/)/g).pop()}/`);
         uploadBytes(storageRef, image).then(snapshot => getDownloadURL(snapshot.ref).then(url => {
           imgLinks.push(url);
         }))
@@ -95,7 +103,7 @@ const SubmitFC = () => {
     }
 
     if (eventBrochure) {
-      const storageRef = ref(storage, `Brochure/${Categories[category_Id]}/${eventBrochure.name.split(/(\\|\/)/g).pop()}/`);
+      const storageRef = ref(storage, `Brochure/${category}/${eventBrochure.name.split(/(\\|\/)/g).pop()}/`);
       uploadBytes(storageRef, eventBrochure).then(snapshot => getDownloadURL(snapshot.ref).then(url => {
         brochureUrl = url
         desc += ` [Download event brochure](${url})`;
@@ -146,9 +154,24 @@ const SubmitFC = () => {
   }, [activityTitle])
 
   useEffect(() => {
-    if (category === 0) setActivityTitle('');
+    if (category === '') setActivityTitle('');
     resetForm();
   }, [category])
+
+  useEffect(() => {
+    if (!fetchingForms) {
+      if (Object.keys(forms).length) {
+        addAlert("Form(s)1 available", "info");
+        setCategories(forms);
+      } else addAlert("No forms available", "info");
+    }
+  }, [fetchingForms, forms]);
+
+  useEffect(() => {
+    if (formError) {
+      addAlert("Error fetching forms: ", formError, "error");
+    }
+  }, [formError]);
 
   return (
     <div className="add-blogs">
@@ -190,6 +213,7 @@ const SubmitFC = () => {
           <FormFC
             category={category}
             setCategory={setCategory}
+            Forms={Categories}
             activityTitle={activityTitle}
             setActivityTitle={setActivityTitle}
             categoryFormData={categoryFormData}
@@ -204,6 +228,7 @@ const SubmitFC = () => {
           />
           <PreviewFC
             category={category}
+            Formfields={category!=='' ? Categories[category].fields : []}
             title={activityTitle}
             fields={categoryFormData}
             images={images}
