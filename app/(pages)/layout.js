@@ -1,13 +1,34 @@
-import Navbar from '@/components/navbar/';
-import Footer from '@/components/footer/';
-import styles from './layout.module.scss';
+"use client";
+import Navbar from "@/components/navbar/";
+import Footer from "@/components/footer/";
+import styles from "./layout.module.scss";
+import useFetchCollection from "@/hooks/fetchCollection";
+import { useEffect } from "react";
+import { setDoc, doc } from "firebase/firestore";
+import { db } from "@/firebasse.config";
 
 export default function Layout({ children }) {
-  return (<>
-    <Navbar />
-    <main className={styles.main}>
-      {children}
-    </main>
-    <Footer />
-  </>)
+  const { docs: visitorNumber, fetching } = useFetchCollection("visitors");
+
+  useEffect(() => {
+    if (!fetching) {
+      const ref = doc(db, "visitors", "visitorNumber");
+      const curr = visitorNumber.visitorNumber.number;
+      console.log(curr);
+      setDoc(ref, {
+        number: curr + 1,
+      });
+    }
+  }, [fetching]);
+
+  return (
+    <>
+      <Navbar />
+      <main className={styles.main}>{children}</main>
+      <Footer
+        fetching={fetching}
+        visitors={visitorNumber?.visitorNumber?.number}
+      />
+    </>
+  );
 }
