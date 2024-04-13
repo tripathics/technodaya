@@ -13,11 +13,13 @@ export default function Layout({ children }) {
   useEffect(() => {
     if (!fetching) {
       const ref = doc(db, "visitors", "visitorNumber");
-      const curr = visitorNumber.visitorNumber.number;
-      console.log(curr);
-      setDoc(ref, {
-        number: curr + 1,
-      });
+      const curr = visitorNumber?.visitorNumber?.number || -1;
+      // console.log(curr);
+      if(curr!==-1){
+        setDoc(ref, {
+          number: curr + 1,
+        });
+      }
     }
   }, [fetching]);
 
