@@ -1,7 +1,4 @@
 import { useEffect, useState } from 'react';
-import { CategoryTitles } from '../../helpers/helpers';
-import formSchema from '../../helpers/formSchema';
-import templates from '../../helpers/previewTemplate';
 import MarkdownIcon from '../icons/markdown-icon';
 import SpinnerIcon from '../icons/spinner-icon';
 import NoPreview from './no-preview';
@@ -9,14 +6,21 @@ import PreviewedInput from '../MdInput';
 import styles from './preview.module.scss';
 import cx from 'classnames';
 import Image from 'next/image';
+import useFetchCollection from '@/hooks/fetchCollection';
+import { where } from 'firebase/firestore';
 
-const PreviewFC = ({ display, category, fields, images = [], imgCaption, submit, switchForm, loading = false }) => {
+const PreviewFC = ({ display, category, fields,Formfields, images = [], imgCaption, submit, switchForm, loading = false }) => {
   const [desc, setDesc] = useState('');
   const [editing, setEditing] = useState(false);
   const [labels, setLabels] = useState({});
+  const {docs:Form,refetch} = useFetchCollection("activity-forms",[where("name","==",category)]);
+
+  useEffect(()=>{
+    refetch();
+  },[category]);
 
   const getPreviewFields = (fields) => {
-    if (category === '0' || !labels) return fields;
+    if (category === '' || !labels) return fields;
     const newFields = {};
 
     Object.keys(labels).forEach(field => {
@@ -56,9 +60,31 @@ const PreviewFC = ({ display, category, fields, images = [], imgCaption, submit,
     return newFields;
   }
 
+  const replaceKeysWithValues=(oldFields , newFields , str)=> {
+    // Iterate through props object
+    for (const key in oldFields ) {
+        if (oldFields .hasOwnProperty(key) &&  newFields .hasOwnProperty(key)) {
+            // Create a regular expression to match the key within the string
+            const regex = new RegExp(oldFields [key], 'g');
+            // Replace all occurrences of the key with its value
+            str = str.replace(regex,  newFields [key]);
+            // oldFields[key]=newFields[key];
+        }
+    }
+    return str;
+}
+
   const updatePreview = () => {
-    if (!templates[category]) setDesc('');
-    else setDesc(templates[category](getPreviewFields(fields)));
+    if (Form[category]===undefined) setDesc('');
+    else {
+      const oldFields = {}
+      Form[category].fields.forEach(item=>{
+        oldFields[item.name]=item.placeholder;
+      })
+      const newFields = getPreviewFields(fields);
+      // console.log(oldFields,newFields);
+      setDesc(replaceKeysWithValues(oldFields,newFields,Form[category].preview));
+    }
   }
 
   const handleSubmit = (event) => {
@@ -72,7 +98,7 @@ const PreviewFC = ({ display, category, fields, images = [], imgCaption, submit,
 
   useEffect(() => {
     let labels = {};
-    formSchema[category].filter(field => (
+    Formfields.filter(field => (
       field.type !== 'sectionHeading'
       && field.type !== 'person'
       && field.type !== 'file'
@@ -85,19 +111,19 @@ const PreviewFC = ({ display, category, fields, images = [], imgCaption, submit,
       }
     })
     setLabels(labels);
-  }, [category])
+  }, [Formfields]);
 
   useEffect(() => {
     updatePreview();
     // eslint-disable-next-line
-  }, [fields])
+  }, [fields,Form])
 
   return (
     <div className={styles.preview} style={{ display: display }} >
-      {parseInt(category) === 0 ? <NoPreview /> : (<>
+      {category === '' ? <NoPreview /> : (<>
         <div className={cx(styles['formatted-preview-wrapper'], { [styles.active]: editing })}>
           <div className={styles.previews}>
-            <h1>{fields.activityTitle ? fields.activityTitle : CategoryTitles[parseInt(category)]?.length > 0 ? CategoryTitles[parseInt(category)] : <em>Untitled</em>}</h1>
+            <h1>{fields.activityTitle ? fields.activityTitle : category!=='' ? category : <em>Untitled</em>}</h1>
             <PreviewedInput
               placeholder='Your output will show here'
               value={desc}

@@ -6,7 +6,7 @@ import { arrayRemove } from "firebase/firestore"
 import SpinnerIcon from "@/components/icons/spinner-icon"
 import { where, orderBy, setDoc, doc, deleteDoc } from 'firebase/firestore'
 import useFetchCollection from "@/hooks/fetchCollection"
-import LoadingPage from "@/components/icons/spinner-icon"
+import LoadingPage from "@/components/loading-screen"
 import { deleteFileFromStorage } from "@/helpers/helpers"
 import cx from "classnames"
 import styles from './page.module.scss'
