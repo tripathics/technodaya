@@ -167,11 +167,11 @@ export default function Form() {
       e.preventDefault();
 
       const labels = Fields.map((field) => field.label);
-      
+
       const nonSectionHeadingFields = Fields.filter(
         (field) => field.type !== "sectionHeading" && field.type !== "dateRange"
       );
-      
+
       const uniqueLabels = new Set(nonSectionHeadingFields).size === nonSectionHeadingFields.length;
       const allLabelsIncluded = nonSectionHeadingFields.every((field) =>
         preview.includes(field.label)
@@ -237,7 +237,7 @@ export default function Form() {
   const dummy = (e) => {
     try {
       if (e) e.preventDefault();
-      addAlert("This is just a Preview You can submit in Editing Mode","wrning"); 
+      addAlert("This is just a Preview You can submit in Editing Mode", "wrning");
     } catch (error) {
       return;
     }
@@ -351,16 +351,16 @@ export default function Form() {
                   if (field.type === "sectionHeading")
                     return (
                       <div key={key} className={styles["field-wrapper"]}>
-                        <div className={styles["input-wrapper"]}>
-                          <TextInput
-                            key={key}
-                            placeholder={"Section Heading"}
-                            required={true}
-                            name={`sectionHeading${key}`}
-                            onChange={handleChange}
-                            value={field.label}
-                          />
-                        </div>
+                        {/* <div className={styles["input-wrapper"]}> */}
+                        <TextInput
+                          key={key}
+                          placeholder={"Section Heading"}
+                          required={true}
+                          name={`sectionHeading${key}`}
+                          onChange={handleChange}
+                          value={field.label}
+                        />
+                        {/* </div> */}
                         <button
                           className={pageStyles.btn}
                           onClick={(e) => deleteField(e, key)}
@@ -376,18 +376,15 @@ export default function Form() {
                   ) {
                     return (
                       <div key={key} className={styles["field-wrapper"]}>
-                        <div className={styles["input-wrapper"]}>
-                          <TextInput
-                            placeholder={`${
-                              field.type.charAt(0).toUpperCase() +
-                              field.type.slice(1).toLowerCase()
+                        <TextInput
+                          placeholder={`${field.type.charAt(0).toUpperCase() +
+                            field.type.slice(1).toLowerCase()
                             } Input Name`}
-                            required={true}
-                            name={`${field.type}${key}`}
-                            onChange={handleChange}
-                            value={field.label}
-                          />
-                        </div>
+                          required={true}
+                          name={`${field.type}${key}`}
+                          onChange={handleChange}
+                          value={field.label}
+                        />
                         <div className={styles.checkbox}>
                           <label htmlFor="">Mandatory</label>
                           <input
@@ -420,18 +417,22 @@ export default function Form() {
                     );
                   }
                 })}
-                <TextInput
-                  placeholder={"Preview of Form"}
-                  required={true}
-                  value={preview}
-                  onChange={handlePreview}
-                />
-                <SelectInput
-                  placeholder="Add New Field"
-                  onChange={selectField}
-                  options={op}
-                  value=""
-                />
+                <div className={styles['field-wrapper']}>
+                  <TextInput
+                    placeholder={"Preview of Form"}
+                    required={true}
+                    value={preview}
+                    onChange={handlePreview}
+                  />
+                </div>
+                <div className={styles['field-wrapper']}>
+                  <SelectInput
+                    placeholder="Add New Field"
+                    onChange={selectField}
+                    options={op}
+                    value=""
+                  />
+                </div>
               </>
             ) : (
               <>
@@ -444,8 +445,8 @@ export default function Form() {
                 <MdInput
                   placeholder="Your output will show here"
                   value={preview}
-                  updateVal={(_) => {}}
-                  editing={(_) => {}}
+                  updateVal={(_) => { }}
+                  editing={(_) => { }}
                 />
               </>
             )}

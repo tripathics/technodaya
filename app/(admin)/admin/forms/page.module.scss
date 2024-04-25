@@ -1,20 +1,28 @@
-.field-wrapper{
+.field-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  > div {
+    margin: 0;
+  }
+  > :first-child {
+    flex-grow: 1;
+  }
+
+  .input-wrapper {
+    flex: 0 1 250px;
+    padding-right: 1rem;
+  }
+
+  .checkbox {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content:flex-start;
-
-    .input-wrapper{
-        flex: 0 1 250px; 
-        padding-right: 1rem;
-    }
-
-    .checkbox{
-        display: flex;
-        gap: 5px;
-        flex-direction: row-reverse;
-    }
+    gap: 5px;
+    flex-direction: row-reverse;
+  }
 }
-.btn{
-    margin-block: 10px;
+.btn {
+  margin-block: 10px;
 }

@@ -80,7 +80,7 @@ export function LogoutBtn() {
   return (
     <button className={cx(styles.logout)} onClick={handleLogout} title="Logout">
       <div className={styles['btn-txt']}>
-        <span>{user?.displayName.includes(' ') ? user.displayName.slice(0, user.displayName.search(' ')) : user?.displayName || 'Logout'}</span>
+        <span>{user?.displayName?.includes(' ') ? user.displayName.slice(0, user.displayName.search(' ')) : user?.displayName || 'Logout'}</span>
         <LogoutIcon />
       </div>
     </button>
