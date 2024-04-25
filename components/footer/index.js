@@ -6,7 +6,7 @@ const crimson_text = Crimson_Text({ display: 'swap', subsets: ['latin'], weight:
 const cormorant = Cormorant({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], styles: ['normal', 'italic'] })
 const zilla_slab = Zilla_Slab({ display: 'swap', subsets: ['latin'], weight: ['300', '400'] })
 
-const Footer = ({ className = '',visitors=-1,fetching }) => {
+const Footer = ({ className = '',visitors=-1,issues=-1 }) => {
   return (
     <footer className={[styles.footer, crimson_text.className, className].join(' ')}>
       <div className={['container', styles['info-Footer']].join(' ')}>
@@ -15,7 +15,8 @@ const Footer = ({ className = '',visitors=-1,fetching }) => {
           <div>
             <p className={[styles.tagline, cormorant.className].join(' ')}>The Technical Meraki of Arunachal</p>
             <p>National Institute of Technology,<br />Arunachal Pradesh</p>
-            {(!fetching && visitors!==-1) && <p className={[styles.visits,cormorant.className].join(' ')}>Our Readers:- <span>{visitors}</span></p>}
+            {(visitors!==-1) && <p className={[styles.visits,cormorant.className].join(' ')}>Our Readers:- <span>{visitors}</span></p>}
+            {(issues!==-1) && <p className={[styles.issues,cormorant.className].join(' ')}>Issues Released:- <span>{issues}</span></p>}
           </div>
         </section>
         <section>
