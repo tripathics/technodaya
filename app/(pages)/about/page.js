@@ -57,11 +57,11 @@ const People = {
   ],
   studentEditors: [
     {
-      name: 'Keshav Arora',
+      name: 'Sachin Pathak',
       role: 'Developer and Maintainer',
       designation: 'UG Student, CSE 3rd year',
       description: 'None',
-      profile: 'https://avatars.githubusercontent.com/u/124811079',
+      profile: 'https://avatars.githubusercontent.com/u/103988614?v=4',
       links: [
         { to: 'https://www.linkedin.com/in/keshav-arora-a5a20325b', icon: 'linkedin' },
         { to: 'https://github.com/keshav7104/', icon: 'github' },
