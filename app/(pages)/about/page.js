@@ -57,15 +57,15 @@ const People = {
   ],
   studentEditors: [
     {
-      name: 'Keshav Arora',
+      name: 'Sahil Hussain',
       role: 'Developer and Maintainer',
       designation: 'UG Student, CSE 3rd year',
       description: 'None',
       profile: 'https://avatars.githubusercontent.com/u/124811079',
       links: [
-        { to: 'https://www.linkedin.com/in/keshav-arora-a5a20325b', icon: 'linkedin' },
-        { to: 'https://github.com/keshav7104/', icon: 'github' },
-        { to: 'https://instagram.com/keshav_7104/', icon: 'instagram' },
+        { to: 'https://www.linkedin.com/in/sahil-hussain-9a092b224/', icon: 'linkedin' },
+        { to: 'https://github.com/hussain123sahil/', icon: 'github' },
+        { to: 'https://www.instagram.com/sahil.hussain.773/', icon: 'instagram' },
       ],
     },
     {
