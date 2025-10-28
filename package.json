@@ -6,25 +6,30 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint"
   },
   "dependencies": {
-    "classnames": "^2.3.2",
-    "eslint": "8.42.0",
-    "eslint-config-next": "13.4.5",
-    "firebase": "^9.22.2",
-    "next": "13.4.5",
-    "react": "18.2.0",
+    "classnames": "^2.5.1",
+    "firebase": "^12.4.0",
+    "next": "16.0.0",
+    "react": "19.2.0",
     "react-beautiful-dnd": "^13.1.1",
-    "react-dom": "18.2.0",
+    "react-dom": "19.2.0",
     "react-markdown": "^8.0.7",
-    "rehype-raw": "^6.1.1",
-    "remark-gfm": "^3.0.1",
-    "sass": "^1.63.4",
-    "sharp": "^0.32.1",
-    "styled-components": "^5.3.10"
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1",
+    "sass": "^1.93.2",
+    "styled-components": "^6.1.19"
   },
   "devDependencies": {
-    "encoding": "^0.1.13"
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-beautiful-dnd": "^13.1.8",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }

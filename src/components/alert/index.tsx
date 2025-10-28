@@ -1,0 +1,84 @@
+import DismissIcon from "../icons/remove-icon";
+import ErrorIcon from "../icons/alerts/error-icon";
+import SuccessIcon from "../icons/alerts/success-icon";
+import WarningIcon from "../icons/alerts/warning-icon";
+import InfoIcon from "../icons/alerts/info-icon";
+
+import styles from "./alert.module.scss";
+import cx from "classnames";
+import { useEffect, useState } from "react";
+import { AlertType } from "@/types/alert";
+
+const Icon: React.FC<{ severity: AlertType }> = ({ severity }) => {
+  if (severity === "success") return <SuccessIcon />;
+  else if (severity === "warning") return <WarningIcon />;
+  else if (severity === "error") return <ErrorIcon />;
+  else return <InfoIcon />;
+};
+
+const Alert: React.FC<{
+  message: string;
+  severity?: AlertType;
+  timeout?: number;
+  handleDismiss?: () => void
+}> = ({ message, severity = "info", timeout = null, handleDismiss = null }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [alertText, setAlertText] = useState("");
+
+  useEffect(() => {
+    if (!!message) {
+      setAlertText(message);
+      setTimeout(() => {
+        setIsVisible(true);
+      }, 300);
+    }
+    else {
+      setIsVisible(false);
+      setTimeout(() => {
+        setAlertText("");
+      }, 300);
+    }
+  }, [message]);
+
+  useEffect(() => {
+    if (timeout === 0) return;
+    if (timeout) {
+      setTimeout(() => {
+        dismissAlert();
+      }, timeout);
+    }
+  }, [])
+
+  const dismissAlert = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      handleDismiss?.();
+    }, 300);
+  };
+
+  return (
+    <div className={cx(styles.alert, styles[severity], { [styles.active]: isVisible }, { [styles.static]: !timeout && !handleDismiss })} >
+      <div className={styles.icon}>
+        <Icon severity={severity} />
+      </div>
+      <div className={styles.message}>{alertText}</div>
+      {handleDismiss && (
+        <button
+          type="button"
+          className={styles.dismiss}
+          onClick={dismissAlert}
+        >
+          <DismissIcon />
+        </button>
+      )}
+    </div>
+  );
+};
+
+export const AlertsWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className={styles['alert-wrapper']}>
+    {children}
+  </div>
+)
+
+export default Alert;
