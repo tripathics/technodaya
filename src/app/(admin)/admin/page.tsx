@@ -13,10 +13,11 @@ import styles from './page.module.scss'
 import SaveIcon from "@/components/icons/save-icon"
 import RefreshIcon from "@/components/icons/refresh-icon"
 import { useAlerts } from "@/contexts/alerts"
+import type { SubmissionType, SubmissionUpdateType } from "@/types/collection"
 
 export default function Submissions() {
-  const [unsaved, setUnsaved] = useState({});
-  const [storageDeletes, setStorageDeletes] = useState([]);
+  const [unsaved, setUnsaved] = useState<Record<string, SubmissionUpdateType>>({});
+  const [storageDeletes, setStorageDeletes] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const { addAlert, clearAlerts } = useAlerts();
@@ -27,7 +28,7 @@ export default function Submissions() {
     fetching: fetchingPending,
     refetch: refetchPending,
     error: errorPending
-  } = useFetchCollection('submissions', [
+  } = useFetchCollection<SubmissionType>('submissions', [
     orderBy('createdInSeconds', 'desc'),
     where("approved", "==", false)
   ]);
@@ -38,12 +39,12 @@ export default function Submissions() {
     fetching: fetchingApproved,
     refetch: refetchApproved,
     error: errorApproved
-  } = useFetchCollection('submissions', [
+  } = useFetchCollection<SubmissionType>('submissions', [
     orderBy('createdInSeconds', 'desc'),
     where("approved", "==", true)
   ]);
 
-  const approve = (id) => {
+  const approve = (id: SubmissionType['id']) => {
     const ls = pending;
     setApproved({ [id]: ls[id], ...approved });
     delete ls[id];
@@ -52,7 +53,7 @@ export default function Submissions() {
     handleUpdate(id, 'approved', true);
   }
 
-  const moveBack = (id) => {
+  const moveBack = (id: SubmissionType['id']) => {
     const ls = approved;
     setPending({ [id]: ls[id], ...pending });
     delete ls[id];
@@ -61,7 +62,7 @@ export default function Submissions() {
     handleUpdate(id, 'approved', false);
   }
 
-  const reject = (id) => {
+  const reject = (id: SubmissionType['id']) => {
     const ls = pending;
     const urls = pending[id].imgUrl;
     if (pending[id].brochureUrl) urls.push(pending[id].brochureUrl);
@@ -71,35 +72,48 @@ export default function Submissions() {
     handleUpdate(id, 'delete', true, urls);
   }
 
-  const update = (id, type, field, value) => {
+  const update = <K extends keyof SubmissionType>(
+    id: SubmissionType["id"],
+    type: 'pending' | 'approved',
+    field: K,
+    value: SubmissionType[K]
+  ) => {
     const ls = type === 'pending' ? pending : approved;
     const setLs = type === 'pending' ? setPending : setApproved;
 
     if (field === 'imgUrl') {
-      ls[id][field] = ls[id][field].filter(url => url !== value);
-      if (ls[id][field].length === 0) update(id, type, 'imgCaption', '');
+      const current = ls[id][field] as SubmissionType['imgUrl'];
+      const filtered = current.filter(url => url !== value);
+      if (filtered.length === 0) update(id, type, 'imgCaption', '');
     } else {
       ls[id][field] = value;
     }
-
     setLs({ ...ls });
 
     handleUpdate(id, field, value);
   }
 
-  const handleUpdate = (id, key, value, urls = []) => {
+  /**
+   * Store unsaved changes
+  */
+  const handleUpdate = <K extends keyof SubmissionUpdateType>(
+    id: SubmissionType['id'],
+    key: K,
+    value: SubmissionUpdateType[K],
+    urls: string[] = []
+  ) => {
     if (key === 'imgUrl') {
-      setStorageDeletes([...storageDeletes, ...urls, value]);
-      value = arrayRemove(value);
+      setStorageDeletes(prev => [...prev, ...urls, value as string]);
+      setUnsaved(prev => ({ ...prev, [id]: { ...prev[id], [key]: arrayRemove(value) } }))
     } else {
-      setStorageDeletes([...storageDeletes, ...urls]);
+      setStorageDeletes(prev => [...prev, ...urls]);
+      setUnsaved(prev => ({ ...prev, [id]: { ...prev[id], [key]: value } }))
     }
-    setUnsaved(prevData => ({ ...prevData, [id]: { ...prevData[id], [key]: value } }))
   }
 
   const saveChanges = () => {
     clearAlerts();
-    const updateDoc = (id) => {
+    const updateDoc = (id: SubmissionType['id']) => {
       const docRef = doc(db, 'submissions', id);
       if (unsaved[id].delete) {
         return deleteDoc(docRef);

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import styles from './not-found.module.scss'
 import { Crimson_Text } from 'next/font/google'
 const crimson_text = Crimson_Text({ display: 'swap', subsets: ['latin'], weight: ['400', '600', '700'], style: ['normal', 'italic'] })
@@ -15,7 +16,7 @@ export default function NotFound() {
           <li>There is an error in the URL entered into your web browser. Please check the URL and try again.</li>
           <li>The page you are looking for has been moved or deleted.</li>
         </ul>
-        <p className={styles.paragraph}><a href='/'>Return to Technodaya home</a></p>
+        <p className={styles.paragraph}><Link replace href='/'>Return to Technodaya home</Link></p>
       </section>
     </div>
   )

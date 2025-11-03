@@ -1,7 +1,7 @@
 'use client'
 import Alert, { AlertsWrapper } from "@/components/alert";
-import { AlertsContext as IAlertsContext, Alert as AlertT, AlertType, AddAlertFn, RemoveAlertFn } from "@/types/alert";
-import { createContext, useState, useContext, useRef, useEffect } from "react";
+import { AlertsContext as IAlertsContext, Alert as AlertT, AddAlertFn, RemoveAlertFn } from "@/types/alert";
+import { createContext, useState, useContext, useRef, useEffect, useCallback } from "react";
 
 const AlertsContext = createContext<IAlertsContext>({
   alerts: [],
@@ -11,17 +11,19 @@ const AlertsContext = createContext<IAlertsContext>({
 const AlertsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [alerts, setAlerts] = useState<AlertT[]>([]);
   const alertsRef = useRef<AlertT[]>([]);
-  const addAlert = (message: string, type: AlertType, timeout?: number) => {
+
+  const addAlert: AddAlertFn = useCallback((message, type, timeout) => {
     const id = Math.random().toString(36).slice(2, 9) + new Date().getTime().toString(36);
     if (!timeout) timeout = type === 'error' ? 10000 : 5000;
     alertsRef.current = [{ id, message, type, timeout }, ...alertsRef.current];
     setAlerts(alertsRef.current);
     return id;
-  };
-  const removeAlert = (id: AlertT["id"]) => {
+  }, []);
+
+  const removeAlert: RemoveAlertFn = useCallback((id) => {
     alertsRef.current = alertsRef.current.filter((alert) => alert.id !== id);
-    setAlerts(alertsRef.current);
-  };
+    setAlerts([...alertsRef.current]);
+  }, []);
 
   return (
     <AlertsContext.Provider value={{ alerts, addAlert, removeAlert }}>
@@ -45,33 +47,29 @@ const Alerts = () => {
   )
 }
 
-const useAlerts = (clearOnUnmount: boolean = true) => {
+const useAlerts = () => {
   const { addAlert: add, removeAlert: remove } = useContext(AlertsContext)
   const alertIds = useRef<AlertT["id"][]>([])
 
-  const clearAlerts = () => {
+  const clearAlerts = useCallback(() => {
     alertIds.current.forEach(id => remove(id))
     alertIds.current = []
-  }
+  }, [remove])
 
-  const addAlert: AddAlertFn = (message, type, timeout) => {
+  const addAlert: AddAlertFn = useCallback((message, type, timeout) => {
     const id = add(message, type, timeout)
     alertIds.current = [id, ...alertIds.current]
     return id
-  }
+  }, [add])
 
-  const removeAlert: RemoveAlertFn = (id) => {
+  const removeAlert: RemoveAlertFn = useCallback((id) => {
     remove(id)
     alertIds.current = alertIds.current.filter(alertId => alertId !== id)
-  }
+  }, [remove])
 
   useEffect(() => {
-    if (clearOnUnmount) {
-      return () => {
-        clearAlerts()
-      }
-    }
-  }, [clearOnUnmount, clearAlerts])
+    return () => clearAlerts()
+  }, [clearAlerts])
 
   return { alertIds, addAlert, removeAlert, clearAlerts }
 }

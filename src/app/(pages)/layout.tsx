@@ -7,34 +7,34 @@ import { useEffect, useState } from "react";
 import { setDoc, doc } from "firebase/firestore";
 import { db } from "@/firebase.config";
 
-export default function Layout({ children }) {
-  const { docs: visitorNumber, fetching: fetchingVisitors } = useFetchCollection("visitors");
-  const { docs: magzinesCount, fetching: fetchingIssues } = useFetchCollection("PastPublications")
+export default function Layout({ children }: { children: React.ReactNode }) {
+  // const { docs: visitorNumber, fetching: fetchingVisitors } = useFetchCollection("visitors");
+  // const { docs: magzinesCount, fetching: fetchingIssues } = useFetchCollection("PastPublications")
 
   const [Visitors, setVisitors] = useState(-1)
   const [Issues, setIssues] = useState(-1)
 
-  useEffect(() => {
-    if (!fetchingVisitors) {
-      const ref = doc(db, "visitors", "visitorNumber");
-      const curr = visitorNumber?.visitorNumber?.number || -1;
-      if (curr !== -1) {
-        setVisitors(curr);
-        setDoc(ref, {
-          number: curr + 1,
-        });
-      }
-    }
-  }, [fetchingVisitors]);
+  // useEffect(() => {
+  //   if (!fetchingVisitors) {
+  //     const ref = doc(db, "visitors", "visitorNumber");
+  //     const curr = visitorNumber?.visitorNumber?.number || -1;
+  //     if (curr !== -1) {
+  //       setVisitors(curr);
+  //       setDoc(ref, {
+  //         number: curr + 1,
+  //       });
+  //     }
+  //   }
+  // }, [fetchingVisitors]);
 
-  useEffect(() => {
-    if (!fetchingIssues) {
-      const count = Object.keys(magzinesCount).length || -1;
-      if (count !== -1) {
-        setIssues(count);
-      }
-    }
-  }, [fetchingIssues])
+  // useEffect(() => {
+  //   if (!fetchingIssues) {
+  //     const count = Object.keys(magzinesCount).length || -1;
+  //     if (count !== -1) {
+  //       setIssues(count);
+  //     }
+  //   }
+  // }, [fetchingIssues])
 
   return (
     <>

@@ -89,8 +89,16 @@ export default function Draft() {
   const [previewAfresh, setIsPreviewAfresh] = useState(false);
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState(null);
-  const { docs: drafts, fetching: fetchingDrafts, error: draftsError } = useFetchCollection('previews');
-  const { docs: approved, fetching: fetchingApproved, error: approvedError } = useFetchCollection('submissions', [orderBy('createdInSeconds', 'asc'), where('approved', '==', true)]);
+  const {
+    docs: drafts,
+    fetching: fetchingDrafts,
+    error: draftsError
+  } = useFetchCollection('previews');
+  const {
+    docs: approved,
+    fetching: fetchingApproved,
+    error: approvedError
+  } = useFetchCollection('submissions', [orderBy('createdInSeconds', 'asc'), where('approved', '==', true)]);
 
   const { addAlert, clearAlerts } = useAlerts();
 
@@ -108,10 +116,10 @@ export default function Draft() {
 
   useEffect(() => {
     if (draftsError) {
-      addAlert('Error fetching drafts: ', draftsError, 'error');
+      addAlert('Error fetching drafts: ' + draftsError, 'error');
     }
     if (approvedError) {
-      addAlert('Error fetching approved submissions: ', approvedError, 'error');
+      addAlert('Error fetching approved submissions: ' + approvedError, 'error');
     }
   }, [draftsError, approvedError])
 

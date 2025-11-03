@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { auth, db } from '@/firebase.config';
 import SpinnerIcon from '@/components/icons/spinner-icon';
 import EmailIcon from '@/components/icons/email-icon';
@@ -11,6 +11,7 @@ import styles from './styles/Login.module.scss';
 import { useUser } from '@/contexts/user';
 import { useRouter } from 'next/navigation';
 import { useAlerts } from '@/contexts/alerts';
+import { FirebaseError } from 'firebase/app';
 
 const Login = () => {
   const { user, admin, redirected, setRedirected, clearUser } = useUser();
@@ -35,6 +36,7 @@ const Login = () => {
         const res = await createUserWithEmailAndPassword(auth, email, password);
         await updateProfile(res.user, { displayName: docSnap.data().FullName });
         // Add user to users collection
+        if (!auth.currentUser) throw new Error('User not authenticated!');
         await setDoc(doc(db, 'users', auth.currentUser.uid), {
           FullName: docSnap.data().FullName,
           Email: email,
@@ -53,7 +55,7 @@ const Login = () => {
         throw new Error('Invalid username or password!');
       }
     } catch (err) {
-      addAlert(err.message, 'error');
+      addAlert((err as Error).message, 'error');
       resetForm();
       clearUser();
     } finally {
@@ -61,7 +63,7 @@ const Login = () => {
     }
   }
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     clearAlerts();
@@ -81,10 +83,10 @@ const Login = () => {
         throw new Error('Invalid username or password!');
       }
     } catch (err) {
-      if (err.code === 'auth/user-not-found') {
+      if (err instanceof FirebaseError && err.code === 'auth/user-not-found') {
         signUpIfAuthorized();
       } else {
-        addAlert(err.message, 'error');
+        addAlert((err as Error).message, 'error');
         resetForm();
         clearUser();
         setLoading(false);
@@ -119,7 +121,7 @@ const Login = () => {
             </div>
             {loading ? (
               <button className={styles['login-btn']} disabled type="submit">
-                <SpinnerIcon style={{ height: '1.2rem' }} />
+                <SpinnerIcon />
               </button>
             ) : (
               <button className={styles['login-btn']} type="submit">Login</button>

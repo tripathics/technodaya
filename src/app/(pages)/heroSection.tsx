@@ -4,33 +4,41 @@ import { limit, orderBy } from "firebase/firestore";
 import Link from "next/link";
 import useFetchCollection from "@/hooks/fetchCollection";
 import styles from "./page.module.scss";
-import { useEffect, useState } from "react";
 import cx from "classnames";
 import MagazineCard, { MagazineCardSkeleton } from "@/components/magazine-card/";
+import type { Issue as IssueType } from "@/types/collection";
 
 import { Cormorant, Open_Sans } from "next/font/google";
 const open_sans = Open_Sans({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], style: ['normal', 'italic'] })
 const cormorant = Cormorant({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], style: ['normal', 'italic'] })
 
-const HeroSection = () => {
-  const [latestIssueId, setLatestIssueId] = useState(null);
+// type IssueType = {
+//   ImageUrl: string;
+//   Title: string;
+//   Vol: string;
+//   Issue: string;
+//   Month: string;
+//   Year: string;
+//   Link: string;
+//   PdfUrl: string;
+//   id: string;
+// }
 
+const HeroSection = () => {
   const {
     docs: issues,
     fetching: loading,
-  } = useFetchCollection('PastPublications', [orderBy('index', 'desc'), limit(3)]);
+  } = useFetchCollection<IssueType>('PastPublications', [orderBy('index', 'desc'), limit(3)]);
 
-  useEffect(() => {
-    if (!loading) setLatestIssueId(Object.keys(issues)[0]);
-  }, [loading])
+  const latestIssueUrl = Object.entries(issues).length > 0 ? issues[Object.keys(issues)[0]].PdfUrl : null;
 
   return (<>
     <section className={cx(styles.hero, 'parallax', styles.parallax, styles.home, cormorant.className)}>
       <div className="container">
         <h1 className={open_sans.className}>Technodaya Newsletter</h1>
         <h4>The Technical Meraki of Arunachal</h4>
-        {latestIssueId ? (
-          <a href={`${issues[latestIssueId].PdfUrl}`} target="_blank" rel="noreferrer" className={[styles.btn, open_sans.className].join(' ')}>
+        {latestIssueUrl ? (
+          <a href={latestIssueUrl} target="_blank" rel="noreferrer" className={[styles.btn, open_sans.className].join(' ')}>
             Read latest issue
           </a>
         ) : (
@@ -50,16 +58,17 @@ const HeroSection = () => {
           </Link>
         </header>
         <div className={styles.issues}>
-          {loading
-            ? <div className="grid-gallery"
+          {loading ? (
+            <div className="grid-gallery"
               aria-label="Loading recent releases"
             >
               <MagazineCardSkeleton />
               <MagazineCardSkeleton />
               <MagazineCardSkeleton />
             </div>
-            : <div className="grid-gallery">
-              {Object.keys(issues).map((id, i) => {
+          ) : (
+            <div className="grid-gallery">
+              {Object.keys(issues).map(id => {
                 const { ImageUrl, Title, Vol, Issue, Month, Year, Link, PdfUrl, } = issues[id];
                 return (
                   <MagazineCard key={id} imgsrc={ImageUrl} title={Title}
@@ -68,7 +77,8 @@ const HeroSection = () => {
                   />
                 );
               })}
-            </div>}
+            </div>
+          )}
         </div>
       </div>
     </section>

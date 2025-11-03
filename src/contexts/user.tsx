@@ -28,7 +28,7 @@ const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const [admin, setAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [redirected, setRedirected] = useState(false);
-  const { addAlert: addAlert, clearAlerts: clearAlerts } = useAlerts();
+  const { addAlert, clearAlerts } = useAlerts();
 
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
