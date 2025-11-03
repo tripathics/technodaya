@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from "react"
-import Submission from "@/components/admin/submissions"
+import Submission, { DecisionFunction, UpdateFunction } from "@/components/admin/submissions"
 import { db } from "@/firebase.config"
 import { arrayRemove } from "firebase/firestore"
 import SpinnerIcon from "@/components/icons/spinner-icon"
@@ -13,10 +13,10 @@ import styles from './page.module.scss'
 import SaveIcon from "@/components/icons/save-icon"
 import RefreshIcon from "@/components/icons/refresh-icon"
 import { useAlerts } from "@/contexts/alerts"
-import type { SubmissionType, SubmissionUpdateType } from "@/types/collection"
+import type { Collections } from "@/types/collection"
 
 export default function Submissions() {
-  const [unsaved, setUnsaved] = useState<Record<string, SubmissionUpdateType>>({});
+  const [unsaved, setUnsaved] = useState<Record<string, Collections.SubmissionUpdate>>({});
   const [storageDeletes, setStorageDeletes] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
@@ -28,7 +28,7 @@ export default function Submissions() {
     fetching: fetchingPending,
     refetch: refetchPending,
     error: errorPending
-  } = useFetchCollection<SubmissionType>('submissions', [
+  } = useFetchCollection<Collections.Submission>('submissions', [
     orderBy('createdInSeconds', 'desc'),
     where("approved", "==", false)
   ]);
@@ -39,21 +39,21 @@ export default function Submissions() {
     fetching: fetchingApproved,
     refetch: refetchApproved,
     error: errorApproved
-  } = useFetchCollection<SubmissionType>('submissions', [
+  } = useFetchCollection<Collections.Submission>('submissions', [
     orderBy('createdInSeconds', 'desc'),
     where("approved", "==", true)
   ]);
 
-  const approve = (id: SubmissionType['id']) => {
-    const ls = pending;
+  const approve: DecisionFunction = (id) => {
+    const ls = { ...pending };
     setApproved({ [id]: ls[id], ...approved });
     delete ls[id];
-    setPending({ ...ls });
+    setPending(ls);
 
     handleUpdate(id, 'approved', true);
   }
 
-  const moveBack = (id: SubmissionType['id']) => {
+  const moveBack: DecisionFunction = (id) => {
     const ls = approved;
     setPending({ [id]: ls[id], ...pending });
     delete ls[id];
@@ -62,7 +62,7 @@ export default function Submissions() {
     handleUpdate(id, 'approved', false);
   }
 
-  const reject = (id: SubmissionType['id']) => {
+  const reject: DecisionFunction = (id) => {
     const ls = pending;
     const urls = pending[id].imgUrl;
     if (pending[id].brochureUrl) urls.push(pending[id].brochureUrl);
@@ -72,17 +72,15 @@ export default function Submissions() {
     handleUpdate(id, 'delete', true, urls);
   }
 
-  const update = <K extends keyof SubmissionType>(
-    id: SubmissionType["id"],
-    type: 'pending' | 'approved',
-    field: K,
-    value: SubmissionType[K]
-  ) => {
+  /**
+   * Update a field in a submission
+   */
+  const update: UpdateFunction = (id, type, field, value) => {
     const ls = type === 'pending' ? pending : approved;
     const setLs = type === 'pending' ? setPending : setApproved;
 
     if (field === 'imgUrl') {
-      const current = ls[id][field] as SubmissionType['imgUrl'];
+      const current = ls[id][field] as Collections.Submission['imgUrl'];
       const filtered = current.filter(url => url !== value);
       if (filtered.length === 0) update(id, type, 'imgCaption', '');
     } else {
@@ -96,15 +94,17 @@ export default function Submissions() {
   /**
    * Store unsaved changes
   */
-  const handleUpdate = <K extends keyof SubmissionUpdateType>(
-    id: SubmissionType['id'],
+  const handleUpdate = <K extends keyof Collections.SubmissionUpdate>(
+    id: Collections.Submission['id'],
     key: K,
-    value: SubmissionUpdateType[K],
+    value: Collections.SubmissionUpdate[K],
     urls: string[] = []
   ) => {
+    // store img url for deletion of image if updating imgUrl
     if (key === 'imgUrl') {
-      setStorageDeletes(prev => [...prev, ...urls, value as string]);
-      setUnsaved(prev => ({ ...prev, [id]: { ...prev[id], [key]: arrayRemove(value) } }))
+      const [imgUrl] = value as string[]
+      setStorageDeletes(prev => [...prev, ...urls, imgUrl]);
+      setUnsaved(prev => ({ ...prev, [id]: { ...prev[id], [key]: arrayRemove(imgUrl) } }))
     } else {
       setStorageDeletes(prev => [...prev, ...urls]);
       setUnsaved(prev => ({ ...prev, [id]: { ...prev[id], [key]: value } }))
@@ -113,7 +113,7 @@ export default function Submissions() {
 
   const saveChanges = () => {
     clearAlerts();
-    const updateDoc = (id: SubmissionType['id']) => {
+    const updateDoc = (id: Collections.Submission['id']) => {
       const docRef = doc(db, 'submissions', id);
       if (unsaved[id].delete) {
         return deleteDoc(docRef);
@@ -188,13 +188,13 @@ export default function Submissions() {
             <div className="submission pending">
               <SubmissionSection type='pending'
                 approve={approve} reject={reject} update={update} moveBack={moveBack}
-                ls={pending} fetching={fetchingPending}
+                ls={pending}
               />
             </div>
             <div className="submission approved">
               <SubmissionSection type='approved'
                 approve={approve} reject={reject} update={update} moveBack={moveBack}
-                ls={approved} fetching={fetchingApproved}
+                ls={approved}
               />
             </div>
           </div>
@@ -204,7 +204,14 @@ export default function Submissions() {
   )
 }
 
-const SubmissionSection = ({ type, ls, approve, reject, update, moveBack }) => {
+const SubmissionSection: React.FC<{
+  type: 'pending' | 'approved';
+  ls: Record<Collections.Submission['id'], Collections.Submission>;
+  approve: DecisionFunction;
+  reject: DecisionFunction;
+  moveBack: DecisionFunction;
+  update: UpdateFunction;
+}> = ({ type, ls, approve, reject, update, moveBack }) => {
   return (
     <>
       <h3 className="sub-summary">{Object.keys(ls).length} {type} submissions</h3>

@@ -10,18 +10,20 @@ import styles from './Activity.module.scss';
 import EmailVerification from "@/components/email-verification";
 import { useUser } from "@/contexts/user";
 import Image from "next/image";
+import type { Submission as SubmissionType } from "@/types/collection";
 
 const Activity = () => {
-  const [lastUpdated, setLastUpdated] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const { user } = useUser();
+  if (!user) return <SpinnerIcon />
 
-  const { docs: pending, fetching: fetchingPending, refetch: refetchPending } = useFetchCollection('submissions', [
+  const { docs: pending, fetching: fetchingPending, refetch: refetchPending } = useFetchCollection<SubmissionType>('submissions', [
     orderBy('createdInSeconds', 'desc'),
     where("uid", "==", user.uid),
     where("approved", "==", false),
   ]);
 
-  const { docs: approved, fetching: fetchingApproved, refetch: refetchApproved } = useFetchCollection('submissions', [
+  const { docs: approved, fetching: fetchingApproved, refetch: refetchApproved } = useFetchCollection<SubmissionType>('submissions', [
     orderBy('createdInSeconds', 'desc'),
     where("uid", "==", user.uid),
     where("approved", "==", true),

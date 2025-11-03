@@ -1,16 +1,17 @@
 'use client'
 import MagazineCard, { MagazineCardSkeleton } from "../magazine-card";
-import { limit as limitBy, orderBy } from "firebase/firestore";
+import { limit as limitBy, orderBy, QueryConstraint } from "firebase/firestore";
 import useFetchCollection from "@/hooks/fetchCollection";
+import type { Issue as IssueType } from "@/types/collection";
 
 export default function IssuesGroup({ limit = null }) {
-  const filter = [orderBy('index', 'desc')]
+  const filter: QueryConstraint[] = [orderBy('index', 'desc')]
   if (limit) { filter.push(limitBy(limit)) }
 
   const {
     docs: issues,
     fetching: loading,
-  } = useFetchCollection('PastPublications', filter);
+  } = useFetchCollection<IssueType>('PastPublications', filter);
 
   return (
     <div className="issues">

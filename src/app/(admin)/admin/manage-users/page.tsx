@@ -2,13 +2,14 @@
 import pageStyles from '../page.module.scss';
 import formStyles from '@/components/form/Form.module.scss'
 import cx from 'classnames'
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { setDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase.config';
 import { RadioInput, TextInput } from '@/components/form/InputComponents';
 import RefreshIcon from '@/components/icons/refresh-icon';
 import useFetchCollection from '@/hooks/fetchCollection';
 import { useAlerts } from '@/contexts/alerts';
+import { Collections } from '@/types/collection';
 
 export default function Register() {
   const [formData, setFormData] = useState({});
@@ -26,16 +27,16 @@ export default function Register() {
     docs: registeredUsers,
     fetching: loadingRegistered,
     refetch: getRegisteredUsers
-  } = useFetchCollection('users');
+  } = useFetchCollection<Collections.User>('users');
 
-  const handleFormUpdate = (e) => {
+  const handleFormUpdate = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData(prevData => ({
       ...prevData,
       [e.target.name]: e.target.value
     }))
   }
 
-  const addAuthorizedUser = (e) => {
+  const addAuthorizedUser = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     clearAlerts();
 

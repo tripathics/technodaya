@@ -6,29 +6,17 @@ import useFetchCollection from "@/hooks/fetchCollection";
 import styles from "./page.module.scss";
 import cx from "classnames";
 import MagazineCard, { MagazineCardSkeleton } from "@/components/magazine-card/";
-import type { Issue as IssueType } from "@/types/collection";
+import type { Collections } from "@/types/collection";
 
 import { Cormorant, Open_Sans } from "next/font/google";
 const open_sans = Open_Sans({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], style: ['normal', 'italic'] })
 const cormorant = Cormorant({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], style: ['normal', 'italic'] })
 
-// type IssueType = {
-//   ImageUrl: string;
-//   Title: string;
-//   Vol: string;
-//   Issue: string;
-//   Month: string;
-//   Year: string;
-//   Link: string;
-//   PdfUrl: string;
-//   id: string;
-// }
-
 const HeroSection = () => {
   const {
     docs: issues,
     fetching: loading,
-  } = useFetchCollection<IssueType>('PastPublications', [orderBy('index', 'desc'), limit(3)]);
+  } = useFetchCollection<Collections.Issue>('PastPublications', [orderBy('index', 'desc'), limit(3)]);
 
   const latestIssueUrl = Object.entries(issues).length > 0 ? issues[Object.keys(issues)[0]].PdfUrl : null;
 
