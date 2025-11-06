@@ -1,5 +1,4 @@
 import './globals.css'
-// import './globals.scss'
 import { Open_Sans } from 'next/font/google'
 import UserProvider from '@/contexts/user'
 import AlertsProvider, { Alerts } from '@/contexts/alerts'
@@ -21,12 +20,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={[open_sans.className].join(' ')}>
-        {/* <AlertsProvider> */}
-        {/*   <Alerts /> */}
-        {/*   <UserProvider> */}
-        {children}
-        {/*   </UserProvider> */}
-        {/* </AlertsProvider> */}
+        <AlertsProvider>
+          <Alerts />
+          <UserProvider>
+            {children}
+          </UserProvider>
+        </AlertsProvider>
       </body>
     </html>
   )

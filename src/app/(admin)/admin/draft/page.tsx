@@ -19,6 +19,7 @@ import NavigateNextIcon from '@/components/icons/navigate-next-icon'
 import SpinnerIcon from '@/components/icons/spinner-icon'
 import RemoveIcon from '@/components/icons/remove-icon'
 import LoadingScreen from '@/components/loading-screen'
+import PangeaBoard from '../drafts-pangea/components/board'
 
 const DraftForm = ({ formData, handleChange, submitForm, drafts = {} }) => {
   const handleSubmit = (e) => {
@@ -315,7 +316,8 @@ export default function Draft() {
           : (fetchingApproved || fetchingDrafts)
             ? <LoadingScreen />
             : (orders && orders?.activities.length !== 0) &&
-            <DndMain orders={orders} updateOrders={handleUpdateOrders} />
+            // <DndMain orders={orders} updateOrders={handleUpdateOrders} />
+            <PangeaBoard orders={orders} updateOrders={handleUpdateOrders} />
         }
       </main>
     </div>

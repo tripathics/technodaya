@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { where, orderBy } from "firebase/firestore";
 import SpinnerIcon from "@/components/icons/spinner-icon";
 import ReactMarkdown from 'react-markdown';
@@ -10,22 +10,20 @@ import styles from './Activity.module.scss';
 import EmailVerification from "@/components/email-verification";
 import { useUser } from "@/contexts/user";
 import Image from "next/image";
-import type { Submission as SubmissionType } from "@/types/collection";
+import type { Collections } from "@/types/collection";
 
 const Activity = () => {
-  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const { user } = useUser();
-  if (!user) return <SpinnerIcon />
 
-  const { docs: pending, fetching: fetchingPending, refetch: refetchPending } = useFetchCollection<SubmissionType>('submissions', [
+  const { docs: pending, fetching: fetchingPending, refetch: refetchPending } = useFetchCollection<Collections.Submission>('submissions', [
     orderBy('createdInSeconds', 'desc'),
-    where("uid", "==", user.uid),
+    where("uid", "==", user!.uid),
     where("approved", "==", false),
   ]);
 
-  const { docs: approved, fetching: fetchingApproved, refetch: refetchApproved } = useFetchCollection<SubmissionType>('submissions', [
+  const { docs: approved, fetching: fetchingApproved, refetch: refetchApproved } = useFetchCollection<Collections.Submission>('submissions', [
     orderBy('createdInSeconds', 'desc'),
-    where("uid", "==", user.uid),
+    where("uid", "==", user!.uid),
     where("approved", "==", true),
   ]);
 
@@ -34,13 +32,13 @@ const Activity = () => {
     refetchPending();
   }
 
-  useEffect(() => {
+  const lastUpdated = useMemo(() => {
     if (!(fetchingApproved && fetchingPending)) {
-      setLastUpdated(new Date().toLocaleString('en-IN', {
+      return new Date().toLocaleString('en-IN', {
         timeStyle: "medium",
         dateStyle: "medium"
-      }))
-    }
+      })
+    } else return null
   }, [fetchingApproved, fetchingPending])
 
   return (
@@ -81,8 +79,8 @@ const Activity = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.keys(pending).map(id => <Submission {...pending[id]} type='Pending' key={id} />)}
-                    {Object.keys(approved).map(id => <Submission {...approved[id]} type='Approved' key={id} />)}
+                    {Object.keys(pending).map(id => <Submission {...pending[id]} type='pending' key={id} />)}
+                    {Object.keys(approved).map(id => <Submission {...approved[id]} type='approved' key={id} />)}
                   </tbody>
                 </table>
               </div>
@@ -93,7 +91,13 @@ const Activity = () => {
   )
 }
 
-const Submission = ({ type, created, title, desc, imgUrl }) => (
+const Submission: React.FC<{
+  type: 'pending' | 'approved';
+  created: Collections.Submission['created'];
+  desc: Collections.Submission['desc'];
+  imgUrl: Collections.Submission['imgUrl'];
+  title: Collections.Submission['title'];
+}> = ({ type, created, title, desc, imgUrl }) => (
   <tr>
     <td>{type}</td>
     <td>{created}</td>

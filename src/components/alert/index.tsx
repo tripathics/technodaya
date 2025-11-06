@@ -25,6 +25,13 @@ const Alert: React.FC<{
   const [isVisible, setIsVisible] = useState(false);
   const [alertText, setAlertText] = useState("");
 
+  const dismissAlert = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      handleDismiss?.();
+    }, 300);
+  };
+
   useEffect(() => {
     if (!!message) {
       setAlertText(message);
@@ -48,13 +55,6 @@ const Alert: React.FC<{
       }, timeout);
     }
   }, [])
-
-  const dismissAlert = () => {
-    setIsVisible(false);
-    setTimeout(() => {
-      handleDismiss?.();
-    }, 300);
-  };
 
   return (
     <div className={cx(styles.alert, styles[severity], { [styles.active]: isVisible }, { [styles.static]: !timeout && !handleDismiss })} >

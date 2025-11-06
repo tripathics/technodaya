@@ -1,5 +1,5 @@
 import { PureComponent } from "react";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { Section } from "../dnd/dndSubmissions"
 import styled from "styled-components"
 

@@ -1,1 +1,28 @@
 @import "tailwindcss";
+
+@theme {
+  --color-border: rgb(219, 219, 219);
+  --color-heading: rgb(33, 37, 41);
+}
+
+.container {
+  @apply mx-auto px-6 max-w-6xl md:px-8;
+}
+
+.page-header {
+  @apply mb-9 py-8 border-b border-solid border-border;
+
+  .heading {
+    @apply uppercase font-semibold text-center text-4xl leading-normal text-heading;
+  }
+}
+
+.nav {
+}
+
+:root {
+  @apply [&::-webkit-scrollbar]:w-2
+  [&::-webkit-scrollbar-track]:bg-transparent
+  [&::-webkit-scrollbar-thumb]:bg-gray-300
+  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500;
+}

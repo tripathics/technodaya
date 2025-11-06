@@ -1,5 +1,5 @@
 import React, { Component, PureComponent, useEffect, useState } from 'react'
-import { Draggable, Droppable } from 'react-beautiful-dnd'
+import { Draggable, Droppable } from '@hello-pangea/dnd'
 import styled from 'styled-components'
 
 import ReactMarkdown from 'react-markdown';
