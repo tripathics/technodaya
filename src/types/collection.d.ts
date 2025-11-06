@@ -5,7 +5,7 @@ export namespace Collections {
   type User = {
     Password: string;
     Email: string;
-    Role: string;
+    Role?: 'admin';
     FullName: string;
     id: string;
   };

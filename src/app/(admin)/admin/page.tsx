@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Submission, { DecisionFunction, UpdateFunction } from "@/components/admin/submissions"
 import { db } from "@/firebase.config"
 import { arrayRemove } from "firebase/firestore"
@@ -19,7 +19,6 @@ export default function Submissions() {
   const [unsaved, setUnsaved] = useState<Record<string, Collections.SubmissionUpdate>>({});
   const [storageDeletes, setStorageDeletes] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const { addAlert, clearAlerts } = useAlerts();
 
   const {
@@ -45,51 +44,87 @@ export default function Submissions() {
   ]);
 
   const approve: DecisionFunction = (id) => {
-    const ls = { ...pending };
-    setApproved({ [id]: ls[id], ...approved });
-    delete ls[id];
-    setPending(ls);
-
+    setApproved(prev => ({ [id]: pending[id], ...prev }));
+    setPending(prev => {
+      const ls = { ...prev };
+      delete ls[id];
+      return ls;
+    })
     handleUpdate(id, 'approved', true);
   }
 
   const moveBack: DecisionFunction = (id) => {
-    const ls = approved;
-    setPending({ [id]: ls[id], ...pending });
-    delete ls[id];
-    setApproved({ ...ls });
-
+    setPending(prev => ({ [id]: approved[id], ...prev }));
+    setApproved(prev => {
+      const ls = { ...prev };
+      delete ls[id];
+      return ls;
+    })
     handleUpdate(id, 'approved', false);
   }
 
   const reject: DecisionFunction = (id) => {
-    const ls = pending;
-    const urls = pending[id].imgUrl;
-    if (pending[id].brochureUrl) urls.push(pending[id].brochureUrl);
-    delete ls[id];
-    setPending({ ...ls });
+    let urls: string[] = [];
+    setPending(prev => {
+      const ls = { ...prev };
+      urls = ls[id].imgUrl;
+      if (ls[id].brochureUrl) urls.push(ls[id].brochureUrl);
+      delete ls[id];
+      return ls;
+    });
 
     handleUpdate(id, 'delete', true, urls);
   }
 
   /**
+   * WARN: Not tested
    * Update a field in a submission
    */
   const update: UpdateFunction = (id, type, field, value) => {
-    const ls = type === 'pending' ? pending : approved;
     const setLs = type === 'pending' ? setPending : setApproved;
+    let filtered: Collections.Submission['imgUrl'] | null = null;
 
-    if (field === 'imgUrl') {
-      const current = ls[id][field] as Collections.Submission['imgUrl'];
-      const filtered = current.filter(url => url !== value);
-      if (filtered.length === 0) update(id, type, 'imgCaption', '');
-    } else {
-      ls[id][field] = value;
-    }
-    setLs({ ...ls });
+    setLs(prev => {
+      // imgUrl update is only for removal of a url
+      if (field === 'imgUrl') {
+        const [imgUrl] = value as string[]
+        filtered = (prev[id][field] as Collections.Submission['imgUrl']).filter(url => url !== imgUrl)
 
-    handleUpdate(id, field, value);
+        if (filtered.length === 0) {
+          update(id, type, 'imgCaption', '');
+        }
+        handleUpdate(id, 'imgUrl', filtered);
+      } else {
+        handleUpdate(id, field, value);
+      }
+      return {
+        ...prev,
+        [id]: {
+          ...prev[id],
+          [field]: filtered || value
+        }
+      }
+    });
   }
+
+  /**
+   * Update a field in a submission
+   */
+  // const update: UpdateFunction = (id, type, field, value) => {
+  //   const ls = type === 'pending' ? pending : approved;
+  //   const setLs = type === 'pending' ? setPending : setApproved;
+  //
+  //   if (field === 'imgUrl') {
+  //     const current = ls[id][field] as Collections.Submission['imgUrl'];
+  //     const filtered = current.filter(url => url !== value);
+  //     if (filtered.length === 0) update(id, type, 'imgCaption', '');
+  //   } else {
+  //     ls[id][field] = value;
+  //   }
+  //   setLs({ ...ls });
+  //
+  //   handleUpdate(id, field, value);
+  // }
 
   /**
    * Store unsaved changes
@@ -153,13 +188,13 @@ export default function Submissions() {
     setStorageDeletes([]);
   }
 
-  useEffect(() => {
+  const lastUpdated = useMemo(() => {
     if (!(fetchingApproved && fetchingPending)) {
-      setLastUpdated(new Date().toLocaleString('en-IN', {
+      return new Date().toLocaleString('en-IN', {
         timeStyle: "medium",
         dateStyle: "medium",
-      }));
-    }
+      });
+    } else return null;
   }, [fetchingApproved, fetchingPending])
 
   return (

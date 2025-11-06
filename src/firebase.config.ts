@@ -14,6 +14,7 @@ const config: FirebaseOptions = {
   // measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 }
 
+console.log(config);
 const app = initializeApp(config);
 const auth = getAuth(app);
 const db = getFirestore(app);
