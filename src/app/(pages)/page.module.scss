@@ -126,139 +126,111 @@
 
     .counts {
         background-image: linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)), url(/images/nitap.jpg);
-
-        .publication-counts {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2.5rem;
-            height: 100%;
-
-            .publication {
-                text-align: center;
-                color: white;
-
-                h1 {
-                    // font-family: 'Open Sans', sans-serif;
-                    font-size: 2.25rem;
-                    letter-spacing: 0.2rem;
-                    line-height: 1.45;
-                    text-transform: uppercase;
-                    font-weight: 600;
-                    margin-bottom: 0.8rem;
-                }
-
-                h4 {
-                    font-style: normal;
-                }
-            }
-        }
-
     }
 
-    .subscription-cont {
-        display: flex;
-        // font-family: 'Open Sans', sans-serif;
-        margin: 3rem auto 0;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        gap: 1.2rem;
-
-        h1 {
-            text-align: center;
-        }
-
-        h4 {
-            font-style: oblique;
-            // font-family: 'Cormorant', serif;
-            font-weight: 400;
-            font-size: 1.2rem;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 1.2rem;
-            margin: 1.6rem 0 0.8rem;
-
-            .inputs {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-
-                input {
-                    padding: 1rem;
-                    margin: .4rem;
-                    border: solid 1px rgba(0, 0, 0, 0.12);
-                    font-family: 'Cormorant', serif;
-                    font-size: 1rem;
-                }
-
-                input:focus {
-                    border: solid 1px rgba(0, 0, 0, 0.3);
-                    outline: none;
-                }
-            }
-
-            .submit {
-                position: relative;
-                padding: .4rem 0;
-                border-radius: 4rem;
-                border: none;
-                background-color: white;
-                cursor: pointer;
-                margin-top: 1.6rem;
-
-                .circle {
-                    position: absolute;
-                    width: 2.4rem;
-                    height: 2.4rem;
-                    --clr: rgba(0, 0, 0, 0.3);
-                    border: 1px solid var(--clr);
-                    border-radius: 50px;
-                    transition: all .3s ease-out;
-
-                    span {
-                        position: absolute;
-                        left: 1.2rem;
-                        top: 1.2rem;
-                        transform: translateY(-50%);
-                        width: 2rem;
-                        height: fit-content;
-
-                        svg {
-                            fill: var(--clr);
-                            width: 100%;
-                            transition: all 0.3s ease;
-                        }
-                    }
-                }
-
-                h3 {
-                    font-size: 1.6rem;
-                    line-height: 2.4rem;
-                    margin-left: 3.6rem;
-                    margin-right: 1rem;
-                    transition: all 0.3s ease;
-                }
-            }
-
-            .submit:hover {
-                h3 {
-                    color: rgb(160, 66, 71);
-                }
-
-                .circle {
-                    width: 100%;
-                    display: block;
-                    --clr: rgba(160, 66, 71, 0.692);
-                }
-            }
-        }
-    }
+    // .subscription-cont {
+    //     display: flex;
+    //     // font-family: 'Open Sans', sans-serif;
+    //     margin: 3rem auto 0;
+    //     justify-content: center;
+    //     flex-direction: column;
+    //     align-items: center;
+    //     gap: 1.2rem;
+    //
+    //     h1 {
+    //         text-align: center;
+    //     }
+    //
+    //     h4 {
+    //         font-style: oblique;
+    //         // font-family: 'Cormorant', serif;
+    //         font-weight: 400;
+    //         font-size: 1.2rem;
+    //     }
+    //
+    //     form {
+    //         display: flex;
+    //         flex-direction: column;
+    //         justify-content: center;
+    //         align-items: center;
+    //         gap: 1.2rem;
+    //         margin: 1.6rem 0 0.8rem;
+    //
+    //         .inputs {
+    //             display: flex;
+    //             flex-wrap: wrap;
+    //             justify-content: center;
+    //
+    //             input {
+    //                 padding: 1rem;
+    //                 margin: .4rem;
+    //                 border: solid 1px rgba(0, 0, 0, 0.12);
+    //                 font-family: 'Cormorant', serif;
+    //                 font-size: 1rem;
+    //             }
+    //
+    //             input:focus {
+    //                 border: solid 1px rgba(0, 0, 0, 0.3);
+    //                 outline: none;
+    //             }
+    //         }
+    //
+    //         .submit {
+    //             position: relative;
+    //             // padding: .4rem 0;
+    //             border-radius: 4rem;
+    //             border: none;
+    //             background-color: white;
+    //             cursor: pointer;
+    //             margin-top: 1.6rem;
+    //
+    //             .circle {
+    //                 position: absolute;
+    //                 width: 2.4rem;
+    //                 height: 2.4rem;
+    //                 --clr: rgba(0, 0, 0, 0.3);
+    //                 border: 1px solid var(--clr);
+    //                 border-radius: 50px;
+    //                 transition: all .3s ease-out;
+    //
+    //                 span {
+    //                     position: absolute;
+    //                     left: 1.2rem;
+    //                     top: 1.2rem;
+    //                     transform: translateY(-50%);
+    //                     width: 2rem;
+    //                     height: fit-content;
+    //
+    //                     svg {
+    //                         fill: var(--clr);
+    //                         width: 100%;
+    //                         transition: all 0.3s ease;
+    //                     }
+    //                 }
+    //             }
+    //
+    //             h3 {
+    //                 font-size: 1.6rem;
+    //                 line-height: 2.4rem;
+    //                 margin-left: 3.6rem;
+    //                 margin-right: 1rem;
+    //                 transition: all 0.3s ease;
+    //             }
+    //         }
+    //
+    //         .submit:hover {
+    //             h3 {
+    //                 color: rgb(160, 66, 71);
+    //             }
+    //
+    //             .circle {
+    //                 width: 100%;
+    //                 display: block;
+    //                 --clr: rgba(160, 66, 71, 0.692);
+    //             }
+    //         }
+    //     }
+    // }
 
 
     .parallax {
@@ -282,7 +254,7 @@
         }
 
         h4 {
-            font-family: inherit;
+            // font-family: inherit;
             font-weight: 400;
             font-size: inherit;
             font-style: oblique;

@@ -5,7 +5,7 @@
   background-size: cover;
   min-height: var(--footer-height);
   color: #ddd;
-  font-size: 0.8rem;
+  // font-size: 0.8rem;
 
   a {
     color: #ddd;
@@ -31,18 +31,20 @@
     margin-bottom: 0.4rem;
   }
 
-  .visits{
-    margin-top: 0.4rem ;
+  .visits {
+    margin-top: 0.4rem;
     font-size: 1rem;
-    span{
+
+    span {
       font-size: 1.5rem;
     }
   }
 
-  .issues{
+  .issues {
     margin-top: 0.2rem;
     font-size: 1rem;
-    span{
+
+    span {
       font-size: 1.5rem;
     }
   }
@@ -90,11 +92,11 @@
 
   .copyright {
     background-color: #0d0d13;
-    color: white;
-    line-height: 1.4;
-    text-align: center;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    // color: white;
+    // line-height: 1.4;
+    // text-align: center;
+    // padding-top: 1rem;
+    // padding-bottom: 1rem;
   }
 
   @media screen and (max-width: 780px) {

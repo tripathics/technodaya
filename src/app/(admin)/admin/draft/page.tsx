@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { DndMain } from '@/components/admin/dnd/dndMain'
+// import { DndMain } from '@/components/admin/dnd/dndMain'
 import { db } from '@/firebase.config'
 import { BiMonthlyNames, CategoryTitles, getBiMonth } from '@/helpers/helpers'
 import { doc, orderBy, setDoc, where } from 'firebase/firestore'

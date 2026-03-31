@@ -1,15 +1,14 @@
 import SpinnerIcon from "../icons/spinner-icon";
-import styles from "./loading-screen.module.scss";
-import { Crimson_Text } from 'next/font/google';
-import cx from 'classnames';
-const crimson_text = Crimson_Text({ display: 'swap', subsets: ['latin'], weight: ['400', '600', '700'], style: ['normal', 'italic'] });
+
+// TODO: min height screen/2
 
 export default function LoadingScreen() {
   return (
-    <div className={cx(styles["loading-screen"], crimson_text.className)}>
-      <div className={styles["content"]}>
-        <SpinnerIcon />
-        <div className={styles["text"]}>Please wait...</div>
+    <div className='font-serif block relative min-h-dvh'>
+      {/* <div className={styles["content"]}> */}
+      <div className="absolute top-1/2 left-1/2 -translate-1/2 flex flex-row">
+        <SpinnerIcon className="w-7 h-7 mr-4" />
+        <div className="font-serif text-2xl">Please wait...</div>
       </div>
     </div>
   );

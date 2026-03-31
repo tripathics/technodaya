@@ -1,6 +1,10 @@
-export default function SpinnerIcon() {
+type SpinnerIconProps = {
+  className?: string;
+}
+
+export default function SpinnerIcon({ className }: SpinnerIconProps) {
   return (
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24">
+    <svg className={className} version="1.1" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24">
       <g>
         <path d="M12,2 a1,1 0 0 1 1,1 v3 a1,1 0 0 1 -1,1 a1,1 0 0 1 -1,-1 v-3 a1,1 0 0 1 1,-1 z" />
         <path style={{ opacity: .918 }} transform="rotate(330,12,12)" d="M12,2 a1,1 0 0 1 1,1 v3 a1,1 0 0 1 -1,1 a1,1 0 0 1 -1,-1 v-3 a1,1 0 0 1 1,-1 z" />

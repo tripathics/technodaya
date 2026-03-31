@@ -3,6 +3,13 @@
 @theme {
   --color-border: rgb(219, 219, 219);
   --color-heading: rgb(33, 37, 41);
+
+  /* Fonts */
+  --font-sans: var(--font-open-sans);
+  --font-serif: var(--font-crimson-text);
+  --font-mono: var(--font-ibm-plex-mono);
+  --font-display: var(--font-cormorant);
+  --font-slab: var(--font-zilla-slab);
 }
 
 .container {
@@ -17,10 +24,8 @@
   }
 }
 
-.nav {
-}
-
 :root {
+  /* scrollbar */
   @apply [&::-webkit-scrollbar]:w-2
   [&::-webkit-scrollbar-track]:bg-transparent
   [&::-webkit-scrollbar-thumb]:bg-gray-300

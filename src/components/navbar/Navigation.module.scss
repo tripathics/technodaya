@@ -6,10 +6,8 @@
     --nav-active-bg: rgb(39, 39, 39);
     --nav-sticky-top: 0;
     height: var(--nav-height);
-    position: fixed;
+    position: sticky;
     top: var(--nav-sticky-top);
-    left: 0;
-    right: 0;
     z-index: 1000;
     background-color: var(--navbar-bg);
 

@@ -1,11 +1,27 @@
 import Image from 'next/image';
 import styles from './magazine.module.scss';
 
-const MagazineCard = ({ imgsrc, title, vol, iss, month, year, link, pdfLink }) => {
+const MagazineCard: React.FC<{
+  imgsrc: string;
+  title: string;
+  vol: string;
+  iss: string;
+  month: string;
+  year: string;
+  link?: string;
+  pdfLink: string
+}> = (props) => {
+  const { imgsrc, title, vol, iss, month, year, link, pdfLink } = props
   return (
     <section className={styles["magazine-card"]}>
-      <figure className={styles["cover-img"]}>
-        <Image src={imgsrc} alt={`Technodaya Vol ${vol} Iss ${iss} cover`} width={600} height={660} />
+      {/* <figure className={styles["cover-img"]}> */}
+      <figure className='relative'>
+        <Image
+          src={imgsrc}
+          alt={`Technodaya Vol ${vol} Iss ${iss} cover`}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
       </figure>
       <div className={styles["desc"]}>
         <a className={styles["title"]} href={link || pdfLink} target='_blank' rel='noreferrer'>

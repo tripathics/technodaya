@@ -38,6 +38,7 @@ export const SectionCard: React.FC<CardProps> = React.memo(props => {
     </Draggable>
   )
 })
+SectionCard.displayName = "SectionCard"
 
 export const SubSectionCard: React.FC<CardProps> = React.memo(props => {
   const subSection = props.data.subSections[props.id]
@@ -80,6 +81,7 @@ export const SubSectionCard: React.FC<CardProps> = React.memo(props => {
     </Draggable>
   )
 })
+SubSectionCard.displayName = "SubSectionCard"
 
 export const ActivityCard: React.FC<CardProps & { isDragDisabled?: boolean }> = React.memo(props => {
   const activity = props.data.activities[props.id]
@@ -104,4 +106,5 @@ export const ActivityCard: React.FC<CardProps & { isDragDisabled?: boolean }> = 
     </Draggable>
   )
 })
+ActivityCard.displayName = "ActivityCard"
 

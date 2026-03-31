@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { DndMain } from '@/components/admin/dnd/dndMain'
-import { fs, db } from '@/firebase.config'
+import { fs, db } from '@/firebasse.config'
 import { getBiMonth, BiMonthlyNames, CategoryTitles } from '@/helpers/helpers'
 import SpinnerIcon from '@/components/icons/spinner-icon'
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'

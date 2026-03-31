@@ -13,7 +13,8 @@ const links = [
 export default function AdminNav() {
   return (
     <NavProvider>
-      <div className={styles['nav-overlay']}></div>
+      {/* <div className={styles['nav-overlay']}></div> */}
+      <div className="sticky top-0 pointer-events-none"></div>
       <aside className={styles['nav-wrapper']}>
         <div className={styles['nav-toggle-wrapper']}>
           <NavToggle />

@@ -5,6 +5,7 @@ import HamburgerIcon from '@/components/icons/hamburger-icon'
 import styles from './Navigation.module.scss';
 import { NavItem, NavBtn } from './NavItem';
 import AuthNav from './authNav'
+import { cn } from '@/lib/utils';
 
 const NavLinks = [
   { link: '/', name: 'Home' },
@@ -14,8 +15,8 @@ const NavLinks = [
 
 const Navbar: React.FC<{ className?: string }> = ({ className = '' }) => {
   return (
-    <nav className={[styles['navbar-component'], className].join(' ')}>
-      <div className={[styles['nav-content-wrapper'], 'container'].join(' ')} >
+    <nav className={cn(styles['navbar-component'], className)}>
+      <div className={cn(styles['nav-content-wrapper'], 'container')} >
         <header className={styles.banner}>
           <Link href='/'>
             <Image width={200} height={24.36} src={'/images/logo/technodaya-logo1.png'} alt="Technodaya" id={styles.technodayaLogo} /></Link>
@@ -23,7 +24,7 @@ const Navbar: React.FC<{ className?: string }> = ({ className = '' }) => {
 
         <div className={styles['nav-items-wrapper']}>
           <div id='mobile-nav' className={styles['mobile-nav-wrapper']}>
-            <ul className={[styles['nav-items'], styles.mobile].join(' ')}>
+            <ul className={cn(styles['nav-items'], styles.mobile)}>
               <li className={styles['nav-btn']}>
                 <NavBtn title='Close menu'><CloseIcon /></NavBtn>
               </li>
@@ -31,7 +32,7 @@ const Navbar: React.FC<{ className?: string }> = ({ className = '' }) => {
               <AuthNav />
             </ul>
           </div>
-          <ul className={[styles['nav-items'], styles.desktop].join(' ')}>
+          <ul className={cn(styles['nav-items'], styles.desktop)}>
             {NavLinks.map((item, i) => <NavItem key={`du${i}`} {...item} />)}
             <li style={{ height: 32 }}><hr className={styles.divider} /></li>
             <AuthNav />

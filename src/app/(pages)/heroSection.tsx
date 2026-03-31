@@ -7,10 +7,8 @@ import styles from "./page.module.scss";
 import cx from "classnames";
 import MagazineCard, { MagazineCardSkeleton } from "@/components/magazine-card/";
 import type { Collections } from "@/types/collection";
-
-import { Cormorant, Open_Sans } from "next/font/google";
-const open_sans = Open_Sans({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], style: ['normal', 'italic'] })
-const cormorant = Cormorant({ display: 'swap', subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], style: ['normal', 'italic'] })
+import { MagazineGrid } from "@/components/magazine/magazine-grid";
+import { cn } from "@/lib/utils";
 
 const HeroSection = () => {
   const {
@@ -21,16 +19,16 @@ const HeroSection = () => {
   const latestIssueUrl = Object.entries(issues).length > 0 ? issues[Object.keys(issues)[0]].PdfUrl : null;
 
   return (<>
-    <section className={cx(styles.hero, 'parallax', styles.parallax, styles.home, cormorant.className)}>
+    <section className={cx(styles.hero, 'parallax', styles.parallax, styles.home, "font-display")}>
       <div className="container">
-        <h1 className={open_sans.className}>Technodaya Newsletter</h1>
+        <h1 className="font-sans">Technodaya Newsletter</h1>
         <h4>The Technical Meraki of Arunachal</h4>
         {latestIssueUrl ? (
-          <a href={latestIssueUrl} target="_blank" rel="noreferrer" className={[styles.btn, open_sans.className].join(' ')}>
+          <a href={latestIssueUrl} target="_blank" rel="noreferrer" className={cn(styles.btn, "font-sans")}>
             Read latest issue
           </a>
         ) : (
-          <Link href="/read" className={[styles.btn, open_sans.className].join(' ')}>
+          <Link href="/read" className={cn(styles.btn, "font-sans")}>
             View all issues
           </Link>
         )}
@@ -47,15 +45,13 @@ const HeroSection = () => {
         </header>
         <div className={styles.issues}>
           {loading ? (
-            <div className="grid-gallery"
-              aria-label="Loading recent releases"
-            >
+            <MagazineGrid aria-label="Loading recent releases">
               <MagazineCardSkeleton />
               <MagazineCardSkeleton />
               <MagazineCardSkeleton />
-            </div>
+            </MagazineGrid>
           ) : (
-            <div className="grid-gallery">
+            <MagazineGrid>
               {Object.keys(issues).map(id => {
                 const { ImageUrl, Title, Vol, Issue, Month, Year, Link, PdfUrl, } = issues[id];
                 return (
@@ -65,7 +61,7 @@ const HeroSection = () => {
                   />
                 );
               })}
-            </div>
+            </MagazineGrid>
           )}
         </div>
       </div>
